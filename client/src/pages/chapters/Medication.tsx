@@ -505,6 +505,7 @@ export default function Medication() {
       chapterNumber={8}
       totalChapters={10}
       onPrevious={() => setLocation('/chapter/what-helps')}
+      onNext={() => setLocation('/chapter/getting-diagnosed')}
     >
       <motion.div className="space-y-20" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <section className="text-center">

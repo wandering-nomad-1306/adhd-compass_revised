@@ -100,9 +100,10 @@ export default function WhatIsADHD() {
     <ChapterLayout
       title="What is ADHD?"
       subtitle="A clear definition without reducing a person to a checklist"
-      chapterNumber={4}
+      chapterNumber={3}
       totalChapters={10}
-      onPrevious={() => setLocation('/chapter/brain')}
+      onPrevious={() => setLocation('/chapter/why-feels')}
+      onNext={() => setLocation('/chapter/brain')}
     >
       <motion.div className="space-y-16" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <section className="text-center">

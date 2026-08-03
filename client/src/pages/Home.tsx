@@ -36,7 +36,7 @@ export default function Home() {
             backgroundAttachment: 'fixed',
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-warm-cream/40 via-warm-cream/20 to-warm-cream/60" />
+          <div className="absolute inset-0" />
         </div>
 
         {/* Content */}
@@ -64,7 +64,7 @@ export default function Home() {
           >
             Welcome to
             <br />
-            <span className="text-sage-green">ADHD Compass</span>
+            <span className="text-foreground">ADHD Compass</span>
           </motion.h1>
 
           {/* Subheading */}
@@ -85,7 +85,7 @@ export default function Home() {
           >
             <button
               onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-              className="inline-flex items-center justify-center px-8 py-3 rounded-lg bg-sage-green text-white font-semibold hover:bg-sage-green/90 transition-colors duration-300 shadow-lg hover:shadow-xl" style={{color: '#231d17'}}
+              className="inline-flex items-center justify-center rounded-lg border border-white/30 bg-transparent px-8 py-3 font-semibold text-[#231d17] shadow-lg transition-colors duration-300 hover:bg-white/15 hover:shadow-xl"
             >
               Begin Your Journey
               <svg
@@ -112,7 +112,7 @@ export default function Home() {
           transition={{ duration: 2, repeat: Infinity }}
         >
           <svg
-            className="w-6 h-6 text-sage-green/60"
+            className="w-6 h-6 text-foreground/60"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -173,7 +173,7 @@ export default function Home() {
             ].map((card, index) => (
               <motion.div
                 key={index}
-                className="p-8 rounded-lg bg-warm-cream border border-sage-green/10 hover:border-sage-green/30 transition-colors duration-300"
+                className="rounded-lg border border-border bg-white p-8 transition-colors duration-300"
                 initial={{ y: 20, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1, duration: 0.6 }}
@@ -190,7 +190,7 @@ export default function Home() {
 
       {/* Design philosophy section */}
       <motion.section
-        className="py-20 px-6 bg-gradient-to-r from-sage-green/5 to-muted-teal/5"
+        className="bg-transparent px-6 py-20"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.6 }}

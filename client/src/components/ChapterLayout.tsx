@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ReactNode } from 'react';
+import ChapterNavigator from '@/components/ChapterNavigator';
 
 interface ChapterLayoutProps {
   title: string;
@@ -25,6 +26,7 @@ export default function ChapterLayout({
 }: ChapterLayoutProps) {
   return (
     <div className="min-h-screen bg-warm-cream">
+      <ChapterNavigator />
       {/* Hero section with optional background image */}
       {heroImage && (
         <motion.div
@@ -100,10 +102,10 @@ export default function ChapterLayout({
           <button
             onClick={onPrevious}
             disabled={!onPrevious}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sage-green hover:bg-sage-green/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+            className="flex items-center gap-2 rounded-lg border border-[#4f7659]/25 bg-white px-4 py-2 font-sans font-semibold text-[#4f7659] shadow-sm transition-colors duration-300 hover:bg-[#4f7659]/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <ChevronLeft className="w-5 h-5" />
-            <span className="font-semibold">Previous</span>
+            <span>Previous</span>
           </button>
 
           <div className="text-sm text-muted-foreground">
@@ -117,9 +119,9 @@ export default function ChapterLayout({
           <button
             onClick={onNext}
             disabled={!onNext}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sage-green hover:bg-sage-green/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+            className="flex items-center gap-2 rounded-lg border border-[#4f7659]/25 bg-white px-4 py-2 font-sans font-semibold text-[#4f7659] shadow-sm transition-colors duration-300 hover:bg-[#4f7659]/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <span className="font-semibold">Next</span>
+            <span>Next</span>
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>

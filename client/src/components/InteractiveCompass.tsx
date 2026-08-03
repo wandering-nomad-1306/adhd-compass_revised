@@ -116,7 +116,6 @@ function createStars(): CompassStar[] {
 
     return Array.from({ length: 15 }, (_, starIndex) => {
       const angle = point.angle + (random() - 0.5) * 36;
-      // Keep each coloured cluster packed inside the compass, clear of the outer tabs.
       const distance = 10 + random() * 17.5;
       const radians = (angle * Math.PI) / 180;
 
@@ -382,7 +381,7 @@ export default function InteractiveCompass({ onNavigate }: { onNavigate: (id: st
             width="198"
             height="198"
             viewBox="0 0 120 120"
-            className="text-sage-green/60"
+            className="text-[#231d17]"
             fill="none"
             stroke="currentColor"
             strokeWidth="1"
