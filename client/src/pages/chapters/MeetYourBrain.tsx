@@ -123,8 +123,8 @@ function BrainSystemExplorer() {
   const Icon = active.icon;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[0.88fr_1.12fr]">
-      <div className="space-y-3" role="tablist" aria-label="Brain systems associated with ADHD">
+    <div className="grid min-w-0 gap-4 lg:gap-5 lg:grid-cols-[0.88fr_1.12fr]">
+      <div className="grid grid-cols-2 gap-2 lg:block lg:space-y-3" role="tablist" aria-label="Brain systems associated with ADHD">
         {brainSystems.map((system, index) => {
           const SystemIcon = system.icon;
           const isActive = selected === index;
@@ -135,18 +135,18 @@ function BrainSystemExplorer() {
               role="tab"
               aria-selected={isActive}
               onClick={() => setSelected(index)}
-              className={`flex w-full items-center gap-4 rounded-2xl border p-4 text-left font-sans transition-all ${
+              className={`flex min-h-12 w-full min-w-0 items-center justify-center rounded-xl border px-3 py-2.5 text-center font-sans text-sm font-bold leading-tight transition-all lg:min-h-0 lg:justify-start lg:gap-4 lg:rounded-2xl lg:p-4 lg:text-left lg:text-base ${
                 isActive
                   ? 'border-sage-green bg-sage-green/[0.08] shadow-sm'
                   : 'border-sage-green/15 bg-white hover:border-sage-green/40'
               }`}
             >
-              <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${isActive ? 'bg-sage-green text-warm-cream' : 'bg-warm-cream text-sage-green'}`}>
+              <span className={`hidden h-11 w-11 shrink-0 items-center justify-center rounded-full lg:flex ${isActive ? 'bg-sage-green text-warm-cream' : 'bg-warm-cream text-sage-green'}`}>
                 <SystemIcon className="h-5 w-5" />
               </span>
-              <span>
-                <span className="block font-bold text-foreground">{system.title}</span>
-                <span className="mt-1 block text-sm leading-snug text-muted-foreground">{system.subtitle}</span>
+              <span className="min-w-0">
+                <span className="block break-words font-bold text-foreground">{system.title}</span>
+                <span className="mt-1 hidden text-sm leading-snug text-muted-foreground lg:block">{system.subtitle}</span>
               </span>
             </button>
           );
@@ -160,15 +160,15 @@ function BrainSystemExplorer() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
-          className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm md:p-8"
+          className="min-w-0 overflow-hidden rounded-3xl border border-sage-green/15 bg-white p-5 shadow-sm sm:p-7 md:p-8 lg:overflow-visible"
         >
-          <div className="flex items-center gap-4">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sage-green/10 text-sage-green">
               <Icon className="h-6 w-6" />
             </span>
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-sage-green">Connected system</p>
-              <h3 className="mt-1 font-serif text-3xl font-bold text-foreground">{active.title}</h3>
+              <h3 className="mt-1 break-words font-serif text-2xl font-bold leading-tight text-foreground sm:text-3xl">{active.title}</h3>
             </div>
           </div>
 
@@ -179,9 +179,9 @@ function BrainSystemExplorer() {
               ['What research suggests in ADHD', active.research],
               ['How this may appear in daily life', active.daily],
             ].map(([label, text]) => (
-              <div key={label} className="border-l-2 border-sage-green/30 pl-4">
+              <div key={label} className="min-w-0 border-l-2 border-sage-green/30 pl-4">
                 <p className="font-bold text-foreground">{label}</p>
-                <p className="mt-2 leading-relaxed text-muted-foreground">{text}</p>
+                <p className="mt-2 break-words leading-relaxed text-muted-foreground">{text}</p>
               </div>
             ))}
           </div>
@@ -411,7 +411,7 @@ export default function MeetYourBrain() {
 
           <div className="mt-6 rounded-2xl border border-[#4f7659]/15 bg-[#4f7659]/[0.05] p-5">
             <p className="font-bold text-foreground">What this means</p>
-            <p className="mt-2 leading-relaxed text-muted-foreground">
+            <p className="mt-2 break-words leading-relaxed text-muted-foreground">
               Doing something successfully once shows that the skill exists. It does not prove that the same level of access will be available under different demands, stress, fatigue, or support. Performance variability is not the same as lack of effort.
             </p>
           </div>

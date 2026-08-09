@@ -251,32 +251,32 @@ function ChallengeExplorer() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="min-w-0 p-6 md:p-8"
+            className="w-full min-w-0 overflow-hidden p-5 sm:p-6 md:p-8 lg:overflow-visible"
           >
-            <div className="flex items-start gap-4">
+            <div className="flex min-w-0 items-start gap-3 sm:gap-4">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#4f7659]/10 text-[#4f7659]">
                 <Icon className="h-6 w-6" />
               </span>
-              <div>
-                <h2 className="font-serif text-2xl font-bold leading-tight text-foreground md:text-3xl">{selected.title}</h2>
-                <p className="mt-3 leading-relaxed text-muted-foreground">{selected.summary}</p>
+              <div className="min-w-0 flex-1">
+                <h2 className="break-words font-serif text-[1.55rem] font-bold leading-tight text-foreground sm:text-2xl md:text-3xl">{selected.title}</h2>
+                <p className="mt-3 break-words leading-relaxed text-muted-foreground">{selected.summary}</p>
               </div>
             </div>
 
             <div className="mt-6 rounded-2xl border border-sage-green/15 bg-sage-green/[0.06] p-5">
               <h3 className="font-bold text-foreground">Why this can happen</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{selected.whyItHappens}</p>
+              <p className="mt-2 break-words text-sm leading-relaxed text-muted-foreground">{selected.whyItHappens}</p>
             </div>
 
             <div className="mt-7">
               <h3 className="font-bold text-foreground">What to try</h3>
               <ol className="mt-4 space-y-3">
                 {selected.actions.map((action, index) => (
-                  <li key={action} className="flex gap-3">
+                  <li key={action} className="flex min-w-0 gap-3">
                     <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#4f7659] text-xs font-bold text-white">
                       {index + 1}
                     </span>
-                    <span className="text-sm leading-relaxed text-foreground md:text-base">{action}</span>
+                    <span className="min-w-0 flex-1 break-words text-sm leading-relaxed text-foreground md:text-base">{action}</span>
                   </li>
                 ))}
               </ol>
@@ -285,11 +285,11 @@ function ChallengeExplorer() {
             <div className="mt-7 grid gap-4 md:grid-cols-2">
               <article className="rounded-2xl bg-warm-cream p-5">
                 <h3 className="font-bold text-foreground">Why this may help</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{selected.why}</p>
+                <p className="mt-3 break-words text-sm leading-relaxed text-muted-foreground">{selected.why}</p>
               </article>
               <article className="rounded-2xl bg-[#5b6f96]/[0.07] p-5">
                 <h3 className="font-bold text-foreground">Example</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{selected.example}</p>
+                <p className="mt-3 break-words text-sm leading-relaxed text-muted-foreground">{selected.example}</p>
               </article>
             </div>
 
@@ -297,7 +297,7 @@ function ChallengeExplorer() {
               <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#a96952]" />
               <div>
                 <p className="font-bold text-foreground">When more support may be useful</p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{selected.moreSupport}</p>
+                <p className="mt-1 break-words text-sm leading-relaxed text-muted-foreground">{selected.moreSupport}</p>
               </div>
             </div>
           </motion.div>

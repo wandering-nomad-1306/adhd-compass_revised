@@ -84,7 +84,7 @@ export default function ChapterLayout({
 
       {/* Main content */}
       <motion.main
-        className="max-w-4xl mx-auto px-6 py-16"
+        className="chapter-content max-w-4xl mx-auto px-4 py-12 sm:px-6 sm:py-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.6 }}

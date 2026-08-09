@@ -226,3 +226,28 @@
     transition: none !important;
   }
 }
+
+
+/* Mobile chapter readability guards. Desktop layout is intentionally unchanged. */
+@media (max-width: 767.98px) {
+  .chapter-content {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .chapter-content :where(section, article, div, header, footer, nav, ul, ol, li) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .chapter-content :where(h1, h2, h3, h4, p, li) {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .chapter-content :where(img, video, canvas) {
+    max-width: 100%;
+    height: auto;
+  }
+}
