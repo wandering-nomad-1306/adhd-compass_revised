@@ -8,7 +8,7 @@ import SourceList from '@/components/SourceList';
 
 const myths = [
   {
-    statement: '“Everyone is a little ADHD.”',
+    statement: '“Everyone has a little ADHD.”',
     verdict: 'Not quite',
     explanation:
       'Everyone can be distracted or impulsive sometimes. ADHD is a persistent developmental pattern that is more frequent or severe than expected, appears across important settings, and meaningfully interferes with daily functioning.',
@@ -150,7 +150,7 @@ export default function WhatIsADHD() {
         <section>
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Explore the pattern</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Three presentations—not three kinds of people</h2>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Three types of ADHD</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
               The presentation describes which symptom group is strongest at the time. It can change as a person grows or as life demands change.
             </p>

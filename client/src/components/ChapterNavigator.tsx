@@ -68,6 +68,12 @@ export default function ChapterNavigator() {
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
+    const openNavigator = () => setOpen(true);
+    window.addEventListener('open-chapter-navigator', openNavigator);
+    return () => window.removeEventListener('open-chapter-navigator', openNavigator);
+  }, []);
+
+  useEffect(() => {
     if (!open) return;
 
     const previousOverflow = document.body.style.overflow;

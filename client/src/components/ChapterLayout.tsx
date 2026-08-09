@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ReactNode } from 'react';
 import ChapterNavigator from '@/components/ChapterNavigator';
+import PageDock from '@/components/PageDock';
 
 interface ChapterLayoutProps {
   title: string;
@@ -26,6 +27,7 @@ export default function ChapterLayout({
 }: ChapterLayoutProps) {
   return (
     <div className="min-h-screen bg-warm-cream">
+      <PageDock />
       <ChapterNavigator />
       {/* Hero section with optional background image */}
       {heroImage && (
@@ -98,17 +100,17 @@ export default function ChapterLayout({
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-3 sm:flex sm:items-center sm:justify-between">
           <button
             onClick={onPrevious}
             disabled={!onPrevious}
-            className="flex items-center gap-2 rounded-lg border border-[#4f7659]/25 bg-white px-4 py-2 font-sans font-semibold text-[#4f7659] shadow-sm transition-colors duration-300 hover:bg-[#4f7659]/10 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-w-0 items-center justify-center gap-1.5 rounded-lg border border-[#4f7659]/25 bg-white px-3 py-2.5 font-sans text-sm font-semibold text-[#4f7659] sm:gap-2 sm:px-4 sm:text-base shadow-sm transition-colors duration-300 hover:bg-[#4f7659]/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <ChevronLeft className="w-5 h-5" />
             <span>Previous</span>
           </button>
 
-          <div className="text-sm text-muted-foreground">
+          <div className="col-span-2 row-start-1 text-center text-xs text-muted-foreground sm:order-none sm:col-auto sm:row-auto sm:text-sm">
             {chapterNumber && totalChapters && (
               <span>
                 Chapter {chapterNumber} of {totalChapters}
@@ -119,7 +121,7 @@ export default function ChapterLayout({
           <button
             onClick={onNext}
             disabled={!onNext}
-            className="flex items-center gap-2 rounded-lg border border-[#4f7659]/25 bg-white px-4 py-2 font-sans font-semibold text-[#4f7659] shadow-sm transition-colors duration-300 hover:bg-[#4f7659]/10 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-w-0 items-center justify-center gap-1.5 rounded-lg border border-[#4f7659]/25 bg-white px-3 py-2.5 font-sans text-sm font-semibold text-[#4f7659] sm:gap-2 sm:px-4 sm:text-base shadow-sm transition-colors duration-300 hover:bg-[#4f7659]/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span>Next</span>
             <ChevronRight className="w-5 h-5" />

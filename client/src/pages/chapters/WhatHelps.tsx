@@ -26,6 +26,7 @@ interface ChallengeGuide {
   shortTitle: string;
   icon: typeof BellRing;
   summary: string;
+  whyItHappens: string;
   actions: string[];
   why: string;
   example: string;
@@ -40,6 +41,8 @@ const challenges: ChallengeGuide[] = [
     icon: BellRing,
     summary:
       'Do not rely on holding an intention in your head until the right moment. Put the information somewhere that can remind you later.',
+    whyItHappens:
+      'Your brain may have difficulty keeping an intention active while attention shifts to something else. This is a working-memory and cueing problem—not proof that you do not care.',
     actions: [
       'Use one main calendar and one main place for tasks instead of several competing systems.',
       'Write the task down immediately. Add the reminder for the time you need to act, not only the time the event begins.',
@@ -60,6 +63,8 @@ const challenges: ChallengeGuide[] = [
     icon: MoveRight,
     summary:
       'Make the first action smaller and more specific. “Start the project” is vague; “open the document and write the title” tells the brain exactly what happens next.',
+    whyItHappens:
+      'Starting requires the brain to choose an entry point, organize the first steps, and make a future reward matter now. A task can be important and still feel hard to activate.',
     actions: [
       'Define the next visible action using a verb: open, place, call, write, or send.',
       'Prepare the materials before the planned start time and remove one obvious distraction.',
@@ -80,6 +85,8 @@ const challenges: ChallengeGuide[] = [
     icon: Clock3,
     summary:
       'Make time visible and build transitions into the plan. A clock tells you the current time; it does not automatically show how much time remains or when to stop.',
+    whyItHappens:
+      'Estimating duration, noticing time passing, and remembering to act later all depend on executive functions. When these signals are weak, time can feel abstract until it becomes urgent.',
     actions: [
       'Use a visible timer for work periods, breaks, and transitions.',
       'Work backward from the real deadline and add an earlier personal checkpoint.',
@@ -100,6 +107,8 @@ const challenges: ChallengeGuide[] = [
     icon: Focus,
     summary:
       'Reduce the number of signals competing with the task and make the current priority easy to see.',
+    whyItHappens:
+      'Attention has to keep selecting the current priority while many other signals compete for notice. ADHD often affects the regulation of attention, not the total ability to focus.',
     actions: [
       'Clear the work surface and silence nonessential notifications for a defined period.',
       'Keep the current instruction, question, or next step visible while working.',
@@ -120,6 +129,8 @@ const challenges: ChallengeGuide[] = [
     icon: ListChecks,
     summary:
       'Move the plan out of your head. Break the task into short steps that can be completed, checked, and restarted after an interruption.',
+    whyItHappens:
+      'A large task asks the brain to hold many steps, priorities, and decisions at once. When that load exceeds working memory, freezing or avoiding the task can be a protective response rather than laziness.',
     actions: [
       'Write the finished outcome in one sentence so the target is clear.',
       'Break the work into steps that can usually be completed in one sitting.',
@@ -140,6 +151,8 @@ const challenges: ChallengeGuide[] = [
     icon: Repeat2,
     summary:
       'Treat switching as a separate task rather than expecting it to happen instantly. Create a clear ending for the first activity and an easy entry into the next one.',
+    whyItHappens:
+      'Changing tasks requires stopping one mental set, remembering the new goal, and absorbing a transition cost. The harder the current activity is to leave, the more support the switch may need.',
     actions: [
       'Use a transition warning before the planned stop time.',
       'Write a one-line restart note before leaving the current task.',
@@ -160,6 +173,8 @@ const challenges: ChallengeGuide[] = [
     icon: CalendarClock,
     summary:
       'Build the smallest routine that solves a real problem. A system with many steps is harder to restart after disruption.',
+    whyItHappens:
+      'Routines become reliable when cues, timing, and rewards repeat consistently. ADHD can make the routine disappear from awareness when the cue changes or the immediate reward is weak.',
     actions: [
       'Attach one new action to something that already happens reliably.',
       'Keep the routine visible where it is used instead of storing it in an app you rarely open.',
@@ -180,6 +195,8 @@ const challenges: ChallengeGuide[] = [
     icon: Sparkles,
     summary:
       'Lower the intensity before trying to solve the problem. Reasoning and planning become harder when arousal is high.',
+    whyItHappens:
+      'Emotional reactions can rise quickly when inhibition, attention, and stress regulation are overloaded. The feeling is real; the goal is to create enough time and support for the response to settle.',
     actions: [
       'Pause the conversation or task briefly when it is safe to do so.',
       'Name the emotion and the immediate trigger in simple language.',
@@ -244,6 +261,11 @@ function ChallengeExplorer() {
                 <h2 className="font-serif text-2xl font-bold leading-tight text-foreground md:text-3xl">{selected.title}</h2>
                 <p className="mt-3 leading-relaxed text-muted-foreground">{selected.summary}</p>
               </div>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-sage-green/15 bg-sage-green/[0.06] p-5">
+              <h3 className="font-bold text-foreground">Why this can happen</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{selected.whyItHappens}</p>
             </div>
 
             <div className="mt-7">
@@ -316,7 +338,7 @@ export default function WhatHelps() {
           </p>
         </section>
 
-        <section>
+        <section id="common-difficulties" data-page-label="Common difficulties">
           <div className="mb-7 max-w-3xl">
             <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl">Strategies for common difficulties</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
@@ -326,7 +348,7 @@ export default function WhatHelps() {
           <ChallengeExplorer />
         </section>
 
-        <section>
+        <section id="support-system" data-page-label="Basic support system">
           <div className="mb-7 max-w-3xl">
             <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl">A basic support system</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
@@ -370,7 +392,7 @@ export default function WhatHelps() {
           </div>
         </section>
 
-        <section>
+        <section id="additional-support" data-page-label="When strategies are not enough">
           <div className="mb-7 max-w-3xl">
             <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl">When strategies are not enough</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
@@ -434,6 +456,12 @@ export default function WhatHelps() {
 
         <SourceList
           sources={[
+            {
+              title: 'Executive Function Disorder & ADHD',
+              organization: 'Attention Deficit Disorder Association',
+              url: 'https://add.org/executive-function-disorder/',
+              note: 'Plain-language explanation of working memory, planning, attention, task switching, and why executive difficulty is not a character flaw.',
+            },
             {
               title: 'Treatment of ADHD',
               organization: 'Centers for Disease Control and Prevention',

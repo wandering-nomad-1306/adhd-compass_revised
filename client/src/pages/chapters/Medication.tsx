@@ -528,25 +528,7 @@ export default function Medication() {
           </div>
         </section>
 
-        <nav aria-label="Medication page sections" className="rounded-3xl border border-sage-green/15 bg-white p-5 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">Jump to what you need</p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {[
-              ['pathways', 'The 3 pathways'],
-              ['effectiveness', 'Effectiveness & limits'],
-              ['timing', 'Short vs long acting'],
-              ['directory', 'Medication cards'],
-              ['side-effects', 'Side effects'],
-              ['titration', 'Finding the right fit'],
-              ['combinations', 'Combinations'],
-              ['faq', 'Common questions'],
-            ].map(([id, label]) => (
-              <button key={id} type="button" onClick={() => jumpTo(id)} className="rounded-full border border-sage-green/20 bg-warm-cream/40 px-4 py-2 text-sm font-semibold text-foreground transition hover:border-sage-green/50 hover:bg-warm-cream">
-                {label}
-              </button>
-            ))}
-          </div>
-        </nav>
+
 
         <section className="grid gap-5 md:grid-cols-2">
           <article className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm">
@@ -573,7 +555,7 @@ export default function Medication() {
           </article>
         </section>
 
-        <section id="pathways" className="scroll-mt-24">
+        <section id="pathways" data-page-label="Medication pathways" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Start with the big picture</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Three broad medication pathways</h2>
@@ -612,7 +594,7 @@ export default function Medication() {
           </div>
         </section>
 
-        <section id="effectiveness" className="scroll-mt-24">
+        <section id="effectiveness" data-page-label="Effectiveness and limits" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">What “effective” really means</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Benefit is measurable—but not magical</h2>
@@ -656,7 +638,7 @@ export default function Medication() {
           </div>
         </section>
 
-        <section id="timing" className="scroll-mt-24">
+        <section id="timing" data-page-label="Short vs long acting" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Forms and duration</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">The same family can feel different in a different formulation</h2>
@@ -699,7 +681,7 @@ export default function Medication() {
           </div>
         </section>
 
-        <section id="directory" className="scroll-mt-24">
+        <section id="directory" data-page-label="Medication directory" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Interactive medication directory</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Explore medicines by stimulant, nonstimulant, or alpha-2 pathway</h2>
@@ -710,7 +692,7 @@ export default function Medication() {
           <MedicationExplorer />
         </section>
 
-        <section id="side-effects" className="scroll-mt-24">
+        <section id="side-effects" data-page-label="Side effects" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Side effects without panic</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">What to watch, what is usually adjusted, and when to escalate</h2>
@@ -721,7 +703,7 @@ export default function Medication() {
           <SideEffectGuide />
         </section>
 
-        <section id="titration" className="scroll-mt-24">
+        <section id="titration" data-page-label="Finding the right fit" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Finding the right fit</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Titration is a structured experiment</h2>
@@ -780,7 +762,7 @@ export default function Medication() {
           </div>
         </section>
 
-        <section id="combinations" className="scroll-mt-24">
+        <section id="combinations" data-page-label="Combination treatment" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Combination treatment</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Why a prescriber may use more than one medicine</h2>
@@ -848,7 +830,7 @@ export default function Medication() {
           </article>
         </section>
 
-        <section id="faq" className="scroll-mt-24">
+        <section id="faq" data-page-label="Common questions" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Common questions</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">The questions people usually have after the basic explanation</h2>

@@ -3,13 +3,11 @@ import {
   Activity,
   ArrowRight,
   BrainCircuit,
-  Clock3,
+  BookOpenCheck,
   Eye,
   Gauge,
   Info,
-  Layers3,
   Network,
-  RefreshCw,
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
@@ -29,7 +27,7 @@ const brainSystems = [
     title: 'Executive control',
     subtitle: 'Keeping a goal active and guiding behaviour toward it',
     regions: 'Prefrontal and frontoparietal systems, working with the striatum and other regions',
-    job: 'These systems help hold goals in mind, resist an immediate response, plan steps, monitor errors, and adjust behaviour when the situation changes.',
+    job: 'These systems help keep a future goal active long enough to guide the present moment. They support working memory, inhibition, planning, error monitoring, and flexible adjustment when the situation changes. This is about access to control—not intelligence or knowing the rule.',
     research:
       'ADHD research repeatedly finds group-level differences in activation and connectivity across frontal-control circuits. A large NIH-supported analysis published in 2024 also linked ADHD symptoms in youth with atypical interactions between the frontal cortex and deeper information-processing regions.',
     daily:
@@ -43,7 +41,7 @@ const brainSystems = [
     title: 'Attention and salience',
     subtitle: 'Selecting what matters now and shifting between internal and external information',
     regions: 'Frontal and parietal attention systems, anterior cingulate, insula, and connected sensory regions',
-    job: 'Attention is not one switch. The brain must notice relevant information, suppress competing input, sustain a goal, and redirect attention when priorities change.',
+    job: 'Attention is not one on/off switch. The brain must select what matters, reduce competition from other signals, sustain the current goal, and redirect attention when priorities change. ADHD often affects the regulation and consistency of attention rather than the total ability to focus.',
     research:
       'Neuroimaging studies associate ADHD with altered coordination across attention, salience, and cognitive-control networks. These are average differences across groups—not a single pattern shared by every person.',
     daily:
@@ -57,7 +55,7 @@ const brainSystems = [
     title: 'Reward and motivation',
     subtitle: 'Estimating effort, reward, delay, and whether an action is worth starting',
     regions: 'The striatum and connected frontal circuits involved in reward learning, motivation, and action selection',
-    job: 'Reward systems help the brain learn from outcomes and decide which action is worth the effort. Immediate, certain feedback usually has a stronger effect than a distant or uncertain payoff.',
+    job: 'Reward systems help estimate effort, expected value, delay, and which action is worth starting. Immediate and certain feedback usually has more influence on present behaviour than a distant or unclear payoff. This is not a lack of caring; it is a difference in how strongly a future outcome guides action now.',
     research:
       'ADHD has been associated with differences in reward processing and, in some studies, a stronger preference for immediate rewards over delayed rewards. This can help explain why context and feedback change performance.',
     daily:
@@ -71,7 +69,7 @@ const brainSystems = [
     title: 'Network coordination',
     subtitle: 'Moving between mind-wandering, task focus, and monitoring what deserves attention',
     regions: 'Default-mode, frontoparietal, salience, and task-related networks',
-    job: 'The default-mode network is more active during internally focused thought. Task-related control networks support externally directed work. Salience systems help coordinate the switch between them.',
+    job: 'The default-mode network supports internally focused thought, memory, and imagination. Task-control networks support externally directed work, while salience systems help decide which network should take priority. The useful question is not whether one network is active, but whether switching and coordination match the task.',
     research:
       'Studies have reported altered communication between default-mode and control networks in ADHD. One proposed explanation is that internally directed activity may intrude during tasks that require sustained external attention.',
     daily:
@@ -81,56 +79,6 @@ const brainSystems = [
   },
 ] as const;
 
-const executiveFunctions = [
-  {
-    id: 'inhibition',
-    icon: ShieldCheck,
-    title: 'Response inhibition',
-    brainJob: 'Pause a response long enough to consider the goal, rule, or consequence.',
-    daily: 'Interrupting, clicking before reading, acting on the first idea, or struggling to stop an activity once engaged.',
-    nuance: 'Impulsivity is affected by context, emotion, fatigue, reward, and learned habits—not only by one brain region.',
-  },
-  {
-    id: 'working-memory',
-    icon: Layers3,
-    title: 'Working memory',
-    brainJob: 'Keep information temporarily active while using it to guide the next step.',
-    daily: 'Losing part of an instruction, forgetting what you were about to do, or abandoning a task after an interruption.',
-    nuance: 'This is different from long-term memory. The information may be known but unavailable at the moment it is needed.',
-  },
-  {
-    id: 'planning',
-    icon: SlidersHorizontal,
-    title: 'Planning and sequencing',
-    brainJob: 'Turn a broad goal into ordered steps, estimate resources, and monitor progress.',
-    daily: 'A project feels like one undifferentiated block; important steps appear only after something goes wrong.',
-    nuance: 'A person may plan well for an interesting, familiar task and struggle with a vague or delayed one.',
-  },
-  {
-    id: 'sustained',
-    icon: Gauge,
-    title: 'Sustained attention',
-    brainJob: 'Maintain the task goal and respond consistently over time.',
-    daily: 'Performance fades during repetitive work, errors cluster late in a task, or attention varies sharply from moment to moment.',
-    nuance: 'ADHD is not a total inability to focus. The consistency and regulation of attention are often more informative than the maximum capacity.',
-  },
-  {
-    id: 'switching',
-    icon: RefreshCw,
-    title: 'Cognitive flexibility',
-    brainJob: 'Disengage from one rule or task, update the goal, and activate a new response set.',
-    daily: 'Transitions feel disproportionately difficult, or the brain keeps following the old task after priorities change.',
-    nuance: 'Switching costs everyone mental effort. ADHD may make the cost more visible, especially without cues or preparation.',
-  },
-  {
-    id: 'time',
-    icon: Clock3,
-    title: 'Time and future action',
-    brainJob: 'Estimate duration, represent future consequences, and remember to act when a cue occurs later.',
-    daily: 'Underestimating how long preparation takes, noticing time only when it becomes urgent, or forgetting an intention when it is out of sight.',
-    nuance: '“Time blindness” is a useful everyday phrase, but it is not a formal diagnostic criterion or one single scientific mechanism.',
-  },
-] as const;
 
 const chemicalSystems = [
   {
@@ -138,26 +86,34 @@ const chemicalSystems = [
     name: 'Dopamine',
     accent: '#5b6f96',
     overview:
-      'Dopamine is a neuromodulator: instead of carrying one complete thought from one cell to another, it changes how strongly particular circuits respond, learn, and select an action.',
-    function:
-      'In frontal-striatal circuits, dopamine contributes to reward learning, effort and value estimates, action selection, movement, and the ability to keep goal-relevant information active.',
-    relevance:
-      'Dopamine-related signalling is one part of ADHD neurobiology. It may help explain why immediate feedback, visible progress, novelty, or urgency can change how strongly a task guides behaviour.',
+      'Dopamine is a neuromodulator. It changes how strongly networks respond to information and how the brain learns from outcomes; it is not a single “motivation chemical” and ADHD is not explained by a simple global dopamine shortage.',
+    role:
+      'In frontal and striatal circuits, dopamine contributes to action selection, reward prediction, learning from feedback, movement, effort allocation and the stability of goal-relevant information. Different dopamine receptors and pathways can have different effects, so the useful question is how dopamine is regulated in a particular circuit rather than whether the whole brain has “too little.”',
+    adhd:
+      'Dopamine is clearly relevant to ADHD, but the evidence does not support one universal dopamine abnormality in every person. Research has reported differences in dopamine transporters, receptors, synthesis, release and reward-related signalling, while other studies do not find the same pattern. A 2024 review concluded that altered dopamine regulation remains plausible but that the classic simple “low dopamine” hypothesis is too narrow.',
+    daily:
+      'Reward-related circuits help explain why immediate feedback, visible progress, novelty or urgency may make an action easier to start or sustain, while a distant payoff may exert less influence in the present moment. That is a possible mechanism, not a statement that a person does not value long-term goals.',
+    medication:
+      'Stimulant medications increase catecholamine signalling, including dopamine, in relevant circuits. Their clinical effect is not the same as “adding motivation”; they can improve the conditions under which attention, inhibition and goal-directed behaviour are regulated.',
     caution:
-      'ADHD is not a global dopamine shortage, and dopamine is not a “motivation chemical” that can be measured to confirm a diagnosis. Its effects depend on the circuit, receptor, timing, and current state.',
+      'There is no routine dopamine test that diagnoses ADHD. Dopamine findings are group-level research results and vary by brain region, receptor, age, medication history and study method.',
   },
   {
     id: 'norepinephrine',
     name: 'Norepinephrine',
     accent: '#477f72',
     overview:
-      'Norepinephrine helps regulate alertness and the signal-to-noise balance in prefrontal networks. It influences whether task-relevant information is strong enough to guide attention and behaviour.',
-    function:
-      'Within a useful range, norepinephrine acting in the prefrontal cortex supports working memory, sustained attention, response inhibition, and the stability of goal-related network activity.',
-    relevance:
-      'This helps explain why attention and control can change with alertness, fatigue, stress, and medication. The same task can be easier when the brain is alert enough but not overloaded.',
+      'Norepinephrine is another neuromodulator that is especially important for alertness and prefrontal control. It helps task-relevant signals stand out from competing activity and supports the stability of working-memory representations.',
+    role:
+      'In the prefrontal cortex, norepinephrine helps regulate attention, working memory and response control. Its effects depend strongly on receptor type and arousal level: an appropriate range can strengthen useful network activity, while very low alertness or very high stress can make deliberate control less reliable.',
+    adhd:
+      'ADHD research has implicated norepinephrine transmission and attention networks, although the evidence is smaller than the dopamine literature and does not define one universal abnormality. The important point is that dopamine and norepinephrine interact in frontal control systems rather than operating as two separate switches.',
+    daily:
+      'This helps explain why fatigue, stress and arousal can change how consistently a person can hold instructions in mind, resist a distraction or return attention to a goal. It does not mean that every fluctuation in alertness is an ADHD symptom.',
+    medication:
+      'Several ADHD medications influence norepinephrine signalling. Stimulants affect catecholamine availability, atomoxetine primarily blocks norepinephrine reuptake, and alpha-2 agonists act on adrenergic receptors. Different mechanisms can improve overlapping functions without proving that ADHD is caused by a single chemical deficit.',
     caution:
-      'More norepinephrine is not automatically better. Too little alertness can weaken task signals, while very high stress or arousal can also disrupt prefrontal control.',
+      'More norepinephrine is not automatically better. High stress can impair prefrontal function, and medication effects depend on dose, receptor activity, individual biology and clinical context.',
   },
 ] as const;
 
@@ -248,8 +204,8 @@ function ChemicalSignalExplorer() {
   const active = chemicalSystems[selected];
 
   return (
-    <div className="rounded-3xl border border-[#4f7659]/15 bg-white p-6 shadow-sm md:p-8">
-      <div className="flex flex-wrap gap-3" role="tablist" aria-label="Chemical messenger explorer">
+    <div className="overflow-hidden rounded-3xl border border-[#4f7659]/15 bg-white shadow-sm">
+      <div className="flex border-b border-sage-green/10 bg-warm-cream/50 p-2" role="tablist" aria-label="Chemical messenger explorer">
         {chemicalSystems.map((item, index) => (
           <button
             key={item.id}
@@ -257,12 +213,8 @@ function ChemicalSignalExplorer() {
             role="tab"
             aria-selected={selected === index}
             onClick={() => setSelected(index)}
-            className={`rounded-full border px-5 py-2.5 font-sans font-bold transition ${
-              selected === index
-                ? 'border-transparent text-white shadow-sm'
-                : 'border-[#4f7659]/20 bg-[#fbf7ed] text-foreground hover:border-[#4f7659]/40'
-            }`}
-            style={selected === index ? { backgroundColor: item.accent } : undefined}
+            className="flex-1 rounded-xl px-4 py-3 text-sm font-bold transition sm:text-base"
+            style={selected === index ? { backgroundColor: item.accent, color: 'white', boxShadow: `0 6px 18px ${item.accent}25` } : { color: '#4b514d' }}
           >
             {item.name}
           </button>
@@ -270,197 +222,49 @@ function ChemicalSignalExplorer() {
       </div>
 
       <AnimatePresence mode="wait">
-        <motion.div
+        <motion.article
           key={active.id}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
-          className="mt-8"
+          className="p-5 sm:p-7 md:p-8"
         >
-          {active.id === 'dopamine' ? (
-            <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
-              <div className="rounded-3xl bg-[#fbf7ed] p-6">
-                <p className="text-sm font-bold text-foreground">Simplified dopamine pathway</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  This diagram shows how dopamine can influence a decision loop. It is not a map of every dopamine pathway in the brain.
-                </p>
-
-                <div className="mt-7 grid gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-stretch">
-                  {[
-                    {
-                      title: 'Cue or goal',
-                      text: 'A task, possible reward, rule, or reminder becomes available.',
-                    },
-                    {
-                      title: 'Value and action',
-                      text: 'Frontal-striatal circuits weigh effort, expected outcome, and which action to select.',
-                    },
-                    {
-                      title: 'Feedback and learning',
-                      text: 'The result updates what the brain expects and which actions are likely next time.',
-                    },
-                  ].map((item, index) => (
-                    <div key={item.title} className="contents">
-                      <article className="rounded-2xl border border-[#5b6f96]/20 bg-white p-4 text-center">
-                        <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[#5b6f96]/10 font-bold text-[#5b6f96]">
-                          {index + 1}
-                        </span>
-                        <h4 className="mt-3 font-bold text-foreground">{item.title}</h4>
-                        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{item.text}</p>
-                      </article>
-                      {index < 2 && <ArrowRight className="mx-auto hidden h-5 w-5 self-center text-[#5b6f96]/50 sm:block" />}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-5 rounded-2xl border border-[#5b6f96]/20 bg-white p-5">
-                  <p className="font-bold text-foreground">What dopamine changes</p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    Dopamine changes the strength and learning of signals inside these circuits. It does not carry a complete instruction such as “start the task.”
-                  </p>
-                </div>
-              </div>
-
-              <ChemicalExplanation active={active} />
-            </div>
-          ) : (
-            <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
-              <div className="rounded-3xl bg-[#fbf7ed] p-6">
-                <p className="text-sm font-bold text-foreground">Prefrontal signal strength</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Prefrontal control tends to work best within a useful range of alertness rather than at either extreme.
-                </p>
-
-                <svg viewBox="0 0 360 170" className="mt-4 h-auto w-full" role="img" aria-label="An inverted U curve showing weaker prefrontal control at low and very high arousal and stronger control in a useful middle range">
-                  <line x1="28" y1="142" x2="338" y2="142" stroke="#b9b3a8" strokeWidth="2" />
-                  <line x1="28" y1="142" x2="28" y2="22" stroke="#b9b3a8" strokeWidth="2" />
-                  <path d="M35 133 C90 128, 105 50, 180 35 C255 50, 270 128, 330 133" fill="none" stroke="#477f72" strokeWidth="5" strokeLinecap="round" />
-                  <motion.circle
-                    cx="180"
-                    cy="35"
-                    r="7"
-                    fill="#477f72"
-                    animate={{ r: [6, 9, 6], opacity: [0.8, 1, 0.8] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                  <text x="180" y="18" textAnchor="middle" fontSize="12" fill="#2c332d" fontWeight="700">Useful range</text>
-                  <text x="35" y="162" fontSize="11" fill="#6b6b68">Low alertness</text>
-                  <text x="276" y="162" fontSize="11" fill="#6b6b68">High stress / arousal</text>
-                  <text transform="translate(13 110) rotate(-90)" fontSize="11" fill="#6b6b68">Prefrontal control</text>
-                </svg>
-
-                <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                  {[
-                    ['Too little', 'Task signals may be weak; fatigue and under-arousal can make sustained control harder.'],
-                    ['Useful range', 'Relevant signals are clearer and working memory can guide behaviour more reliably.'],
-                    ['Too much', 'High stress can add noise and reduce flexible, deliberate control.'],
-                  ].map(([title, text], index) => (
-                    <article key={title} className={`rounded-2xl border p-4 ${index === 1 ? 'border-[#477f72]/35 bg-[#477f72]/[0.08]' : 'border-[#477f72]/15 bg-white'}`}>
-                      <h4 className="font-bold text-foreground">{title}</h4>
-                      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{text}</p>
-                    </article>
-                  ))}
-                </div>
-              </div>
-
-              <ChemicalExplanation active={active} />
-            </div>
-          )}
-
-          <div className="mt-7 rounded-2xl border border-[#4f7659]/15 bg-[#4f7659]/[0.05] p-5">
-            <p className="font-bold text-foreground">How the two systems work together</p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Dopamine and norepinephrine both modulate prefrontal and connected circuits, but they act through different receptors and pathways. Their effects overlap in attention, working memory, motivation, and behavioural control; neither chemical explains ADHD by itself.
-            </p>
+          <div className="max-w-3xl">
+            <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: active.accent }}>Neurotransmitter / neuromodulator</p>
+            <h3 className="mt-2 font-serif text-3xl font-bold text-foreground">{active.name}</h3>
+            <p className="mt-4 text-lg leading-relaxed text-foreground">{active.overview}</p>
           </div>
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-}
 
-function ChemicalExplanation({ active }: { active: (typeof chemicalSystems)[number] }) {
-  return (
-    <div>
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#4f7659]">Chemical messenger</p>
-      <h3 className="mt-2 font-serif text-3xl font-bold text-foreground">{active.name}</h3>
-      <p className="mt-4 text-lg leading-relaxed text-foreground">{active.overview}</p>
-      <div className="mt-6 space-y-4">
-        {[
-          ['Main functions', active.function],
-          ['Relevance to ADHD', active.relevance],
-          ['Important limit', active.caution],
-        ].map(([label, text]) => (
-          <div key={label} className="border-l-2 pl-4" style={{ borderColor: `${active.accent}55` }}>
-            <p className="font-bold text-foreground">{label}</p>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{text}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ExecutiveFunctionExplorer() {
-  const [selected, setSelected] = useState(0);
-  const active = executiveFunctions[selected];
-  const Icon = active.icon;
-
-  return (
-    <div className="rounded-3xl border border-sage-green/15 bg-white p-6 shadow-sm md:p-8">
-      <div className="flex gap-3 overflow-x-auto pb-3" role="tablist" aria-label="Executive functions">
-        {executiveFunctions.map((item, index) => {
-          const ItemIcon = item.icon;
-          const isActive = selected === index;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              onClick={() => setSelected(index)}
-              className={`flex min-w-44 items-center gap-2 rounded-xl border px-4 py-3 text-left font-sans font-semibold transition ${
-                isActive
-                  ? 'border-sage-green bg-sage-green/[0.08] text-foreground'
-                  : 'border-sage-green/15 bg-warm-cream text-muted-foreground hover:border-sage-green/35'
-              }`}
-            >
-              <ItemIcon className="h-5 w-5 shrink-0 text-sage-green" />
-              {item.title}
-            </button>
-          );
-        })}
-      </div>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={active.id}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.2 }}
-          className="mt-7"
-        >
-          <div className="flex items-center gap-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sage-green/10 text-sage-green">
-              <Icon className="h-6 w-6" />
-            </span>
-            <h3 className="font-serif text-3xl font-bold text-foreground">{active.title}</h3>
-          </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="mt-7 grid gap-4 md:grid-cols-2">
             {[
-              ['The brain’s job', active.brainJob],
-              ['What difficulty may look like', active.daily],
-              ['The important nuance', active.nuance],
-            ].map(([label, text]) => (
-              <article key={label} className="rounded-2xl bg-warm-cream p-5">
-                <p className="font-bold text-foreground">{label}</p>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{text}</p>
-              </article>
+              ['What it normally does', active.role],
+              ['How it connects to ADHD', active.adhd],
+              ['What this can look like in daily life', active.daily],
+              ['Why medication affects it', active.medication],
+            ].map(([title, text]) => (
+              <section key={title} className="rounded-2xl border border-sage-green/10 bg-[#fbf8f0] p-5">
+                <h4 className="font-bold text-foreground">{title}</h4>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+              </section>
             ))}
           </div>
-        </motion.div>
+
+          <div className="mt-5 flex gap-3 rounded-2xl border border-[#a96952]/15 bg-[#a96952]/[0.05] p-5">
+            <Info className="mt-0.5 h-5 w-5 shrink-0 text-[#a96952]" />
+            <div>
+              <p className="font-bold text-foreground">Important limit</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{active.caution}</p>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-sage-green/15 bg-sage-green/[0.05] p-5">
+            <p className="font-bold text-foreground">How dopamine and norepinephrine fit together</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Both systems influence prefrontal and connected networks. Dopamine is particularly important in reward learning, action selection and frontal-striatal signalling; norepinephrine is especially important for alertness and strengthening task-relevant prefrontal signals. Their functions overlap, and neither chemical alone explains ADHD.
+            </p>
+          </div>
+        </motion.article>
       </AnimatePresence>
     </div>
   );
@@ -489,7 +293,7 @@ export default function MeetYourBrain() {
           </p>
         </section>
 
-        <motion.section
+        <motion.section id="research-limits" data-page-label="Research limits"
           className="rounded-2xl border border-sage-green/15 bg-gradient-to-br from-sage-green/[0.08] to-muted-teal/[0.08] p-7"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -506,7 +310,7 @@ export default function MeetYourBrain() {
           </div>
         </motion.section>
 
-        <motion.section initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <motion.section id="brain-map" data-page-label="Brain map" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Interactive map</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Brain regions and connections</h2>
@@ -517,7 +321,7 @@ export default function MeetYourBrain() {
           <BrainNetworkViz />
         </motion.section>
 
-        <section>
+        <section id="brain-systems" data-page-label="Brain systems">
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">From regions to circuits</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Four systems that make the ADHD brain easier to understand</h2>
@@ -528,29 +332,43 @@ export default function MeetYourBrain() {
           <BrainSystemExplorer />
         </section>
 
-        <section>
+        <section id="neurochemistry" data-page-label="Neurochemistry">
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Neurochemistry</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Dopamine and norepinephrine</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              These chemical messengers modulate how strongly brain circuits respond. The two diagrams below show different parts of their roles rather than presenting them as the same signal.
+              Dopamine and norepinephrine influence attention, working memory, reward, arousal and behavioural control through overlapping brain circuits. The key is regulation within specific networks—not a simple “chemical shortage.”
             </p>
           </div>
           <ChemicalSignalExplorer />
         </section>
 
-        <section>
-          <div className="mb-8 max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Executive functions</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Executive functions</h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Executive functions are mental processes used to hold a goal in mind, control a response, organize steps, manage time, sustain attention, and switch tasks. ADHD can affect several of these processes, but the pattern differs between people and situations.
-            </p>
+        <section id="executive-functions" data-page-label="Executive functions">
+          <div className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm md:p-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Executive functions</p>
+                <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">How goals become actions</h2>
+                <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+                  Executive functions are the mental processes used to keep a goal active, hold information in working memory, pause a response, organize steps, estimate time, begin, monitor, switch, and finish. These difficulties are central to many people’s experience of ADHD, but they are not unique to ADHD and they do not appear in the same pattern for everyone.
+                </p>
+              </div>
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-sage-green/10 text-sage-green">
+                <BookOpenCheck className="h-7 w-7" />
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setLocation('/chapter/brain/executive-functions')}
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-sage-green px-5 py-3 font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              Explore executive functions
+              <ArrowRight className="h-4 w-4" />
+            </button>
           </div>
-          <ExecutiveFunctionExplorer />
         </section>
 
-        <section className="rounded-3xl border border-[#4f7659]/15 bg-white p-7 shadow-sm md:p-8">
+        <section id="performance" data-page-label="Why performance varies" className="rounded-3xl border border-[#4f7659]/15 bg-white p-7 shadow-sm md:p-8">
           <div className="flex items-center gap-4">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#4f7659]/10 text-[#4f7659]">
               <Activity className="h-6 w-6" />
@@ -599,7 +417,7 @@ export default function MeetYourBrain() {
           </div>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-2">
+        <section id="emotion-movement" data-page-label="Emotion and movement" className="grid gap-6 lg:grid-cols-2">
           <article className="rounded-2xl border border-sage-green/15 bg-white p-7 shadow-sm">
             <h2 className="font-serif text-3xl font-bold text-foreground">Emotional regulation</h2>
             <p className="mt-4 leading-relaxed text-foreground">
@@ -650,6 +468,18 @@ export default function MeetYourBrain() {
         <SourceList
           sources={[
             {
+              title: 'Inside the ADHD Brain: Structure, Function, and Chemistry',
+              organization: 'Attention Deficit Disorder Association',
+              url: 'https://add.org/adhd-brain/',
+              note: 'Plain-language overview of frontal systems, brain networks, dopamine, norepinephrine, and executive dysfunction.',
+            },
+            {
+              title: 'The dopamine hypothesis for ADHD: An evaluation of evidence',
+              organization: 'Frontiers in Psychiatry',
+              url: 'https://www.frontiersin.org/journals/psychiatry/articles/10.3389/fpsyt.2024.1492126/full',
+              note: 'Critical review explaining why ADHD should not be reduced to a simple global dopamine deficiency.',
+            },
+            {
               title: 'Attention-Deficit/Hyperactivity Disorder: What You Need to Know',
               organization: 'National Institute of Mental Health',
               url: 'https://www.nimh.nih.gov/health/publications/attention-deficit-hyperactivity-disorder-what-you-need-to-know',
@@ -673,6 +503,18 @@ export default function MeetYourBrain() {
               title: 'Attention Deficit Hyperactivity Disorder',
               organization: 'MedlinePlus, U.S. National Library of Medicine',
               url: 'https://medlineplus.gov/attentiondeficithyperactivitydisorder.html',
+            },
+            {
+              title: 'Executive function deficits in ADHD and autism spectrum disorder',
+              organization: 'Nature Reviews Psychology / PubMed Central',
+              url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11485171/',
+              note: '2024 critical review of executive-function components, heterogeneity, and measurement limitations.',
+            },
+            {
+              title: 'ADHD Neuroscience 101',
+              organization: 'ADDitude',
+              url: 'https://www.additudemag.com/adhd-neuroscience-101/',
+              note: 'Plain-language secondary overview; the scientific claims on this page are cross-checked against the primary and government sources listed here.',
             },
             {
               title: 'Catecholamine influences on prefrontal cortical function',

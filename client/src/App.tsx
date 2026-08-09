@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Welcome from "./pages/chapters/Welcome";
 import WhyItFeelsLikeThis from "./pages/chapters/WhyItFeelsLikeThis";
 import MeetYourBrain from "./pages/chapters/MeetYourBrain";
+import ExecutiveFunctions from "./pages/chapters/ExecutiveFunctions";
 import WhatIsADHD from "./pages/chapters/WhatIsADHD";
 import WhatHelps from "./pages/chapters/WhatHelps";
 import Medication from "./pages/chapters/Medication";
@@ -38,6 +39,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/chapter/welcome"} component={Welcome} />
       <Route path={"/chapter/why-feels"} component={WhyItFeelsLikeThis} />
+      <Route path={"/chapter/brain/executive-functions"} component={ExecutiveFunctions} />
       <Route path={"/chapter/brain"} component={MeetYourBrain} />
       <Route path={"/chapter/what-is"} component={WhatIsADHD} />
       <Route path={"/chapter/what-helps"} component={WhatHelps} />
