@@ -1,9 +1,10 @@
-import { Toaster } from "@/components/ui/sonner";
+﻿import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
 import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
+import RouteSEO from "./components/RouteSEO";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Welcome from "./pages/chapters/Welcome";
@@ -79,6 +80,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
+          <RouteSEO />
           <RouteScrollRestoration />
           <Router />
         </TooltipProvider>
@@ -88,3 +90,4 @@ function App() {
 }
 
 export default App;
+

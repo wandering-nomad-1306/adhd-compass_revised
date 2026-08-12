@@ -1,8 +1,5 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @import "tw-animate-css";
-
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=Roboto+Flex:opsz,wght@8..144,300..900&display=swap');
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -251,3 +248,4 @@
     height: auto;
   }
 }
+
