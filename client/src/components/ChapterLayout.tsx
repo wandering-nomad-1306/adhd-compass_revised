@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ReactNode } from 'react';
 import ChapterNavigator from '@/components/ChapterNavigator';
 import PageDock from '@/components/PageDock';
+import SiteFooter from '@/components/SiteFooter';
 
 interface ChapterLayoutProps {
   title: string;
@@ -128,6 +129,7 @@ export default function ChapterLayout({
           </button>
         </div>
       </motion.footer>
+      <SiteFooter />
     </div>
   );
 }

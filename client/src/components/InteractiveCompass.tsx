@@ -28,10 +28,28 @@ const compassPoints: CompassPoint[] = [
     id: 'welcome',
     label: 'Welcome',
     shortLabel: 'Welcome',
-    angle: 0,
+    angle: 270,
     accent: '#4f7659',
     accentRgb: '79, 118, 89',
     description: 'Start here',
+  },
+  {
+    id: 'why-feels',
+    label: 'Why It Feels Like This',
+    shortLabel: 'Your\nExperiences',
+    angle: 315,
+    accent: '#7e8249',
+    accentRgb: '126, 130, 73',
+    description: 'Common experiences',
+  },
+  {
+    id: 'what-is',
+    label: 'What is ADHD?',
+    shortLabel: 'What is\nADHD?',
+    angle: 0,
+    accent: '#a96952',
+    accentRgb: '169, 105, 82',
+    description: 'The diagnosis',
   },
   {
     id: 'brain',
@@ -43,22 +61,22 @@ const compassPoints: CompassPoint[] = [
     description: 'The neuroscience',
   },
   {
-    id: 'why-feels',
-    label: 'Why It Feels Like This',
-    shortLabel: 'Your\nExperiences',
+    id: 'what-helps',
+    label: 'What Actually Helps',
+    shortLabel: 'What\nHelps',
     angle: 90,
-    accent: '#7e8249',
-    accentRgb: '126, 130, 73',
-    description: 'Common experiences',
+    accent: '#925e76',
+    accentRgb: '146, 94, 118',
+    description: 'Strategies & support',
   },
   {
-    id: 'what-is',
-    label: 'What is ADHD?',
-    shortLabel: 'What is\nADHD?',
+    id: 'medication',
+    label: 'Medication',
+    shortLabel: 'Medication',
     angle: 135,
-    accent: '#a96952',
-    accentRgb: '169, 105, 82',
-    description: 'The diagnosis',
+    accent: '#4e72a2',
+    accentRgb: '78, 114, 162',
+    description: 'How it works',
   },
   {
     id: 'getting-diagnosed',
@@ -70,31 +88,13 @@ const compassPoints: CompassPoint[] = [
     description: 'The process',
   },
   {
-    id: 'what-helps',
-    label: 'What Helps',
-    shortLabel: 'What\nHelps',
-    angle: 225,
-    accent: '#925e76',
-    accentRgb: '146, 94, 118',
-    description: 'Strategies & support',
-  },
-  {
     id: 'accommodations',
     label: 'Accommodations',
     shortLabel: 'Accommo-\ndations',
-    angle: 270,
+    angle: 225,
     accent: '#477f72',
     accentRgb: '71, 127, 114',
     description: 'Getting support',
-  },
-  {
-    id: 'medication',
-    label: 'Medication',
-    shortLabel: 'Medication',
-    angle: 315,
-    accent: '#4e72a2',
-    accentRgb: '78, 114, 162',
-    description: 'How it works',
   },
 ];
 
@@ -145,10 +145,11 @@ function closestSection(angle: number) {
   ).index;
 }
 
-export default function InteractiveCompass({ onNavigate }: { onNavigate: (id: string) => void }) {
+export default function InteractiveCompass({ onNavigate, selectedId }: { onNavigate: (id: string) => void; selectedId?: string }) {
   const reducedMotion = useReducedMotion();
+  const selectedIndex = Math.max(0, compassPoints.findIndex((point) => point.id === selectedId));
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [cursorSection, setCursorSection] = useState(0);
+  const [cursorSection, setCursorSection] = useState(selectedIndex);
   const compassRef = useRef<HTMLDivElement>(null);
   const needleRef = useRef<HTMLDivElement>(null);
   const starRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -156,7 +157,7 @@ export default function InteractiveCompass({ onNavigate }: { onNavigate: (id: st
   const pointerPosition = useRef({ clientX: 0, clientY: 0 });
   const pointerInside = useRef(false);
   const hoveredIndexRef = useRef<number | null>(null);
-  const restingSection = useRef(0);
+  const restingSection = useRef(selectedIndex);
 
   const activeSection = hoveredIndex ?? cursorSection;
   const starGroups = useMemo(
@@ -199,6 +200,19 @@ export default function InteractiveCompass({ onNavigate }: { onNavigate: (id: st
   useEffect(() => {
     paintStars(activeSection);
   }, [activeSection, paintStars]);
+
+  useEffect(() => {
+    restingSection.current = selectedIndex;
+    setCursorSection(selectedIndex);
+    paintStars(selectedIndex);
+
+    if (needleRef.current) {
+      needleRef.current.style.transition = reducedMotion
+        ? 'none'
+        : 'transform 420ms cubic-bezier(0.22, 1, 0.36, 1)';
+      needleRef.current.style.transform = `rotate(${compassPoints[selectedIndex].angle + 90}deg)`;
+    }
+  }, [paintStars, reducedMotion, selectedIndex]);
 
   useEffect(() => {
     return () => {

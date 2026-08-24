@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 import InteractiveCompass from '@/components/InteractiveCompass';
 import { useEffect, useState } from 'react';
+import SiteFooter from '@/components/SiteFooter';
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -167,8 +168,8 @@ export default function Home() {
               },
               {
                 icon: '🛠️',
-                title: 'Accommodations',
-                description: 'Evidence-based strategies, accommodations, and support options tailored to how your brain works.',
+                title: 'What Helps',
+                description: 'Practical, evidence-informed strategies for reducing everyday difficulties and making tasks easier to manage.',
               },
             ].map((card, index) => (
               <motion.div
@@ -208,6 +209,7 @@ export default function Home() {
           </p>
         </div>
       </motion.section>
+      <SiteFooter />
     </div>
   );
 }

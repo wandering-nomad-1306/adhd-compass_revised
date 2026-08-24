@@ -16,18 +16,18 @@ const CHAPTER_PATHS: Record<string, string> = {
 };
 
 const MINI_POINTS = [
-  { angle: 0, accent: '#4f7659' },
-  { angle: 45, accent: '#5b6f96' },
-  { angle: 90, accent: '#7e8249' },
-  { angle: 135, accent: '#a96952' },
-  { angle: 180, accent: '#9a7648' },
-  { angle: 225, accent: '#925e76' },
-  { angle: 270, accent: '#477f72' },
-  { angle: 315, accent: '#4e72a2' },
+  { id: 'welcome', angle: 270, accent: '#4f7659' },
+  { id: 'why-feels', angle: 315, accent: '#7e8249' },
+  { id: 'what-is', angle: 0, accent: '#a96952' },
+  { id: 'brain', angle: 45, accent: '#5b6f96' },
+  { id: 'what-helps', angle: 90, accent: '#925e76' },
+  { id: 'medication', angle: 135, accent: '#4e72a2' },
+  { id: 'getting-diagnosed', angle: 180, accent: '#9a7648' },
+  { id: 'accommodations', angle: 225, accent: '#477f72' },
 ];
 
 /** A compact visual copy of the homepage compass used as the persistent opener. */
-function MiniCompass() {
+function MiniCompass({ selectedId }: { selectedId: string }) {
   return (
     <span className="relative block h-12 w-12" aria-hidden="true">
       <span className="absolute inset-[3px] rounded-full border border-sage-green/25 bg-[#fffdf8] shadow-[inset_0_0_12px_rgba(79,118,89,0.07)]" />
@@ -44,19 +44,31 @@ function MiniCompass() {
           <span
             key={point.angle}
             className="absolute h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border bg-white shadow-[0_2px_5px_rgba(40,45,40,0.08)]"
-            style={{ left: x, top: y, borderColor: point.accent }}
+            style={{
+              left: x,
+              top: y,
+              borderColor: point.accent,
+              backgroundColor: point.id === selectedId ? point.accent : '#ffffff',
+              boxShadow: point.id === selectedId ? `0 0 0 3px ${point.accent}20, 0 0 8px ${point.accent}55` : undefined,
+            }}
           />
         );
       })}
 
-      <svg
-        className="absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 -rotate-[28deg] text-[#231d17]"
-        viewBox="0 0 120 120"
-        fill="none"
-      >
-        <path d="M60 10 L65 50 L60 55 L55 50 Z" fill="currentColor" />
-        <circle cx="60" cy="60" r="7" fill="currentColor" />
-      </svg>
+      <span className="absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2">
+        <svg
+          className="h-9 w-9 text-[#231d17]"
+          style={{
+            transform: `rotate(${(MINI_POINTS.find((point) => point.id === selectedId)?.angle ?? 270) + 90}deg)`,
+            transformOrigin: '50% 50%',
+          }}
+          viewBox="0 0 120 120"
+          fill="none"
+        >
+          <path d="M60 9 L66 49 L60 56 L54 49 Z" fill="currentColor" />
+          <circle cx="60" cy="60" r="7.5" fill="currentColor" />
+        </svg>
+      </span>
     </span>
   );
 }
@@ -66,6 +78,9 @@ export default function ChapterNavigator() {
   const [open, setOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const reducedMotion = useReducedMotion();
+  const selectedId = location.startsWith('/chapter/brain')
+    ? 'brain'
+    : Object.entries(CHAPTER_PATHS).find(([, path]) => location === path)?.[0] ?? 'welcome';
 
   useEffect(() => {
     const openNavigator = () => setOpen(true);
@@ -117,7 +132,7 @@ export default function ChapterNavigator() {
         aria-expanded={open}
         title="Open ADHD Compass"
       >
-        <MiniCompass />
+        <MiniCompass selectedId={selectedId} />
       </button>
 
       <AnimatePresence>
@@ -169,7 +184,7 @@ export default function ChapterNavigator() {
                 </button>
               </div>
 
-              <InteractiveCompass onNavigate={navigateToChapter} />
+              <InteractiveCompass onNavigate={navigateToChapter} selectedId={selectedId} />
             </motion.section>
           </motion.div>
         )}

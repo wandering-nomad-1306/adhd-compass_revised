@@ -15,6 +15,7 @@ import WhatIsADHD from "./pages/chapters/WhatIsADHD";
 import WhatHelps from "./pages/chapters/WhatHelps";
 import Medication from "./pages/chapters/Medication";
 import InProgress from "./pages/chapters/InProgress";
+import About from "./pages/About";
 
 function RouteScrollRestoration() {
   const [location] = useLocation();
@@ -38,6 +39,7 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/about"} component={About} />
       <Route path={"/chapter/welcome"} component={Welcome} />
       <Route path={"/chapter/why-feels"} component={WhyItFeelsLikeThis} />
       <Route path={"/chapter/brain/executive-functions"} component={ExecutiveFunctions} />
@@ -90,4 +92,5 @@ function App() {
 }
 
 export default App;
+
 

@@ -48,7 +48,7 @@ function MythExplorer() {
 
   return (
     <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-      <div className="space-y-3" role="tablist" aria-label="Common ADHD myths">
+      <div className="grid grid-cols-2 gap-2 sm:block sm:space-y-3" role="tablist" aria-label="Common ADHD myths">
         {myths.map((myth, index) => {
           const active = index === selected;
           return (
@@ -58,15 +58,15 @@ function MythExplorer() {
               role="tab"
               aria-selected={active}
               onClick={() => setSelected(index)}
-              className={`w-full rounded-xl border p-4 text-left transition-all ${
+              className={`flex min-h-14 w-full items-center justify-center rounded-xl border p-3 text-center transition-all sm:min-h-0 sm:block sm:p-4 sm:text-left ${
                 active
                   ? 'border-sage-green bg-sage-green/[0.08] shadow-sm'
                   : 'border-sage-green/15 bg-white hover:border-sage-green/35'
               }`}
             >
-              <span className="flex items-center gap-3">
-                <CircleHelp className={`h-5 w-5 shrink-0 ${active ? 'text-sage-green' : 'text-muted-foreground'}`} />
-                <span className="font-semibold text-foreground">{myth.statement}</span>
+              <span className="flex items-center justify-center gap-3 sm:justify-start">
+                <CircleHelp className={`hidden h-5 w-5 shrink-0 sm:block ${active ? 'text-sage-green' : 'text-muted-foreground'}`} />
+                <span className="text-xs font-semibold leading-snug text-foreground sm:text-base">{myth.statement}</span>
               </span>
             </button>
           );
@@ -80,7 +80,7 @@ function MythExplorer() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.22 }}
-          className="flex min-h-64 flex-col justify-center rounded-2xl border border-sage-green/15 bg-white p-7 shadow-sm"
+          className="flex min-h-0 flex-col justify-center rounded-2xl border border-sage-green/15 bg-white p-5 shadow-sm sm:min-h-64 sm:p-7"
         >
           <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-sage-green">
             <CheckCircle2 className="h-5 w-5" /> Evidence-based answer
@@ -150,9 +150,9 @@ export default function WhatIsADHD() {
         <section>
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Explore the pattern</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Three types of ADHD</h2>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Three ADHD presentations</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              The presentation describes which symptom group is strongest at the time. It can change as a person grows or as life demands change.
+              ADHD is described using three <strong className="font-semibold text-foreground">presentations</strong>: predominantly inattentive, predominantly hyperactive-impulsive, and combined. The presentation reflects which symptom criteria have been met over the previous six months, so it can change over time as the balance of symptoms changes. Context can affect how noticeable symptoms are, but ADHD still requires symptoms in more than one setting.
             </p>
           </div>
           <ADHDPresentationExplorer />
@@ -165,11 +165,12 @@ export default function WhatIsADHD() {
           </div>
           <div className="overflow-hidden rounded-2xl border border-sage-green/15 bg-white shadow-sm">
             {[
-              ['Pattern', 'Symptoms form an ongoing pattern rather than appearing only during a short period of stress or sleep loss.'],
+              ['Duration', 'Symptoms persist for at least 6 months to a degree that is inconsistent with developmental level and interferes with functioning.'],
+              ['Symptom threshold', 'Children through age 16 need at least 6 symptoms in the relevant symptom group; people age 17 and older need 5. Combined presentation requires meeting the threshold in both symptom groups.'],
               ['History', 'Several symptoms were present before age 12, even when the diagnosis happens much later.'],
               ['Settings', 'The pattern shows up in at least two important settings, such as home, school, work, or relationships.'],
               ['Impact', 'Symptoms interfere with or reduce the quality of social, academic, or occupational functioning.'],
-              ['Context', 'A careful evaluation considers sleep, anxiety, depression, learning differences, medical conditions, substances, and other explanations.'],
+              ['Context', 'The symptoms are not better explained by another mental disorder or by another condition that can produce similar difficulties. A careful evaluation considers sleep, anxiety, depression, learning differences, medical conditions, substances, and other explanations.'],
             ].map(([label, text], index) => (
               <div key={label} className="grid gap-2 border-b border-sage-green/10 p-5 last:border-b-0 md:grid-cols-[130px_1fr] md:p-6">
                 <span className="flex items-center gap-2 font-bold text-sage-green">
@@ -266,6 +267,11 @@ export default function WhatIsADHD() {
               title: 'What is ADHD?',
               organization: 'American Psychiatric Association',
               url: 'https://www.psychiatry.org/patients-families/adhd/what-is-adhd',
+            },
+            {
+              title: 'DSM-5 Changes: Attention-Deficit/Hyperactivity Disorder',
+              organization: 'American Psychiatric Association',
+              url: 'https://www.psychiatry.org/File%20Library/Psychiatrists/Practice/DSM/APA_DSM-5-ADHD.pdf',
             },
             {
               title: 'ADHD Resource Center',

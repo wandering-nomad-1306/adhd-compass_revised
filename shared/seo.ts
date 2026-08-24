@@ -19,6 +19,11 @@ export const SEO_BY_PATH: Record<string, SeoConfig> = {
       "A free, evidence-based guide to understanding ADHD, your brain, treatment options, medication, and what to do next.",
   },
 
+  "/about": {
+    title: "About ADHD Compass | Why It Exists & How It Works",
+    description:
+      "Learn why ADHD Compass exists, how its evidence-based information is built, what the site can and cannot do, and how to report corrections.",
+  },
   "/chapter/welcome": {
     title: "I Have ADHD. Now What? | ADHD Compass",
     description:
@@ -75,3 +80,4 @@ export const SEO_BY_PATH: Record<string, SeoConfig> = {
 
   "/404": NOT_FOUND_SEO,
 };
+
