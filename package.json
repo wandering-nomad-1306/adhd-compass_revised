@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "start": "NODE_ENV=production node dist/index.js",
+    "build": "vite build && esbuild scripts/prerender.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/prerender.mjs && node dist/prerender.mjs",
+    "start": "vite preview --host 0.0.0.0 --port 4173",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
     "format": "prettier --write ."
