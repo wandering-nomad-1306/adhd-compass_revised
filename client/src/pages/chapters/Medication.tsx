@@ -10,13 +10,16 @@ import {
   ChevronDown,
   CircleGauge,
   Clock3,
+  Eye,
   HeartPulse,
+  Info,
   Layers3,
   ListChecks,
   Moon,
   Pill,
   Scale,
   ShieldAlert,
+  ShieldCheck,
   Sparkles,
   Stethoscope,
   Target,
@@ -24,7 +27,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useLocation } from 'wouter';
-import ChapterLayout from '@/components/ChapterLayout';
+import ChapterLayoutWide from '@/components/ChapterLayoutWide';
 import MedicationExplorer from '@/components/MedicationExplorer';
 import SourceList from '@/components/SourceList';
 
@@ -33,109 +36,164 @@ const pathways = [
     id: 'stimulant',
     label: 'Stimulants',
     color: '#4e72a2',
-    eyebrow: 'Fastest and most commonly used',
+    eyebrow: 'Fastest-acting & most extensively researched',
     summary:
-      'Stimulants are the best-known and most widely used ADHD medicines. They include two families—methylphenidate and amphetamine—and are available in many short- and long-acting forms.',
+      'Stimulants are the most effective, first-line medications for ADHD across children, teens, and adults. They fall into two distinct medication families—methylphenidate and amphetamine—offered in fast-acting (short-duration) and once-daily (extended-release) formulations.',
     howWorks:
-      'Brain cells communicate using chemical messengers. Stimulants make dopamine and norepinephrine more available, strengthening the signal between cells involved in attention, impulse control, and activity regulation.',
-    onset: 'Often noticeable within 30–60 minutes once the medicine and dose fit.',
-    coverage: 'About 3–6 hours for many immediate-release products and roughly 8–16 hours for many extended-release products.',
+      'Stimulants boost two essential brain signaling chemicals—dopamine (which powers motivation and attention) and norepinephrine (which filters out mental distractions). However, the two stimulant families work through completely different gears:\n\n' +
+      '• Methylphenidates (Ritalin, Concerta, Focalin, Jornay PM) act as a temporary gatekeeper. Normally, brain cells use tiny vacuum pumps (transporters) to suck signaling chemicals out of the communication gap. Methylphenidate temporarily blocks these pumps, allowing your natural chemical signals to linger longer and deliver clear messages.\n\n' +
+      '• Amphetamines (Adderall, Vyvanse, Dexedrine) provide a two-way boost. In addition to blocking the cleanup pumps, they travel inside brain cells and encourage internal storage pouches to release fresh reserves of dopamine and norepinephrine into the communication gap.\n\n' +
+      'Because they operate through different cellular mechanisms, not responding well to one family does NOT mean stimulants won’t work for you. About 40% of people who do not benefit from one family respond smoothly and successfully to the other.',
+    onset: 'Noticeable within 30–60 minutes once an effective therapeutic dose is reached.',
+    coverage: 'About 3–5 hours for immediate-release tablets; 8–14 hours for once-daily extended-release capsules.',
     response:
-      'The AACAP/APA guide reports that about three-quarters of children experience fewer symptoms with a stimulant. CDC currently summarizes response at roughly 70–80% of children.',
-    examples: ['Methylphenidate: Ritalin, Concerta, Focalin, Daytrana, Jornay PM', 'Amphetamine: Adderall, Dexedrine, Vyvanse, Mydayis'],
+      'In landmark global reviews (Cortese et al., Lancet Psychiatry 2018), stimulants showed the highest response rates of any ADHD medication. Approximately 70–80% of children and adults experience substantial, real-world symptom reduction on an optimized stimulant.',
+    examples: [
+      'Methylphenidate family: Ritalin IR, Concerta (smooth osmotic shell), Focalin XR, Daytrana skin patch, Jornay PM (taken at bedtime for morning focus)',
+      'Amphetamine family: Adderall IR/XR (mixed salts), Dexedrine, Vyvanse (lisdexamfetamine prodrug activated in red blood cells)',
+    ],
     usefulWhen: [
-      'A fast, clearly observable effect is useful',
-      'Core inattention, hyperactivity, or impulsivity causes substantial impairment',
-      'A variety of duration and dosage forms is helpful',
+      'A rapid, noticeable improvement is needed for school, work, or driving safety',
+      'Core inattention, hyperactivity, or impulsive decision-making disrupts daily life',
+      'You need flexible coverage options (such as a 4-hour booster or a 12-hour school/workday capsule)',
     ],
     strengths: [
-      'Strongest average symptom effect among ADHD medicines',
-      'Benefit can often be assessed quickly',
-      'Many formulations allow short, school-day, full-day, liquid, chewable, capsule, tablet, or patch options',
-      'A poor response to one stimulant family does not mean the other family will fail',
+      'Highest average effectiveness across all ADHD medication classes in clinical trials',
+      'Benefits can be evaluated on the very first day an effective dose is reached',
+      'Wide variety of delivery formats: swallowable capsules, sprinkle beads, chewables, liquids, and skin patches',
+      'High switching success: trying the alternative stimulant family works for the majority of non-responders',
     ],
     limitations: [
-      'Controlled substances with misuse, diversion, safe-storage, and refill considerations',
-      'Can reduce appetite, delay sleep, or increase pulse and blood pressure',
-      'May worsen anxiety, irritability, tics, or mood symptoms in some people',
-      'Coverage may end too early, last too long, or produce rebound as it wears off',
+      'Schedule II regulated medicines requiring locked storage, monthly refills, and prescriber follow-up',
+      'FDA Universal Boxed Warning regarding risks of misuse, dependency, diversion, and overdose',
+      'Can reduce appetite during active hours, delay evening sleep, or mildly raise heart rate and blood pressure',
+      'Strictly prohibited with MAO inhibitors (mandatory 14-day gap) and in individuals with serious structural heart abnormalities',
     ],
-    commonEffects: ['Lower appetite or weight loss', 'Difficulty falling asleep', 'Headache or stomachache', 'Irritability or moodiness', 'Mild pulse or blood-pressure increase'],
-    monitor: ['Target symptoms and real-life functioning', 'Appetite, weight, and growth in children', 'Sleep and time of last dose', 'Pulse and blood pressure', 'Mood, anxiety, tics, and unusual behavior', 'Storage, adherence, misuse, or diversion'],
+    commonEffects: [
+      'Reduced appetite during active hours',
+      'Trouble falling asleep if taken too late',
+      'Mild headache or temporary stomach discomfort',
+      'Slight increase in pulse (3–6 bpm) and blood pressure (2–4 mmHg)',
+      'Late-afternoon rebound irritability as medication clears',
+    ],
+    monitor: [
+      'Real-world functional gains (completing projects, driving focus, emotional regulation)',
+      'Baseline and routine blood pressure and resting pulse checks',
+      'Appetite, healthy calorie intake, and pediatric growth curves',
+      'Bedtime routines, sleep quality, and dosing schedule',
+      'Emergence of mood swings, irritability, or unusual anxiety',
+      'Secure locked medication storage and refill tracking',
+    ],
     keyPoint:
-      'Methylphenidate and amphetamine work somewhat differently. Someone may respond poorly to one family and very well to the other, so the first unsuccessful trial is not the end of the medication process.',
+      'Methylphenidate (a cleanup blocker) and amphetamine (a cleanup blocker plus active releaser) work through different biological mechanisms. If one family makes you feel jittery, emotionally flat, or ineffective, switching to the other family has a very high success rate.',
   },
   {
     id: 'nonstimulant',
-    label: 'Nonstimulants',
+    label: 'Daily Nonstimulants',
     color: '#925e76',
-    eyebrow: 'Daily treatment that builds gradually',
+    eyebrow: 'Continuous 24-hour steady coverage',
     summary:
-      'The main FDA-approved nonstimulants in this pathway are atomoxetine and viloxazine extended release. They are taken consistently and usually need time at a useful dose before the effect can be judged.',
+      'The primary FDA-approved daily nonstimulants are atomoxetine (Strattera) and viloxazine extended-release (Qelbree). Taken consistently every day, they build steady-state blood levels over several weeks, providing 24-hour symptom coverage without daily peaks, crashes, or rebound.',
     howWorks:
-      'Atomoxetine and viloxazine increase norepinephrine signaling through different mechanisms. The effect develops gradually rather than producing the same-day “on/off” pattern typical of stimulants.',
-    onset: 'Usually measured in weeks, not hours. A single dose does not show whether the medicine will work.',
-    coverage: 'Designed for steady daily coverage rather than a short window of effect.',
+      'Daily nonstimulants work through a steady, non-addictive pathway:\n\n' +
+      '• Selective prefrontal tuning: In the brain’s front executive center (the prefrontal cortex), the norepinephrine cleanup pump naturally cleans up both norepinephrine and dopamine. Atomoxetine and viloxazine slow down this pump, gently raising levels of both focus chemicals right where you need them.\n\n' +
+      '• Zero addiction potential: Unlike stimulants, nonstimulants do NOT trigger rapid dopamine surges in the brain’s pleasure and reward center (the nucleus accumbens). Because of this, they carry zero abuse risk, have no street value, and are regular non-controlled prescriptions.\n\n' +
+      '• Around-the-clock consistency: Because the medication remains active in your system continuously, it covers early mornings before breakfast and late evenings without wearing off.',
+    onset: 'Gradual onset over 2 to 6 weeks, reaching full therapeutic strength at 6 to 8 weeks. Single doses do not show immediate benefit.',
+    coverage: 'Continuous 24-hour steady-state coverage with no daily wear-off or rebound crash.',
     response:
-      'On average, nonstimulants are somewhat less effective than stimulants, but they can be very useful when stimulants do not work, are not tolerated, are not preferred, or do not fit the clinical picture.',
-    examples: ['Atomoxetine (Strattera or generic)', 'Viloxazine extended release (Qelbree)'],
+      'While average response sizes are slightly lower than stimulants in group studies, nonstimulants provide profound relief for many individuals. They are especially valuable when stimulants cause intolerable side effects, when co-occurring anxiety or tic disorders exist, or when non-controlled prescriptions are preferred.',
+    examples: ['Atomoxetine (Strattera or generic)', 'Viloxazine extended-release (Qelbree)'],
     usefulWhen: [
-      'Stimulants are ineffective or cause unacceptable side effects',
-      'A non-controlled medicine is preferred',
-      'Anxiety, tics, medical risk, or substance-misuse concerns affect the decision',
+      'Stimulants cause intolerable side effects (severe appetite loss, sleep loss, palpitations, or mood dips)',
+      'A regular, non-controlled prescription with automatic refills is preferred',
+      'Co-occurring anxiety, emotional dysregulation, tics, or substance misuse risk shapes the care plan',
+      'You need all-day coverage that supports early morning wake-ups and evening family life',
     ],
     strengths: [
-      'Not controlled substances',
-      'Steady all-day treatment without timing an immediate-release and extended-release window',
-      'May have less impact on appetite or sleep for some people',
-      'Can be useful when stimulant response is incomplete or inconsistent',
+      'Non-controlled status: regular prescription refills without special controlled-substance hurdles',
+      'Continuous 24-hour coverage without afternoon crashes or rebound irritability',
+      'Does not aggravate anxiety and often helps soothe emotional reactivity',
+      'Viloxazine is FDA-approved across both children (ages 6+) and adults',
     ],
     limitations: [
-      'Slower onset means the trial requires patience and consistent dosing',
-      'Still has meaningful side effects and drug interactions',
-      'Atomoxetine and viloxazine carry important mood/suicidality warnings',
-      'May not reduce symptoms as strongly as a well-matched stimulant',
+      'Takes 4 to 8 weeks of daily use to evaluate whether the dose is working',
+      'FDA Boxed Warning for increased risk of suicidal thoughts in children, teens, and young adults (requires close monitoring)',
+      'Severe liver enzyme interaction: Viloxazine must NEVER be taken with asthma medication (theophylline) or muscle relaxants (tizanidine)',
+      'Requires a strict 14-day gap before or after taking MAO inhibitor medications',
+      'Common early side effects include daytime sleepiness, nausea, fatigue, and decreased appetite',
     ],
-    commonEffects: ['Tiredness or sleepiness', 'Nausea or stomach discomfort', 'Reduced appetite', 'Headache', 'Insomnia or irritability'],
-    monitor: ['Mood and suicidal thoughts or behavior', 'Appetite and weight', 'Sleep and daytime fatigue', 'Pulse and blood pressure', 'Drug interactions and caffeine with viloxazine', 'Rare liver symptoms with atomoxetine'],
+    commonEffects: [
+      'Daytime sleepiness or fatigue (often improves after initial weeks)',
+      'Nausea or stomach upset (greatly reduced when taken with a substantial meal)',
+      'Mild reductions in appetite or weight',
+      'Mild increases in heart rate and blood pressure',
+      'Occasional adult sexual side effects or urinary hesitancy (atomoxetine)',
+    ],
+    monitor: [
+      'Mood shifts, agitation, or emergence of suicidal thoughts (FDA Boxed Warning)',
+      'Baseline and periodic pulse and blood pressure measurements',
+      'Drug interactions: Viloxazine CYP1A2 interactions (including caffeine sensitivity) and Atomoxetine CYP2D6 metabolism',
+      'Dietary intake, meal timing, and daytime alertness',
+      'Rare liver symptoms with atomoxetine (dark urine, yellowing eyes, severe abdominal pain)',
+    ],
     keyPoint:
-      '“Nonstimulant” does not mean mild, risk-free, or optional to monitor. These medicines have real benefits, real adverse effects, and different timelines for judging success.',
+      '“Nonstimulant” does not mean weak or risk-free. These are potent psychiatric medications that provide continuous 24-hour stability, but they require 4–8 weeks of patient consistency, careful monitoring of mood, and strict attention to drug interactions.',
   },
   {
     id: 'alpha',
-    label: 'Alpha-2 agonists',
+    label: 'Alpha-2 Agonists',
     color: '#9a7648',
-    eyebrow: 'Calming adrenergic signaling',
+    eyebrow: 'Targeted calming for impulses, tics & sleep',
     summary:
-      'Guanfacine extended release and clonidine extended release are nonstimulant alpha-2 agonists. They can be used alone or added to a stimulant and may be especially relevant when sleep, tics, impulsivity, aggression, or behavioral dysregulation are part of the picture.',
+      'Guanfacine extended-release (Intuniv) and clonidine extended-release (Kapvay) are calming medications originally developed for blood pressure. In ADHD, they selectively strengthen executive brain circuits to improve impulse control, emotional reactivity, bedtime hyperarousal, and co-occurring tics.',
     howWorks:
-      'These medicines reduce certain adrenergic signals and strengthen regulation in brain networks involved in attention and impulse control. They were also developed for blood-pressure effects, which explains several of their cautions.',
-    onset: 'Benefit generally builds over days to weeks rather than appearing after one dose.',
-    coverage: 'Guanfacine ER is usually once daily. Clonidine ER is often divided between morning and bedtime after titration.',
+      'Alpha-2 agonists act as noise-canceling filters for executive brain circuits:\n\n' +
+      '• Sealing leaky attention channels: In your prefrontal cortex, brain cells have microscopic doors (ion channels) that let attention signals leak out when you are overwhelmed or under-stimulated. Guanfacine and clonidine activate special control switches (alpha-2A receptors) that seal those leaky doors shut. This strengthens priority signals and tunes out distracting background mental noise.\n\n' +
+      '• Calming without dopamine: They improve frustration tolerance, impulse control, and working memory without stimulating dopamine circuits.\n\n' +
+      '• Blood pressure origins: Because they relax the body’s adrenaline pathways, their most noticeable effects are lowering blood pressure, slowing the pulse, and causing drowsiness. This is also why they must NEVER be stopped abruptly.',
+    onset: 'Benefits build steadily over 2 to 4 weeks; not designed for instant same-day focus.',
+    coverage: 'Guanfacine ER is taken once daily (morning or evening). Clonidine ER is usually taken twice daily, with the larger dose at bedtime.',
     response:
-      'Their average effect on core ADHD symptoms is usually smaller than stimulants, but their different profile can be valuable alone or as an add-on.',
-    examples: ['Guanfacine ER (Intuniv or generic)', 'Clonidine ER (Kapvay or generic)'],
+      'Particularly effective for hyperactive restlessness, impulsive outbursts, emotional volatility, co-occurring motor/vocal tics, and chronic bedtime insomnia. They are frequently combined with daytime stimulants to smooth late-day crashes and cover evening hours.',
+    examples: [
+      'Guanfacine ER (Intuniv or generic) — highly selective for prefrontal alpha-2A focus receptors',
+      'Clonidine ER (Kapvay or generic) — broader action, typically more sedating, excellent for severe sleep latency and tics',
+    ],
     usefulWhen: [
-      'Tics, sleep problems, aggression, or marked impulsivity coexist',
-      'A stimulant helps but does not cover the whole symptom picture',
-      'A non-controlled option is needed and sedation can be managed',
+      'Physical hyperactivity, impulsive conflict, or intense emotional volatility dominates daily life',
+      'Co-occurring motor or vocal tics (Tourette syndrome) make stimulants difficult to use alone',
+      'Severe bedtime restlessness and racing thoughts prevent falling asleep',
+      'An add-on medication is needed to smooth afternoon stimulant crashes and improve evening family life',
     ],
     strengths: [
-      'Not controlled substances',
-      'Approved as monotherapy and as adjunctive treatment to stimulants',
-      'May help with tics, sleep, evening behavior, or hyperarousal in some patients',
-      'Can smooth residual symptoms when a stimulant is otherwise useful',
+      'Non-controlled medications with zero abuse, misuse, or street value',
+      'FDA-approved for children and teens as both stand-alone treatment and add-on therapy with stimulants',
+      'Clinically proven to reduce motor/vocal tics and ease behavioral meltdowns',
+      'Helps calm racing thoughts at night without dependency',
     ],
     limitations: [
-      'Drowsiness and fatigue can be substantial',
-      'Can lower blood pressure and heart rate or cause dizziness',
-      'Missed doses and abrupt stopping can cause rebound hypertension',
-      'The dose must be tapered rather than stopped suddenly',
+      'FDA approval is pediatric (ages 6–17); prescribing in adults with ADHD is clinically common but technically off-label',
+      'Significant daytime drowsiness, sedation, and fatigue (especially during the first month)',
+      'Lowers blood pressure and heart rate; can cause dizziness when standing up quickly',
+      'CRITICAL REBOUND WARNING: Must NEVER be stopped cold turkey. Abruptly missing or stopping doses can cause a dangerous, rapid spike in blood pressure and racing heart rate; requires a gradual medical taper',
     ],
-    commonEffects: ['Drowsiness', 'Fatigue', 'Dizziness', 'Low blood pressure', 'Slow heart rate or dry mouth'],
-    monitor: ['Daytime alertness', 'Blood pressure and pulse', 'Dizziness or fainting', 'Missed doses', 'Medication interactions', 'A gradual taper plan before stopping'],
+    commonEffects: [
+      'Drowsiness and daytime sleepiness',
+      'Fatigue or low physical energy',
+      'Dizziness or lightheadedness when standing up quickly',
+      'Mild drops in resting blood pressure and pulse',
+      'Dry mouth, headache, or mild stomach pain',
+    ],
+    monitor: [
+      'Baseline and routine sitting and standing blood pressure and resting heart rate',
+      'Daytime alertness and safety when driving or doing sports',
+      'Strict adherence: ensuring pills are never skipped or stopped suddenly',
+      'Mandatory slow tapering schedule under prescriber supervision if stopping',
+      'Interactions with other sedatives, allergy medicines, or blood pressure drugs',
+    ],
     keyPoint:
-      'These are not simply “sleep medicines.” Their role is broader, but sedation and cardiovascular effects are central to safe use.',
+      'Alpha-2 agonists are not just mild sleep aids. They directly strengthen impulse control and working memory by sealing leaky prefrontal circuits. However, because they lower blood pressure, avoiding sudden missed doses and tapering off slowly is an absolute medical requirement.',
   },
 ] as const;
 
@@ -178,9 +236,9 @@ function PathwayExplorer() {
               <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: selected.color }}>{selected.eyebrow}</p>
               <h3 className="mt-2 font-serif text-4xl font-bold text-foreground">{selected.label}</h3>
               <p className="mt-5 text-lg leading-relaxed text-foreground">{selected.summary}</p>
-              <div className="mt-6 rounded-2xl bg-warm-cream p-5">
-                <p className="flex items-center gap-2 text-sm font-bold text-foreground"><BrainCircuit className="h-5 w-5" style={{ color: selected.color }} /> How it works</p>
-                <p className="mt-3 text-sm leading-relaxed text-foreground">{selected.howWorks}</p>
+              <div className="mt-6 rounded-2xl bg-warm-cream p-5 sm:p-6 border border-stone-200/60">
+                <p className="flex items-center gap-2 text-base font-bold text-foreground"><BrainCircuit className="h-5 w-5" style={{ color: selected.color }} /> How This Medication Works in the Brain</p>
+                <p className="mt-3 text-[15px] sm:text-base leading-[1.75] text-foreground/90 whitespace-pre-line">{selected.howWorks}</p>
               </div>
             </div>
 
@@ -192,11 +250,11 @@ function PathwayExplorer() {
               ].map(([label, text, Icon]) => {
                 const IconComponent = Icon as typeof Clock3;
                 return (
-                  <div key={label as string} className="rounded-2xl border border-sage-green/10 p-5">
+                  <div key={label as string} className="rounded-2xl border border-stone-200/80 p-5 shadow-2xs">
                     <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.13em] text-muted-foreground">
                       <IconComponent className="h-4 w-4" style={{ color: selected.color }} /> {label as string}
                     </p>
-                    <p className="mt-3 text-sm leading-relaxed text-foreground">{text as string}</p>
+                    <p className="mt-2.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90">{text as string}</p>
                   </div>
                 );
               })}
@@ -204,56 +262,56 @@ function PathwayExplorer() {
           </div>
 
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
-            <div className="rounded-2xl border border-sage-green/10 p-5">
-              <p className="text-sm font-bold" style={{ color: selected.color }}>Examples in this pathway</p>
+            <div className="rounded-2xl border border-stone-200/80 p-5 sm:p-6 shadow-2xs">
+              <p className="text-base font-bold" style={{ color: selected.color }}>Examples in this pathway</p>
               <ul className="mt-4 space-y-3">
-                {selected.examples.map((item) => <li key={item} className="text-sm leading-relaxed text-foreground">{item}</li>)}
+                {selected.examples.map((item) => <li key={item} className="text-[15px] sm:text-base leading-[1.75] text-foreground/90">• {item}</li>)}
               </ul>
             </div>
-            <div className="rounded-2xl border border-sage-green/10 p-5">
-              <p className="text-sm font-bold" style={{ color: selected.color }}>Often considered when</p>
+            <div className="rounded-2xl border border-stone-200/80 p-5 sm:p-6 shadow-2xs">
+              <p className="text-base font-bold" style={{ color: selected.color }}>Often considered when</p>
               <ul className="mt-4 space-y-3">
                 {selected.usefulWhen.map((item) => (
-                  <li key={item} className="flex gap-2 text-sm leading-relaxed text-foreground"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" style={{ color: selected.color }} />{item}</li>
+                  <li key={item} className="flex gap-2.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0" style={{ color: selected.color }} />{item}</li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl border border-sage-green/10 p-5">
-              <p className="text-sm font-bold" style={{ color: selected.color }}>The key idea</p>
-              <p className="mt-4 text-sm leading-relaxed text-foreground">{selected.keyPoint}</p>
+            <div className="rounded-2xl border border-stone-200/80 p-5 sm:p-6 shadow-2xs">
+              <p className="text-base font-bold" style={{ color: selected.color }}>The key idea</p>
+              <p className="mt-4 text-[15px] sm:text-base leading-[1.75] text-foreground/90">{selected.keyPoint}</p>
             </div>
           </div>
 
           <div className="mt-5 grid gap-5 md:grid-cols-2">
-            <div className="rounded-2xl bg-sage-green/[0.07] p-6">
-              <p className="text-sm font-bold text-sage-green">Potential strengths</p>
+            <div className="rounded-2xl bg-sage-green/[0.08] p-6 border border-sage-green/20">
+              <p className="text-base font-bold text-sage-green">Potential strengths</p>
               <ul className="mt-4 space-y-3">
                 {selected.strengths.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm leading-relaxed text-foreground"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-sage-green" />{item}</li>
+                  <li key={item} className="flex gap-3 text-[15px] sm:text-base leading-[1.75] text-foreground/90"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-sage-green" />{item}</li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl bg-[#a96952]/[0.07] p-6">
-              <p className="text-sm font-bold text-[#8f5541]">Limitations and trade-offs</p>
+            <div className="rounded-2xl bg-[#a96952]/[0.08] p-6 border border-[#a96952]/20">
+              <p className="text-base font-bold text-[#8f5541]">Limitations and trade-offs</p>
               <ul className="mt-4 space-y-3">
                 {selected.limitations.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm leading-relaxed text-foreground"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#a96952]" />{item}</li>
+                  <li key={item} className="flex gap-3 text-[15px] sm:text-base leading-[1.75] text-foreground/90"><AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-[#a96952]" />{item}</li>
                 ))}
               </ul>
             </div>
           </div>
 
           <div className="mt-5 grid gap-5 md:grid-cols-2">
-            <div className="rounded-2xl border border-sage-green/10 p-6">
-              <p className="text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">Common effects to know</p>
+            <div className="rounded-2xl border border-stone-200/80 p-6 shadow-2xs">
+              <p className="text-xs font-bold uppercase tracking-[0.15em] text-stone-600">Common effects to know</p>
               <div className="mt-4 flex flex-wrap gap-2">
-                {selected.commonEffects.map((item) => <span key={item} className="rounded-full bg-warm-cream px-3 py-2 text-xs text-foreground">{item}</span>)}
+                {selected.commonEffects.map((item) => <span key={item} className="rounded-full bg-warm-cream px-3.5 py-1.5 text-xs sm:text-sm font-medium text-stone-800">{item}</span>)}
               </div>
             </div>
-            <div className="rounded-2xl border border-sage-green/10 p-6">
-              <p className="text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">What is monitored</p>
-              <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                {selected.monitor.map((item) => <span key={item} className="rounded-xl bg-warm-cream p-3 text-xs leading-relaxed text-foreground">{item}</span>)}
+            <div className="rounded-2xl border border-stone-200/80 p-6 shadow-2xs">
+              <p className="text-xs font-bold uppercase tracking-[0.15em] text-stone-600">What is monitored</p>
+              <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+                {selected.monitor.map((item) => <span key={item} className="rounded-xl bg-warm-cream p-3 text-xs sm:text-sm leading-relaxed text-stone-800 font-medium">{item}</span>)}
               </div>
             </div>
           </div>
@@ -272,32 +330,32 @@ const sideEffectGroups = [
       {
         issue: 'Lower appetite or weight loss',
         notice: 'Meals may be smaller while the medicine is active; weight can fall early in treatment.',
-        response: 'Track weight and growth. The guide suggests giving the stimulant with meals and concentrating nutritious calories when appetite is better, often later in the day. Do not force food.',
-        urgency: 'Routine discussion unless weight loss is substantial, growth falters, or eating becomes unsafe.',
+        response: 'Track weight and growth. Giving the stimulant with or after meals and concentrating nutritious calories when appetite rebounds (early morning and late evening) helps maintain growth velocity. Do not force meals.',
+        urgency: 'Routine discussion unless weight loss is substantial, growth velocity falters, or eating becomes unsafe.',
       },
       {
-        issue: 'Difficulty falling asleep',
-        notice: 'The medicine may last too late, or ADHD-related sleep problems may already be present.',
-        response: 'Strengthen sleep routines, avoid caffeine, review naps and screens, move the dose earlier, or discuss a shorter-acting preparation or removal of a late dose.',
-        urgency: 'Contact the prescriber if sleep loss is persistent or causing daytime impairment.',
+        issue: 'Difficulty falling asleep (insomnia)',
+        notice: 'The medicine may last too late into the evening, or pre-existing ADHD sleep delay may be unmasked.',
+        response: 'Strengthen sleep hygiene, eliminate evening screens, avoid caffeine, move the morning dose earlier, or discuss switching to an earlier-wearing formulation or eliminating an afternoon booster.',
+        urgency: 'Contact the prescriber if severe sleep deprivation impairs daytime safety, cognitive function, or school/work attendance.',
       },
       {
-        issue: 'Dizziness or feeling faint',
-        notice: 'Light-headedness, weakness, or near-fainting may reflect hydration, food intake, blood pressure, or another problem.',
-        response: 'The guide advises holding the next dose and contacting the practitioner, checking pulse and blood pressure, fluids, and food.',
-        urgency: 'Urgent assessment for fainting, chest pain, severe shortness of breath, or a concerning heart rhythm.',
+        issue: 'Dizziness, palpitations, or lightheadedness',
+        notice: 'Lightheadedness upon standing, racing pulse, or weakness can reflect dehydration, inadequate caloric intake, or cardiovascular elevation.',
+        response: 'Check hydration and food intake; check pulse and blood pressure sitting and standing. Clinician may adjust dose or evaluate cardiac function.',
+        urgency: 'EMERGENCY assessment if accompanied by chest pain, shortness of breath, unexplained fainting (syncope), or irregular heart rhythm.',
       },
       {
-        issue: 'Irritability, moodiness, or rebound',
-        notice: 'Mood may worsen while the dose is active, as it wears off, or because another mood problem is present.',
-        response: 'Record the timing. The clinician may change dose, timing, formulation, stimulant family, or assess a separate mood condition.',
-        urgency: 'Prompt contact for severe agitation, mania, hallucinations, suicidal behavior, or dangerous aggression.',
+        issue: 'Irritability, rebound moodiness, or emotional lability',
+        notice: 'Mood may dip abruptly as the medication wears off in the late afternoon (rebound phenomenon) or become flattened while active.',
+        response: 'Record the exact time of onset. The clinician may smooth the wearing-off curve by adding a small booster, switching to an alternative release system, or trialing the opposite stimulant family.',
+        urgency: 'Prompt clinical evaluation for acute depressive symptoms, severe agitation, hallucinations, mania, or emergence of suicidal behavior.',
       },
       {
-        issue: 'Growth concerns',
-        notice: 'Some children grow or gain weight more slowly while taking stimulants.',
-        response: 'Measure height and weight regularly—AACAP suggests at least every six months—and discuss nutrition, dose, timing, formulation, or carefully planned medication breaks.',
-        urgency: 'Routine but important follow-up; do not create medication holidays without the prescriber.',
+        issue: 'Pediatric growth velocity attenuation',
+        notice: 'Some children exhibit a temporary modest deceleration in height and weight velocity during continuous stimulant treatment.',
+        response: 'Plot height and weight on standardized CDC/WHO growth charts at least every 6 months. Review nutrition and caloric density. Planned medication pauses should only be undertaken in consultation with the prescriber.',
+        urgency: 'Routine clinical tracking; persistent downward crossing of height percentiles warrants pediatric endocrinology or nutrition review.',
       },
     ],
   },
@@ -307,34 +365,34 @@ const sideEffectGroups = [
     color: '#925e76',
     rows: [
       {
-        issue: 'Tiredness or sleepiness',
-        notice: 'Often most noticeable when treatment begins or after a dose increase.',
-        response: 'Start low and increase gradually. Timing or divided dosing may be adjusted for atomoxetine; the prescriber decides.',
-        urgency: 'Contact the prescriber if sedation is severe, unsafe, or persistent.',
+        issue: 'Tiredness, sedation, or daytime sleepiness',
+        notice: 'Often most pronounced during initial titration or after dose escalations.',
+        response: 'Titrate slowly. For atomoxetine, splitting the daily dose into twice-daily administration or shifting the dose to bedtime can reduce daytime sedation.',
+        urgency: 'Contact the prescriber if sedation impairs daytime safety, driving, or basic function.',
       },
       {
-        issue: 'Nausea, stomach pain, or vomiting',
-        notice: 'Gastrointestinal effects can occur early and may improve with time.',
-        response: 'Track timing, food, hydration, and severity. The prescriber may slow titration, change timing, or reconsider the medicine.',
-        urgency: 'Prompt review for persistent vomiting, dehydration, severe abdominal pain, or jaundice.',
+        issue: 'Gastrointestinal distress (nausea, stomach pain, vomiting)',
+        notice: 'Dyspepsia, nausea, or abdominal discomfort can occur, particularly when taken on an empty stomach.',
+        response: 'Administer capsules with a substantial meal. Do not open atomoxetine capsules (powder is an ocular irritant). Viloxazine capsules may be opened and sprinkled on cold soft food per label.',
+        urgency: 'Prompt medical review for persistent intractable vomiting, dehydration, severe abdominal pain, or signs of jaundice.',
       },
       {
-        issue: 'Appetite or sleep changes',
-        notice: 'Appetite may decrease; either sleepiness or insomnia can occur.',
-        response: 'Monitor meals, weight, sleep timing, and daytime function rather than assuming every change is caused by ADHD itself.',
-        urgency: 'Contact the prescriber if weight, sleep, or daily safety is significantly affected.',
+        issue: 'Appetite suppression or sleep disturbance',
+        notice: 'Appetite reduction, early insomnia, or mid-night awakenings can occur.',
+        response: 'Monitor meals, weight, sleep patterns, and caffeine intake (viloxazine inhibits CYP1A2, substantially increasing caffeine exposure).',
+        urgency: 'Contact the prescriber if nutrition, weight, or sleep is markedly impaired.',
       },
       {
-        issue: 'Mood or suicidal thoughts',
-        notice: 'Atomoxetine has a boxed warning for suicidal ideation in children and adolescents; viloxazine has a boxed warning for suicidal thoughts and behaviors in pediatric and adult patients.',
-        response: 'Watch closely for new or sudden changes in mood, behavior, thoughts, or feelings, particularly early in treatment and after dose changes.',
-        urgency: 'Immediate clinical or emergency help for suicidal thoughts, actions, or dangerous behavior.',
+        issue: 'Suicidal ideation or mood changes (FDA Boxed Warning)',
+        notice: 'Both atomoxetine and viloxazine carry FDA Boxed Warnings for increased risk of suicidal thoughts and behaviors in pediatric and young adult patients.',
+        response: 'Caregivers and adult patients must actively monitor for emergence of suicidal thinking, depressive mood, hostility, agitation, or unusual behavioral changes, especially in the first 8 weeks.',
+        urgency: 'IMMEDIATE psychiatric evaluation or crisis care (dial 988 in the U.S. / Canada, or local emergency services) for any suicidal thoughts or dangerous behavior.',
       },
       {
-        issue: 'Drug interactions',
-        notice: 'Liver metabolism affects atomoxetine; viloxazine has important interactions and can increase caffeine exposure.',
-        response: 'Give the prescriber and pharmacist a complete list of prescriptions, over-the-counter medicines, supplements, and caffeine use.',
-        urgency: 'Prompt advice before adding or stopping interacting medicines.',
+        issue: 'Drug-drug interactions & hepatic metabolism',
+        notice: 'Atomoxetine is metabolized by CYP2D6 (sensitive to fluoxetine/paroxetine); viloxazine is a potent CYP1A2 inhibitor.',
+        response: 'Provide the prescriber and pharmacist an exhaustive list of all medications. Concomitant viloxazine with theophylline or tizanidine is STRICTLY CONTRAINDICATED.',
+        urgency: 'Contact the prescriber immediately prior to taking new prescriptions, over-the-counter medicines, or herbal supplements.',
       },
     ],
   },
@@ -344,28 +402,28 @@ const sideEffectGroups = [
     color: '#9a7648',
     rows: [
       {
-        issue: 'Drowsiness and fatigue',
-        notice: 'The most common limitation, especially when starting or increasing the dose.',
-        response: 'Start very low and increase gradually. Review timing and avoid driving or unsafe activity until the effect is understood.',
-        urgency: 'Contact the prescriber for severe sedation, confusion, falls, or inability to function safely.',
+        issue: 'Somnolence and daytime fatigue',
+        notice: 'The most frequent adverse effect, especially during initial titration and dose increases.',
+        response: 'Start at the lowest available dose and titrate in small weekly steps. Dosing guanfacine or the larger portion of clonidine at bedtime helps mitigate daytime drowsiness.',
+        urgency: 'Contact the prescriber if somnolence causes falls, confusion, or unsafe daytime impairment.',
       },
       {
-        issue: 'Low blood pressure, dizziness, or slow pulse',
-        notice: 'Standing dizziness, weakness, faintness, or unusual fatigue can occur.',
-        response: 'Monitor blood pressure and pulse, hydration, and interacting medicines. Rise slowly and discuss symptoms with the prescriber.',
-        urgency: 'Urgent assessment for fainting, chest pain, severe weakness, or very slow heart rate with symptoms.',
+        issue: 'Low blood pressure, bradycardia, or orthostasis',
+        notice: 'Dizziness upon standing, lightheadedness, weakness, or unusual lethargy.',
+        response: 'Monitor sitting and standing blood pressure and heart rate. Maintain adequate hydration. Rise slowly from sitting or lying positions.',
+        urgency: 'Urgent evaluation for syncope (fainting), chest pain, severe weakness, or symptomatic bradycardia (heart rate < 50 bpm with dizziness).',
       },
       {
-        issue: 'Missed doses or abrupt stopping',
-        notice: 'Stopping suddenly can cause rebound hypertension; higher doses increase concern.',
-        response: 'Do not double missed doses or stop abruptly. Follow the product-specific missed-dose and taper plan.',
-        urgency: 'Prompt advice for several missed doses, severe headache, marked blood-pressure rise, or concerning symptoms.',
+        issue: 'Missed doses and abrupt discontinuation (Rebound risk)',
+        notice: 'Abruptly stopping alpha-2 agonists can precipitate acute rebound hypertension and reflex tachycardia.',
+        response: 'Never stop suddenly or double up on missed doses. Always maintain an uninterrupted medication supply and plan travel refills well in advance.',
+        urgency: 'Emergency medical consultation if multiple consecutive doses are missed and severe headache, nausea, rapid pulse, or acute blood pressure elevation occurs.',
       },
       {
-        issue: 'Mood symptoms',
-        notice: 'Irritability or mood changes can occur and may overlap with fatigue or the underlying condition.',
-        response: 'Track timing and discuss whether the dose, schedule, combination, or diagnosis needs review.',
-        urgency: 'Prompt help for dangerous behavior, severe depression, or suicidal thoughts.',
+        issue: 'Irritability or depressive affect',
+        notice: 'Emotional blunting, irritability, or depressive symptoms can occasionally occur, overlapping with fatigue.',
+        response: 'Track symptom timing in relation to doses. The clinician may evaluate whether the dose is too high, titration was too fast, or a different treatment is indicated.',
+        urgency: 'Prompt review for severe depressive symptoms, self-harm thoughts, or behavioral crises.',
       },
     ],
   },
@@ -400,19 +458,19 @@ function SideEffectGuide() {
           {selected.rows.map((row) => (
             <div key={row.issue} className="grid gap-4 p-5 md:grid-cols-[.7fr_1fr_1.25fr_1fr] md:p-6">
               <div>
-                <p className="font-bold" style={{ color: selected.color }}>{row.issue}</p>
+                <p className="font-bold text-base sm:text-lg" style={{ color: selected.color }}>{row.issue}</p>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-muted-foreground">What it may look like</p>
-                <p className="mt-2 text-sm leading-relaxed text-foreground">{row.notice}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-stone-600">What it may look like</p>
+                <p className="mt-2 text-[15px] sm:text-base leading-[1.7] text-foreground/90">{row.notice}</p>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-muted-foreground">What is usually discussed</p>
-                <p className="mt-2 text-sm leading-relaxed text-foreground">{row.response}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-stone-600">What is usually discussed</p>
+                <p className="mt-2 text-[15px] sm:text-base leading-[1.7] text-foreground/90">{row.response}</p>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-muted-foreground">When to escalate</p>
-                <p className="mt-2 text-sm leading-relaxed text-foreground">{row.urgency}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-stone-600">When to escalate</p>
+                <p className="mt-2 text-[15px] sm:text-base leading-[1.7] text-foreground/90">{row.urgency}</p>
               </div>
             </div>
           ))}
@@ -426,37 +484,37 @@ const faqs = [
   {
     question: 'What if the first medication does not work?',
     answer:
-      'That is common and does not mean medication as a whole has failed. The dose may be too low, too high, too short, too long, or the formulation may not match the day. A person may also respond to methylphenidate but not amphetamine—or vice versa. The clinician reviews whether there was a fair trial, then changes one variable at a time.',
+      'That is common and does not indicate medication has failed. The dose may have been suboptimal, the formulation may not match the daily routine, or the patient may be a non-responder to that specific drug family. In clinical trials, approximately 40% of patients who fail methylphenidate respond robustly to amphetamines, and vice versa. Nonstimulants (atomoxetine, viloxazine) and alpha-2 agonists (guanfacine, clonidine) provide further evidence-based alternatives.',
   },
   {
     question: 'Does medication cure ADHD?',
     answer:
-      'No. Medication can reduce core symptoms while it is active and may make learning or using skills easier. It does not teach organization, repair a learning disability, create motivation on command, or remove every difficulty. Many people benefit from medication plus skills, therapy, environmental changes, sleep support, and accommodations.',
+      'No. Medication reduces core symptoms while pharmacologically active by optimizing catecholaminergic transmission in executive brain networks. It does not teach executive habits, organizational strategies, or emotional regulation skills automatically. Comprehensive treatment integrates medication with behavioral therapy, psychoeducation, environmental scaffolding, sleep support, and workplace or educational accommodations.',
   },
   {
-    question: 'Are generic and brand-name medicines identical?',
+    question: 'Are generic and brand-name ADHD medicines identical?',
     answer:
-      'They contain the same active ingredient and must meet regulatory standards, but extended-release delivery systems and inactive ingredients can differ. Some people notice a meaningful difference in timing or tolerability. Record the manufacturer and discuss consistent changes with the prescriber or pharmacist rather than changing doses independently.',
+      'Generics share identical active pharmaceutical ingredients and must demonstrate bioequivalence within standard pharmacokinetic bounds. However, extended-release delivery systems (such as OROS osmotic pumps, bimodal bead coatings, or matrix systems) and inactive excipients can differ between manufacturers. Some individuals experience noticeable changes in absorption rate or daily duration. Keep track of the specific generic manufacturer on your pharmacy label and discuss any changes with your prescriber.',
   },
   {
-    question: 'Can medication be used when someone has tics?',
+    question: 'Can ADHD medication be prescribed when someone has tics?',
     answer:
-      'Tics require an individualized plan. The AACAP guide notes that atomoxetine and alpha-2 agonists may be helpful when ADHD and tics occur together, and guanfacine or clonidine can also be combined with a stimulant. The clinician considers whether symptoms are pre-existing, medication-related, or fluctuating naturally.',
+      'Yes, with careful individualization. Extensive clinical evidence demonstrates that stimulants do not cause chronic tic disorders and do not worsen tics in the majority of patients. When tics and ADHD co-occur, alpha-2 agonists (guanfacine ER, clonidine ER) or atomoxetine are frequently selected because they reduce ADHD symptoms while simultaneously reducing tic severity. Alpha-2 agonists can also be safely combined with stimulants under medical guidance.',
   },
   {
-    question: 'Can two ADHD medicines be combined?',
+    question: 'Can two ADHD medications be combined?',
     answer:
-      'Yes, in selected cases. Guanfacine ER and clonidine ER are FDA-labeled as monotherapy or adjunctive therapy to stimulants. Other combinations are used clinically but may have less evidence or may not be FDA-approved as a combination. The purpose should be explicit: extend coverage, treat residual symptoms, address tics or sleep, or reduce a limiting side effect.',
+      'Yes, under qualified clinical supervision. Guanfacine ER and clonidine ER are FDA-approved as adjunctive therapy to stimulants in pediatric ADHD to smooth late-day rebound, treat residual impulsivity, and assist with bedtime winding down. Other combinations are used off-label in clinical practice but require explicit rationales, careful cardiovascular tracking, and systematic documentation of benefit versus added side effects.',
   },
   {
-    question: 'Should medication be taken only on difficult days?',
+    question: 'Should medication be taken only on difficult days (“drug holidays”)?',
     answer:
-      'It depends on the medicine and treatment plan. Some short-acting stimulants have flexible schedules, while nonstimulants and alpha-2 agonists need consistent daily dosing and should not be started and stopped casually. Any planned breaks should balance symptom return, driving or safety, relationships, school or work, side effects, and the product’s stopping instructions.',
+      'It depends strictly on the drug class. Immediate-release stimulants can allow flexible scheduling if approved by the prescriber. In contrast, nonstimulants (atomoxetine, viloxazine) and alpha-2 agonists (guanfacine, clonidine) require consistent daily dosing to maintain steady-state efficacy and MUST NEVER be stopped casually. Abrupt cessation of alpha-2 agonists risks life-threatening rebound hypertension. Discuss all planned breaks with your prescriber.',
   },
   {
     question: 'How do we know the dose is right?',
     answer:
-      'The best dose is not the highest dose and not a standard number. It is the lowest practical dose that produces meaningful improvement in agreed targets with tolerable side effects across the whole day. A good review includes onset, duration, rebound, appetite, sleep, mood, pulse, blood pressure, and functioning—not only whether the person “felt focused.”',
+      'The optimal dose is the lowest effective dose that provides meaningful functional improvement across the required daily window with tolerable adverse effects. It is never determined by body weight alone for stimulants. Optimal titration tracks observable real-life outcomes: sustained task completion, emotional regulation, driving safety, pulse, blood pressure, appetite, and sleep latency.',
   },
 ];
 
@@ -475,7 +533,9 @@ function FAQSection() {
               aria-expanded={isOpen}
             >
               <span className="font-serif text-xl font-bold text-foreground">{item.question}</span>
-              <motion.span animate={{ rotate: isOpen ? 180 : 0 }} className="rounded-full bg-warm-cream p-2 text-sage-green"><ChevronDown className="h-5 w-5" /></motion.span>
+              <motion.span animate={{ rotate: isOpen ? 180 : 0 }} className="rounded-full bg-warm-cream p-2 text-sage-green">
+                <ChevronDown className="h-5 w-5" />
+              </motion.span>
             </button>
             <AnimatePresence initial={false}>
               {isOpen && (
@@ -499,46 +559,43 @@ export default function Medication() {
   };
 
   return (
-    <ChapterLayout
+    <ChapterLayoutWide
       title="Medication"
-      subtitle="Understand the options, trade-offs, and monitoring"
-      chapterNumber={8}
+      subtitle="Options, cellular mechanisms, trade-offs, and clinical monitoring."
+      chapterNumber={7}
       totalChapters={10}
+      badgeText="Chapter 7 · Pharmacotherapy"
+      estimatedReadingTime="9 min read"
+      bgClass="bg-[#FAF7F2]"
+      accentColor="#7a5933"
+      maxWidthClass="max-w-[76rem]"
       onPrevious={() => setLocation('/chapter/what-helps')}
       onNext={() => setLocation('/chapter/getting-diagnosed')}
     >
-      <motion.div className="space-y-20" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-        <section className="text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#4e72a2]">A complete, calm guide</p>
-          <h1 className="mt-4 font-serif text-4xl font-bold text-foreground md:text-6xl">ADHD medication, explained clearly</h1>
-          <p className="mx-auto mt-6 max-w-4xl text-xl leading-relaxed text-muted-foreground">
-            Learn what the main medication pathways do, how quickly they work, where they can help, what they cannot do, how side effects are managed, and how a prescriber finds a useful medicine and dose without treating you like a checklist.
-          </p>
-        </section>
+      <motion.div className="space-y-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
 
         <section className="rounded-3xl border border-[#a96952]/25 bg-[#a96952]/[0.06] p-6 md:p-8">
           <div className="flex items-start gap-4">
             <Stethoscope className="mt-1 h-7 w-7 shrink-0 text-[#a96952]" />
             <div>
-              <h2 className="font-serif text-2xl font-bold text-foreground">How to use this page</h2>
+              <h2 className="font-serif text-2xl font-bold text-foreground">How to use this medical guide</h2>
               <p className="mt-3 leading-relaxed text-foreground">
-                This is education, not a prescription. It draws heavily from the AACAP and American Psychiatric Association <em>Parents’ Medication Guide</em>, which is child/adolescent focused, and adds current U.S. label context where the guide is older. Doses are shown only to explain how products differ. Do not start, switch, split, combine, skip, taper, or stop medication from this page.
+                This is educational clinical information, not personal medical advice. It integrates evidence from the American Academy of Pediatrics (AAP 2019), the American Academy of Child and Adolescent Psychiatry (AACAP Practice Parameters), international network meta-analyses (Cortese et al., <em>Lancet Psychiatry</em> 2018; Faraone et al., 2021), and current FDA DailyMed prescribing information. Dosages and parameters illustrate pharmacological distinctions and regulatory approvals. Never initiate, alter, combine, taper, or stop psychiatric medication without direct guidance from a licensed medical prescriber.
               </p>
             </div>
           </div>
         </section>
-
-
 
         <section className="grid gap-5 md:grid-cols-2">
           <article className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm">
             <div className="flex items-center gap-3"><Target className="h-6 w-6 text-sage-green" /><h2 className="font-serif text-3xl font-bold text-foreground">What medication can do</h2></div>
             <ul className="mt-6 space-y-4">
               {[
-                'Reduce inattention, hyperactivity, and impulsivity while the treatment is active',
-                'Improve the ability to pause, sustain effort, complete work, and use learned strategies',
-                'Reduce impairment at school, work, home, while driving, and in relationships for many people',
-                'Create enough symptom relief for therapy, coaching, routines, and accommodations to work better',
+                'Substantially reduce inattention, hyperactivity, and impulsivity while pharmacologically active',
+                'Enhance prefrontal signal-to-noise ratio, improving working memory, response inhibition, and sustained effort',
+                'Reduce functional impairment across academic, workplace, driving, and social settings',
+                'Lower long-term risks of motor vehicle accidents, accidental injuries, and academic underachievement (Faraone et al., 2021)',
+                'Create sufficient symptom stabilization for behavioral therapy, skill coaching, and accommodations to work effectively',
               ].map((item) => <li key={item} className="flex gap-3 leading-relaxed text-foreground"><CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-sage-green" />{item}</li>)}
             </ul>
           </article>
@@ -546,10 +603,10 @@ export default function Medication() {
             <div className="flex items-center gap-3"><AlertCircle className="h-6 w-6 text-[#a96952]" /><h2 className="font-serif text-3xl font-bold text-foreground">What medication cannot do alone</h2></div>
             <ul className="mt-6 space-y-4">
               {[
-                'Cure ADHD or permanently change every symptom',
-                'Teach planning, organization, emotional skills, or study habits automatically',
-                'Fix a learning disability, unsuitable environment, sleep deprivation, trauma, or another untreated condition',
-                'Guarantee motivation, happiness, perfect grades, or conflict-free relationships',
+                'Cure ADHD or permanently reorganize neurodevelopmental circuits',
+                'Automatically teach organizational skills, time management, emotional regulation, or study strategies',
+                'Remediate learning disabilities, unsupportive environments, chronic sleep deprivation, or trauma',
+                'Guarantee internal motivation for uninteresting tasks without deliberate scaffolding and routines',
               ].map((item) => <li key={item} className="flex gap-3 leading-relaxed text-foreground"><AlertTriangle className="mt-1 h-5 w-5 shrink-0 text-[#a96952]" />{item}</li>)}
             </ul>
           </article>
@@ -560,36 +617,203 @@ export default function Medication() {
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Start with the big picture</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Three broad medication pathways</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Stimulants, daily nonstimulants, and alpha-2 agonists differ in speed, strength, side effects, and the situations in which they are useful. Select each pathway for a complete explanation.
+              Stimulants, daily nonstimulants, and alpha-2 agonists differ fundamentally in cellular mechanisms, speed of onset, duration, cardiovascular profiles, and clinical indications. Select each pathway for a complete breakdown.
             </p>
           </div>
           <PathwayExplorer />
         </section>
 
-        <section className="rounded-3xl border border-sage-green/15 bg-gradient-to-br from-[#4e72a2]/[0.08] via-white to-sage-green/[0.08] p-7 md:p-10">
+        <section className="rounded-3xl border border-sage-green/15 bg-gradient-to-br from-[#4e72a2]/[0.08] via-white to-sage-green/[0.08] p-7 md:p-10 shadow-sm">
           <div className="grid items-center gap-8 lg:grid-cols-[.85fr_1.15fr]">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#4e72a2]">One useful diagram</p>
-              <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">How stimulants strengthen the signal</h2>
-              <p className="mt-4 leading-relaxed text-foreground">
-                The guide describes stimulant benefit as improved communication between brain cells. This is not “speeding up the whole brain.” It is making important dopamine and norepinephrine signals more available in networks involved in attention and self-control.
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#4e72a2]">Cellular neuroscience explained</p>
+              <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">How ADHD medications optimize the brain's signal-to-noise ratio</h2>
+              <p className="mt-4 text-[15px] sm:text-base leading-[1.75] text-foreground/90">
+                ADHD medications do not “speed up the entire brain” or make someone hyperactive. As demonstrated in landmark Yale research by Dr. Amy Arnsten, therapeutic doses balance two essential signaling chemicals in the brain's front executive network:
               </p>
+              <ul className="mt-3.5 space-y-2 text-[15px] sm:text-base leading-[1.75] text-foreground/90">
+                <li className="flex items-start gap-2.5">
+                  <span className="font-bold text-[#4e72a2]">•</span>
+                  <span><strong>Norepinephrine strengthens the SIGNAL:</strong> It turns up the volume on priority tasks, working memory, and long-term goals.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="font-bold text-[#4e72a2]">•</span>
+                  <span><strong>Dopamine mutes the NOISE:</strong> It quiets distracting background thoughts, sensory chaos, and impulsive interruptions.</span>
+                </li>
+              </ul>
             </div>
             <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
               {[
-                ['1', 'Signal is too weak or inconsistent', 'Important messages compete with noise.'],
-                ['2', 'Medication increases availability', 'Dopamine and norepinephrine signaling becomes stronger.'],
-                ['3', 'Regulation becomes easier', 'Pausing, sustaining attention, and using skills may require less effort.'],
+                ['1', 'Low chemical signaling', 'Priority tasks fade out quickly; background sensory noise and random thoughts compete for your attention.'],
+                ['2', 'Targeted receptor balancing', 'Medication gently restores dopamine and norepinephrine to their optimal working window in executive circuits.'],
+                ['3', 'Sharp signal, quiet background', 'Goals stay anchored in working memory; resisting distractions and sustaining focus feels manageable and natural.'],
               ].map(([number, title, text], index) => (
                 <div key={number} className="contents">
-                  <div className="rounded-2xl border border-[#4e72a2]/15 bg-white p-5 shadow-sm">
+                  <div className="rounded-2xl border border-[#4e72a2]/20 bg-white p-5 sm:p-6 shadow-2xs">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#4e72a2]/10 font-bold text-[#4e72a2]">{number}</span>
-                    <h3 className="mt-4 font-bold text-foreground">{title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+                    <h3 className="mt-4 font-bold text-foreground text-base">{title}</h3>
+                    <p className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground">{text}</p>
                   </div>
                   {index < 2 && <ArrowRight className="mx-auto hidden h-5 w-5 text-[#4e72a2]/45 sm:block" />}
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Dedicated Medical Contraindications & Safety Section */}
+        <section id="contraindications" data-page-label="Contraindications and safety" className="scroll-mt-24">
+          <div className="mb-8 max-w-4xl">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-red-700">Patient Safety & Regulatory Rules</p>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Critical Contraindications & Dangerous Interactions</h2>
+            <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted-foreground">
+              Certain health conditions and drug combinations pose severe, life-threatening risks. These formal medical contraindications and class-wide warnings from the U.S. FDA, AAP, and NICE must be reviewed before starting or altering any ADHD medication.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* MAOI Washout */}
+            <article className="rounded-3xl border border-red-500/30 bg-red-500/[0.06] p-7 shadow-sm">
+              <div className="flex items-center gap-3">
+                <ShieldAlert className="h-6 w-6 text-red-600 shrink-0" />
+                <h3 className="font-serif text-2xl font-bold text-red-950">Mandatory 14-Day MAOI Washout</h3>
+              </div>
+              <span className="mt-2.5 inline-block rounded-full bg-red-100 px-3.5 py-1 text-xs font-bold text-red-900">
+                Fatal Blood Pressure Spike Risk · Absolute Contraindication
+              </span>
+              <p className="mt-4 text-[15px] sm:text-base leading-relaxed text-foreground">
+                Taking any stimulant (*methylphenidate or amphetamine*), atomoxetine, or viloxazine at the same time as—or within <strong className="text-red-950 underline decoration-red-400">14 days of stopping</strong>—a Monoamine Oxidase Inhibitor (MAOI) is strictly prohibited. Common MAOIs include phenelzine (*Nardil*), tranylcypromine (*Parnate*), selegiline, rasagiline, the antibiotic linezolid, and intravenous methylene blue.
+              </p>
+              <div className="mt-4 text-sm sm:text-base leading-relaxed text-foreground/90 border-t border-red-200/80 pt-3">
+                <p>
+                  <strong>Why this rule exists:</strong> MAOIs completely block the breakdown of brain signaling chemicals, while ADHD medications increase their availability. Combining them triggers a massive, uncontrolled adrenaline surge throughout the body, leading to <strong>dangerously high fevers</strong>, <strong>extreme blood pressure spikes</strong>, seizures, or fatal brain bleeding.
+                </p>
+              </div>
+            </article>
+
+            {/* Viloxazine CYP1A2 */}
+            <article className="rounded-3xl border border-red-500/30 bg-red-500/[0.06] p-7 shadow-sm">
+              <div className="flex items-center gap-3">
+                <ShieldAlert className="h-6 w-6 text-red-600 shrink-0" />
+                <h3 className="font-serif text-2xl font-bold text-red-950">Viloxazine (Qelbree) CYP1A2 Blockade</h3>
+              </div>
+              <span className="mt-2.5 inline-block rounded-full bg-red-100 px-3.5 py-1 text-xs font-bold text-red-900">
+                Theophylline & Tizanidine · Strict FDA Contraindication
+              </span>
+              <p className="mt-4 text-[15px] sm:text-base leading-relaxed text-foreground">
+                Viloxazine strongly shuts down your liver’s CYP1A2 breakdown pathway. Taking viloxazine together with the asthma medicine <strong className="text-red-950">theophylline</strong> or the muscle relaxant <strong className="text-red-950">tizanidine</strong> is <strong className="text-red-950 underline decoration-red-400">strictly forbidden</strong> by the FDA.
+              </p>
+              <div className="mt-4 text-sm sm:text-base leading-relaxed text-foreground/90 border-t border-red-200/80 pt-3">
+                <p>
+                  <strong>Why this rule exists:</strong> Because viloxazine blocks their only exit door, tizanidine or theophylline quickly accumulate to <strong>toxic, life-threatening blood levels</strong> (up to 10 times normal), causing severe drops in blood pressure, dangerously slowed heart rate, and respiratory collapse. Viloxazine also slows caffeine clearance, making a morning cup of coffee feel 3 times stronger.
+                </p>
+              </div>
+            </article>
+
+            {/* Cardiovascular Pre-Screening & Disease */}
+            <article className="rounded-3xl border border-amber-600/30 bg-amber-500/[0.06] p-7 shadow-sm">
+              <div className="flex items-center gap-3">
+                <HeartPulse className="h-6 w-6 text-amber-700 shrink-0" />
+                <h3 className="font-serif text-2xl font-bold text-foreground">Cardiovascular Pre-Screening & Heart Disease</h3>
+              </div>
+              <span className="mt-2.5 inline-block rounded-full bg-amber-100 px-3.5 py-1 text-xs font-bold text-amber-950">
+                Structural Defects & Uncontrolled Blood Pressure
+              </span>
+              <p className="mt-4 text-[15px] sm:text-base leading-relaxed text-foreground">
+                Stimulants and atomoxetine are contraindicated in individuals with active heart disease, pre-existing structural heart abnormalities (*such as enlarged heart muscle or coronary artery malformations*), serious irregular heart rhythms, or moderate-to-severe uncontrolled high blood pressure.
+              </p>
+              <div className="mt-4 text-sm sm:text-base leading-relaxed text-foreground/90 border-t border-amber-200/80 pt-3">
+                <p>
+                  <strong>Required clinical screening:</strong> Before prescribing, doctors follow the <strong>AAP / AHA cardiac screening protocol</strong>: reviewing your personal and family history (*checking for unexplained fainting during exercise or early sudden cardiac death under age 40*) and measuring baseline blood pressure and resting pulse.
+                </p>
+              </div>
+            </article>
+
+            {/* Angle-Closure Glaucoma */}
+            <article className="rounded-3xl border border-amber-600/30 bg-amber-500/[0.06] p-7 shadow-sm">
+              <div className="flex items-center gap-3">
+                <Eye className="h-6 w-6 text-amber-700 shrink-0" />
+                <h3 className="font-serif text-2xl font-bold text-foreground">Angle-Closure (Narrow-Angle) Glaucoma</h3>
+              </div>
+              <span className="mt-2.5 inline-block rounded-full bg-amber-100 px-3.5 py-1 text-xs font-bold text-amber-950">
+                Ophthalmic Emergency Precaution
+              </span>
+              <p className="mt-4 text-[15px] sm:text-base leading-relaxed text-foreground">
+                Both stimulants and atomoxetine slightly widen your pupils (*mydriasis*). In individuals born with anatomically narrow drainage angles in the eye, this normal widening can physically pinch shut the eye's fluid drainage canals.
+              </p>
+              <div className="mt-4 text-sm sm:text-base leading-relaxed text-foreground/90 border-t border-amber-200/80 pt-3">
+                <p>
+                  <strong>Why this matters:</strong> If fluid cannot drain, internal eye pressure spikes rapidly (*an acute angle-closure attack*), causing <strong>severe eye pain, blurred vision, intense headaches, and rapid permanent vision damage</strong> if not treated as an emergency. Active narrow-angle glaucoma is a strict contraindication.
+                </p>
+              </div>
+            </article>
+
+            {/* OROS Delivery Mechanical Narrowing */}
+            <article className="rounded-3xl border border-sage-green/25 bg-white p-7 shadow-sm">
+              <div className="flex items-center gap-3">
+                <Layers3 className="h-6 w-6 text-sage-green shrink-0" />
+                <h3 className="font-serif text-2xl font-bold text-foreground">Concerta OROS & Digestive Narrowing</h3>
+              </div>
+              <span className="mt-2.5 inline-block rounded-full bg-warm-cream px-3.5 py-1 text-xs font-bold text-stone-700">
+                Rigid Shell Precaution · Swallow Whole Only
+              </span>
+              <p className="mt-4 text-[15px] sm:text-base leading-relaxed text-foreground">
+                Concerta uses an advanced rigid shell (*the OROS osmotic pump*) that does not dissolve or soften in the stomach or intestines. It pushes medication out steadily through a microscopic laser-drilled hole, and the empty shell passes harmlessly into the toilet.
+              </p>
+              <div className="mt-4 text-sm sm:text-base leading-relaxed text-foreground/90 border-t border-sage-green/15 pt-3">
+                <p>
+                  <strong>Crucial administration rules:</strong> Concerta is contraindicated in patients with severe pre-existing digestive tract narrowing (*such as strictures, motility disorders, or past intestinal blockages*). <strong>Concerta tablets must always be swallowed whole</strong> with fluids and <strong>must NEVER be crushed, chewed, or cut in half</strong>.
+                </p>
+              </div>
+            </article>
+
+            {/* Alpha-2 Rebound Hypertension */}
+            <article className="rounded-3xl border border-red-500/30 bg-red-500/[0.06] p-7 shadow-sm">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="h-6 w-6 text-red-600 shrink-0" />
+                <h3 className="font-serif text-2xl font-bold text-red-950">Alpha-2 Agonist Abrupt Discontinuation</h3>
+              </div>
+              <span className="mt-2.5 inline-block rounded-full bg-red-100 px-3.5 py-1 text-xs font-bold text-red-900">
+                Severe Rebound Blood Pressure Spike · Never Stop Suddenly
+              </span>
+              <p className="mt-4 text-[15px] sm:text-base leading-relaxed text-foreground">
+                Alpha-2 medications (*clonidine / Kapvay, guanfacine / Intuniv*) act as a steady brake pedal on your body's adrenaline system. If you take your foot off the brake abruptly by stopping cold-turkey, your body experiences an acute adrenaline rebound.
+              </p>
+              <div className="mt-4 text-sm sm:text-base leading-relaxed text-foreground/90 border-t border-red-200/80 pt-3">
+                <p>
+                  <strong>Mandatory tapering protocol:</strong> Alpha-2 agonists <strong>must NEVER be stopped abruptly</strong>. Missing multiple consecutive doses can trigger <strong>dangerously high blood pressure, racing heartbeat, pounding headaches, and shaking</strong>. Any decision to stop requires a gradual, step-by-step taper supervised by your doctor.
+                </p>
+              </div>
+            </article>
+          </div>
+
+          {/* 2023 Universal FDA Boxed Warning Callout */}
+          <div className="mt-7 rounded-3xl border border-amber-600/30 bg-amber-500/[0.08] p-7 md:p-8">
+            <div className="flex items-start gap-4">
+              <AlertTriangle className="mt-1 h-7 w-7 shrink-0 text-amber-700" />
+              <div>
+                <h3 className="font-serif text-2xl font-bold text-amber-950">
+                  Universal FDA Stimulant Boxed Warning (May 2023 Update)
+                </h3>
+                <p className="mt-3 leading-relaxed text-amber-950 text-sm md:text-base">
+                  In May 2023, the U.S. FDA issued an updated, standardized class-wide Boxed Warning across <strong>ALL prescription stimulants</strong>—including all methylphenidate and amphetamine products. The standardized warning clarifies that stimulants possess a high potential for abuse, misuse, and addiction, which can lead to overdose and death. Clinicians must assess each individual’s risk before prescribing, educate patients and families on locked storage and proper disposal, and monitor for signs of misuse and diversion throughout treatment.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Pediatric vs Adult Regulatory Indications Callout */}
+          <div className="mt-5 rounded-3xl border border-sage-green/20 bg-warm-cream/50 p-6 md:p-7">
+            <div className="flex items-start gap-4">
+              <Info className="mt-1 h-6 w-6 shrink-0 text-sage-green" />
+              <div>
+                <h3 className="font-serif text-xl font-bold text-foreground">
+                  Pediatric vs. Adult FDA Indications: Regulatory Nuance
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  While methylphenidate, amphetamines, atomoxetine, and viloxazine (Qelbree) have formal FDA indications for adults, <strong>alpha-2 adrenergic agonists (guanfacine ER / Intuniv, clonidine ER / Kapvay) are FDA-approved exclusively for pediatric patients ages 6 to 17</strong>. Prescribing guanfacine ER or clonidine ER in adults with ADHD is widely practiced in clinical psychiatry, but represents <strong>off-label prescribing</strong> requiring individualized clinical discussion and cardiovascular monitoring.
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -601,9 +825,9 @@ export default function Medication() {
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {[
-              ['About 70–80%', 'of children have fewer ADHD symptoms with fast-acting stimulant medication, according to CDC.', CircleGauge],
-              ['About 40–50%', 'symptom reduction is described in the AACAP/APA guide for children who respond to stimulants.', Activity],
-              ['Not every symptom', 'goes away. The goal is noticeable improvement in functioning, not becoming a different person.', Sparkles],
+              ['About 70–80%', 'of children and adults achieve significant symptom reduction with an optimized stimulant medication trial (Cortese et al., 2018; CDC).', CircleGauge],
+              ['Effect Size ~1.0', 'average standardized mean difference for stimulants in network meta-analyses—the highest of any psychiatric drug class.', Activity],
+              ['Not every barrier', 'resolves. The goal is noticeable, meaningful improvement in daily functioning, safety, and learning—not perfection.', Sparkles],
             ].map(([big, text, Icon]) => {
               const IconComponent = Icon as typeof CircleGauge;
               return (
@@ -617,22 +841,22 @@ export default function Medication() {
           </div>
           <div className="mt-5 grid gap-5 lg:grid-cols-[1.1fr_.9fr]">
             <article className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm">
-              <h3 className="font-serif text-3xl font-bold text-foreground">Look for function, not just “focus”</h3>
+              <h3 className="font-serif text-3xl font-bold text-foreground">Look for functional improvement, not just “feeling focused”</h3>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {[
-                  'Can the person start and finish more of the intended task?',
-                  'Are unsafe impulses, interruptions, or conflicts less frequent?',
-                  'Does benefit last through the part of the day that matters?',
-                  'Can learned strategies be used more consistently?',
-                  'Are school, work, driving, home, and relationships meaningfully easier?',
-                  'Are side effects small enough that the overall trade-off is worthwhile?',
+                  'Can the person initiate, sustain, and complete priority tasks?',
+                  'Are impulsive interruptions, conflicts, or dangerous actions reduced?',
+                  'Does symptom control last through the critical school, work, or driving hours?',
+                  'Can learned cognitive and behavioral strategies be accessed reliably?',
+                  'Are relationship friction, emotional dysregulation, and home stress diminished?',
+                  'Are side effects mild enough that the overall risk-benefit balance is positive?',
                 ].map((item) => <div key={item} className="rounded-xl bg-warm-cream p-4 text-sm leading-relaxed text-foreground">{item}</div>)}
               </div>
             </article>
             <article className="rounded-3xl border border-[#a96952]/20 bg-[#a96952]/[0.06] p-7">
-              <h3 className="font-serif text-3xl font-bold text-foreground">Important limitation</h3>
+              <h3 className="font-serif text-3xl font-bold text-foreground">Essential Clinical Limitation</h3>
               <p className="mt-4 leading-relaxed text-foreground">
-                The guide is explicit: medication does not provide organizational skills and does not overcome a learning disability. Symptom relief can create a better opportunity to learn, practice, and use those supports—but the supports still matter.
+                Clinical practice guidelines emphasize: medication reduces core neurochemical barriers, but it does not teach organizational skills, time management, or overcome co-occurring learning differences. Symptom relief creates the neurological window for therapy, coaching, and environmental accommodations to take root.
               </p>
             </article>
           </div>
@@ -640,10 +864,10 @@ export default function Medication() {
 
         <section id="timing" data-page-label="Short vs long acting" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Forms and duration</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">The same family can feel different in a different formulation</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Pharmacokinetics and delivery</p>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Formulation shapes the clinical experience</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              A medication name is only part of the story. Release system, dose timing, duration, meals, metabolism, and the shape of the day all influence whether it feels smooth, too short, too long, or uneven.
+              A molecule is only part of the story. Release mechanisms (osmotic pumps, bimodal beads, transdermal matrices, prodrug cleavage) govern onset speed, smoothness, daytime duration, and rebound profiles.
             </p>
           </div>
           <div className="grid gap-5 lg:grid-cols-3">
@@ -651,23 +875,23 @@ export default function Medication() {
               {
                 icon: Clock3,
                 title: 'Immediate release',
-                range: 'Often about 3–6 hours',
-                text: 'Starts quickly and gives a clear window of effect. It can be flexible, but may require two or more doses and can produce a more obvious wear-off.',
-                best: 'Useful for short coverage, dose finding, or a clinician-prescribed late-day booster.',
+                range: 'Typically 3–5 hours',
+                text: 'Fast onset (20–30 minutes) with a distinct peak and wear-off window. Flexible for specific tasks, but multiple daytime doses can be inconvenient and provoke noticeable rebound irritability.',
+                best: 'Useful for short coverage, dose exploration, or as a late-afternoon booster dose.',
               },
               {
                 icon: Layers3,
                 title: 'Extended release',
-                range: 'Often about 8–16 hours',
-                text: 'Designed to cover more of the school or work day with one morning dose. Different delivery systems can have very different onset and wear-off patterns.',
-                best: 'Useful when avoiding a midday dose and smoother all-day coverage are priorities.',
+                range: 'Typically 8–14 hours',
+                text: 'Engineered to cover an entire school or workday with a single morning dose. Advanced bead matrices and osmotic pumps smooth out peaks and valleys.',
+                best: 'Standard first-line choice: eliminates school/work daytime redosing and reduces rebound.',
               },
               {
                 icon: Moon,
                 title: 'Delayed / special delivery',
-                range: 'Timing depends on the product',
-                text: 'Examples include evening-dosed methylphenidate, patches, liquids, chewables, and sprinkle capsules. These solve practical problems—not just swallowing pills.',
-                best: 'Useful when early mornings, swallowing, meals, or an unusual schedule shape the treatment need.',
+                range: 'Product-specific kinetics',
+                text: 'Includes evening-dosed delayed-release capsules (Jornay PM), transdermal patches (Daytrana), chewable tablets, liquids, and prodrugs (Vyvanse).',
+                best: 'Solves swallowing barriers, early-morning impairment, or need for flexible duration.',
               },
             ].map(({ icon: Icon, title, range, text, best }) => (
               <article key={title} className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm">
@@ -684,9 +908,9 @@ export default function Medication() {
         <section id="directory" data-page-label="Medication directory" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Interactive medication directory</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Explore medicines by stimulant, nonstimulant, or alpha-2 pathway</h2>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Explore medicines by pathway, mechanism, and indications</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Search or filter the cards. Methylphenidate and amphetamine are shown as subfamilies inside the stimulant pathway—not as competing top-level categories. Open a card for use cases, starting information, strengths, limitations, side effects, and safety notes.
+              Search or filter cards across stimulants, nonstimulants, and alpha-2 agonists. Click any card to review cellular mechanisms, starting information, advantages, limitations, side effects, FDA Boxed Warnings, and strict contraindications.
             </p>
           </div>
           <MedicationExplorer />
@@ -695,9 +919,9 @@ export default function Medication() {
         <section id="side-effects" data-page-label="Side effects" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Side effects without panic</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">What to watch, what is usually adjusted, and when to escalate</h2>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">What to watch, what is adjusted, and when to seek urgent care</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Side effects are not all equal. Some improve with time or a change in food, timing, dose, or formulation. Others require prompt contact or urgent help. Select a pathway below.
+              Side effects vary widely in severity and management. Many resolve spontaneously with time, dose titration, or meal adjustments. Others require prompt clinical contact or emergency evaluation.
             </p>
           </div>
           <SideEffectGuide />
@@ -706,18 +930,18 @@ export default function Medication() {
         <section id="titration" data-page-label="Finding the right fit" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Finding the right fit</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Titration is a structured experiment</h2>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Titration is a structured clinical trial of one</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              The aim is not “take more until you feel focused.” The prescriber starts conservatively, changes one variable at a time, and looks for the best balance of benefit and adverse effects.
+              The goal of titration is not “take more until focus is forced.” The prescriber starts conservatively, adjusts one variable at a time, and identifies the lowest dose that maximizes functional gains with acceptable tolerability.
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-5">
             {[
-              [ListChecks, '01', 'Define targets', 'Choose two or three observable outcomes before treatment.'],
-              [Scale, '02', 'Record baseline', 'Symptoms, function, sleep, appetite, mood, pulse, blood pressure, and growth when relevant.'],
-              [Pill, '03', 'Start low', 'Use the product-specific starting plan and give it the correct amount of time.'],
-              [CircleGauge, '04', 'Adjust carefully', 'Change one variable and record onset, duration, rebound, benefit, and side effects.'],
-              [Target, '05', 'Keep only useful treatment', 'Continue, switch, combine, or stop based on measurable net benefit.'],
+              [ListChecks, '01', 'Define targets', 'Identify 2–3 specific, observable functional goals prior to treatment.'],
+              [Scale, '02', 'Record baseline', 'Document baseline symptoms, vitals (BP/pulse), sleep, appetite, and growth.'],
+              [Pill, '03', 'Start low', 'Begin at the lowest recommended starting dose and maintain for an adequate trial.'],
+              [CircleGauge, '04', 'Adjust carefully', 'Adjust dose or timing in small steps; track onset, duration, rebound, and side effects.'],
+              [Target, '05', 'Evaluate net benefit', 'Continue, switch, combine, or taper based on measurable functional improvement.'],
             ].map(([Icon, number, title, text], index) => {
               const IconComponent = Icon as typeof ListChecks;
               return (
@@ -736,26 +960,26 @@ export default function Medication() {
               <div className="flex items-center gap-3"><HeartPulse className="h-6 w-6 text-sage-green" /><h3 className="font-serif text-3xl font-bold text-foreground">What belongs in a follow-up review</h3></div>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {[
-                  'What improved in real life?',
-                  'When does benefit begin and end?',
-                  'Is there rebound as it wears off?',
-                  'What happened to appetite and weight?',
-                  'What happened to sleep and daytime energy?',
-                  'Any mood, anxiety, tics, or unusual behavior?',
-                  'Pulse, blood pressure, dizziness, or fainting?',
-                  'Any missed doses, refill, storage, or misuse concerns?',
+                  'What observable functional goals improved?',
+                  'When does symptom control begin and wear off?',
+                  'Is late-afternoon rebound irritability present?',
+                  'Appetite, caloric intake, and pediatric growth velocity?',
+                  'Sleep latency, bedtime routine, and morning wakefulness?',
+                  'Any emergent anxiety, mood flattening, or tics?',
+                  'Sitting/standing blood pressure and heart rate?',
+                  'Medication adherence, refill scheduling, and locked storage?',
                 ].map((item) => <div key={item} className="rounded-xl bg-warm-cream p-4 text-sm leading-relaxed text-foreground">{item}</div>)}
               </div>
             </article>
             <article className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm">
-              <div className="flex items-center gap-3"><Utensils className="h-6 w-6 text-[#9a7648]" /><h3 className="font-serif text-3xl font-bold text-foreground">A simple daily log</h3></div>
-              <p className="mt-4 leading-relaxed text-foreground">A one-minute record is more useful than a vague memory at the next appointment.</p>
+              <div className="flex items-center gap-3"><Utensils className="h-6 w-6 text-[#9a7648]" /><h3 className="font-serif text-3xl font-bold text-foreground">A simple daily medication log</h3></div>
+              <p className="mt-4 leading-relaxed text-foreground">A brief daily note provides reliable longitudinal data during clinical appointments.</p>
               <div className="mt-5 space-y-3">
                 {[
-                  ['Morning', 'Dose/time • breakfast • baseline mood'],
-                  ['Midday', 'Benefit 0–10 • appetite • pulse/BP if requested'],
-                  ['Evening', 'Wear-off/rebound • dinner • relationships'],
-                  ['Night', 'Sleepiness/insomnia • time asleep • unusual symptoms'],
+                  ['Morning', 'Dose & time taken • breakfast composition • morning mood/focus'],
+                  ['Midday', 'Symptom rating (1–10) • lunch appetite • school/work performance'],
+                  ['Evening', 'Wear-off time • rebound irritability • dinner appetite • family friction'],
+                  ['Night', 'Bedtime routine • sleep latency • nighttime awakenings • unusual symptoms'],
                 ].map(([time, details]) => <div key={time} className="grid grid-cols-[85px_1fr] gap-3 rounded-xl border border-sage-green/10 p-4 text-sm"><strong className="text-sage-green">{time}</strong><span className="text-foreground">{details}</span></div>)}
               </div>
             </article>
@@ -765,27 +989,27 @@ export default function Medication() {
         <section id="combinations" data-page-label="Combination treatment" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Combination treatment</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Why a prescriber may use more than one medicine</h2>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Why a prescriber may combine medications</h2>
           </div>
           <div className="grid gap-6 lg:grid-cols-[1.05fr_.95fr]">
             <article className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm">
               <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-                <div className="w-full rounded-2xl bg-[#4e72a2]/10 p-5 text-center sm:w-48"><Pill className="mx-auto h-7 w-7 text-[#4e72a2]" /><p className="mt-3 font-bold text-foreground">Stimulant</p><p className="mt-1 text-xs text-muted-foreground">Core symptoms and daytime coverage</p></div>
+                <div className="w-full rounded-2xl bg-[#4e72a2]/10 p-5 text-center sm:w-48"><Pill className="mx-auto h-7 w-7 text-[#4e72a2]" /><p className="mt-3 font-bold text-foreground">Stimulant</p><p className="mt-1 text-xs text-muted-foreground">Daytime executive function & core focus</p></div>
                 <div className="flex items-center gap-2 text-sage-green"><span className="h-px w-8 bg-sage-green/30" /><span className="text-xl font-bold">+</span><span className="h-px w-8 bg-sage-green/30" /></div>
                 <div className="w-full rounded-2xl bg-[#9a7648]/10 p-5 text-center sm:w-48"><Moon className="mx-auto h-7 w-7 text-[#9a7648]" /><p className="mt-3 font-bold text-foreground">Alpha-2 agonist</p><p className="mt-1 text-xs text-muted-foreground">Residual impulsivity, tics, sleep, or evening behavior</p></div>
               </div>
               <p className="mt-6 text-center text-sm leading-relaxed text-foreground">
-                Guanfacine ER and clonidine ER are FDA-labeled for use alone or as adjunctive therapy to stimulant medication. The combination should have a clear purpose and its own monitoring plan.
+                Guanfacine ER and clonidine ER are FDA-approved as monotherapy or adjunctive therapy to stimulants specifically for children and adolescents ages 6 to 17; use in adults with ADHD is clinically common but formally off-label. The combination should have an explicit clinical goal and its own dedicated cardiovascular monitoring plan.
               </p>
             </article>
             <article className="rounded-3xl border border-[#a96952]/20 bg-[#a96952]/[0.06] p-7">
               <h3 className="font-serif text-3xl font-bold text-foreground">Combinations are not automatically “stronger”</h3>
               <ul className="mt-5 space-y-4">
                 {[
-                  'A second medicine may extend coverage or address a different symptom cluster.',
-                  'It may allow a lower dose of the first medicine when side effects limit treatment.',
-                  'Other combinations are used clinically but may have less evidence or may not be FDA-approved as a combination.',
-                  'Every added medicine adds interactions, adherence burden, and another possible source of side effects.',
+                  'An adjunctive agent may smooth late-day rebound or address comorbid tics, sleep, or emotional dysregulation.',
+                  'It may allow a lower dose of the primary stimulant when dose-limiting side effects (e.g. tachycardia or anorexia) occur.',
+                  'Other combinations (e.g. stimulant + atomoxetine) are prescribed off-label and require specialist oversight.',
+                  'Every added agent introduces potential drug-drug interactions, adherence burden, and cumulative side-effect risks.',
                 ].map((item) => <li key={item} className="flex gap-3 text-sm leading-relaxed text-foreground"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#a96952]" />{item}</li>)}
               </ul>
             </article>
@@ -795,13 +1019,13 @@ export default function Medication() {
         <section>
           <div className="mb-8 max-w-4xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Less commonly used options</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Second-line and off-label medicines</h2>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Second-line and off-label medications</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {[
-              ['Bupropion', 'An antidepressant used off-label for ADHD in some adolescents and adults, especially when mood or smoking concerns are also relevant. It can cause insomnia or irritability and carries a seizure risk in susceptible people.'],
-              ['Modafinil', 'Infrequently used for ADHD and not FDA-approved for ADHD. The AACAP guide highlights the need to watch for rash.'],
-              ['Tricyclic antidepressants', 'Infrequently used and require more intensive safety monitoring, which may include blood levels and an electrocardiogram.'],
+              ['Bupropion (Wellbutrin)', 'An aminoketone antidepressant with dual norepinephrine and dopamine reuptake inhibition (NDRI). Used off-label for adult ADHD, especially when co-occurring depressive symptoms or smoking cessation are clinical targets. It carries a dose-dependent seizure risk in susceptible individuals and should not be used in eating disorders.'],
+              ['Modafinil (Provigil)', 'A wakefulness-promoting agent approved for narcolepsy and sleep apnea, used off-label in selected adult ADHD cases. AACAP and FDA guidelines emphasize vigilance for serious cutaneous reactions, including Stevens-Johnson syndrome.'],
+              ['Tricyclic antidepressants (TCAs)', 'Tertiary/secondary amines (such as desipramine, imipramine, and nortriptyline) occasionally used off-label when first- and second-line treatments fail. They carry significant cardiotoxicity risks in overdose, anticholinergic side effects, and require baseline and periodic ECG monitoring.'],
             ].map(([title, text]) => <article key={title} className="rounded-3xl border border-sage-green/15 bg-white p-6 shadow-sm"><h3 className="font-serif text-2xl font-bold text-foreground">{title}</h3><p className="mt-4 text-sm leading-relaxed text-foreground">{text}</p></article>)}
           </div>
         </section>
@@ -811,84 +1035,100 @@ export default function Medication() {
             <div className="flex items-center gap-3"><ShieldAlert className="h-6 w-6 text-sage-green" /><h2 className="font-serif text-3xl font-bold text-foreground">Before medication starts</h2></div>
             <ul className="mt-6 space-y-4">
               {[
-                'Confirm that a thorough evaluation supports ADHD and considers other explanations',
-                'Review developmental, medical, neurological, psychiatric, family, and substance-use history',
-                'List every prescription, over-the-counter medicine, supplement, caffeine source, and substance use',
-                'Review heart symptoms and family cardiac history; examine pulse and blood pressure',
-                'Record baseline appetite, weight, growth in children, sleep, mood, tics, and functional targets',
-                'Agree on follow-up timing and what symptoms require a call or urgent care',
+                'Confirm a comprehensive clinical evaluation establishing DSM-5-TR diagnostic criteria across multiple settings',
+                'Detailed personal and family cardiovascular screening (syncope, sudden early cardiac death, chest pain, arrhythmias)',
+                'Baseline measurement of blood pressure, resting heart rate, height, weight, and sleep patterns',
+                'Exhaustive reconciliation of all current prescriptions, OTC drugs, vitamins, supplements, and caffeine intake',
+                'Screening for personal or family psychiatric history, substance use disorders, and glaucoma risk',
+                'Mutual agreement on 2–3 objective target outcomes, scheduled titration reviews, and emergency contact procedures',
               ].map((item) => <li key={item} className="flex gap-3 text-sm leading-relaxed text-foreground"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-sage-green" />{item}</li>)}
             </ul>
           </article>
-          <article className="rounded-3xl border border-[#a96952]/20 bg-white p-7 shadow-sm">
+          <article className="rounded-3xl border border-[#a96952]/20 bg-[#a96952]/[0.06] p-7 shadow-sm">
             <div className="flex items-center gap-3"><AlertTriangle className="h-6 w-6 text-[#a96952]" /><h2 className="font-serif text-3xl font-bold text-foreground">When to seek help quickly</h2></div>
-            <p className="mt-4 leading-relaxed text-foreground">Product-specific instructions differ. Contact the prescriber promptly for significant or persistent adverse effects, marked mood or behavior changes, new tics, fainting, or a treatment pattern that is clearly not working.</p>
-            <div className="mt-5 rounded-xl bg-[#a96952]/[0.07] p-5">
-              <p className="font-bold text-[#8f5541]">Urgent or emergency evaluation</p>
-              <p className="mt-2 text-sm leading-relaxed text-foreground">Chest pain, severe shortness of breath, fainting with concerning symptoms, seizure, serious allergic reaction, suicidal behavior, new hallucinations or mania, dangerous agitation, or signs of severe overdose.</p>
+            <p className="mt-4 leading-relaxed text-foreground">Contact the prescriber promptly for persistent adverse effects, marked depressive mood, new or worsening motor/vocal tics, severe insomnia, or suspected drug interactions.</p>
+            <div className="mt-5 rounded-2xl bg-white p-5 border border-[#a96952]/20">
+              <p className="font-bold text-red-700">Immediate Emergency / Crisis Evaluation</p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground">
+                Seek immediate emergency medical attention (dial 911/988 in the U.S. / Canada, or local emergency services) for: chest pain, exertional syncope (fainting), severe shortness of breath, seizure, severe acute allergic reaction (angioedema, anaphylaxis), acute emergence of suicidal behavior or intent, new hallucinations or psychotic symptoms, severe agitation, or signs of suspected overdose.
+              </p>
             </div>
           </article>
         </section>
 
         <section id="faq" data-page-label="Common questions" className="scroll-mt-24">
           <div className="mb-8 max-w-4xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Common questions</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">The questions people usually have after the basic explanation</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4e72a2]">Frequently asked questions</p>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-5xl">Clinical answers to common questions</h2>
           </div>
           <FAQSection />
         </section>
 
         <section className="rounded-3xl border border-sage-green/15 bg-gradient-to-br from-[#4e72a2]/[0.08] to-sage-green/[0.08] p-8">
-          <h2 className="font-serif text-3xl font-bold text-foreground">Questions worth taking to the appointment</h2>
+          <h2 className="font-serif text-3xl font-bold text-foreground">Questions worth taking to your appointment</h2>
           <div className="mt-7 grid gap-4 md:grid-cols-2">
             {[
-              'Which two or three outcomes will tell us this medication is helping?',
-              'Why are you choosing this pathway and formulation for this person?',
-              'How quickly should benefit appear, and how long should it cover?',
-              'Which side effects are expected, which need a call, and which are urgent?',
-              'What should be checked before treatment and at each follow-up?',
-              'What is the plan if the first dose, formulation, or stimulant family does not fit?',
-              'Could another condition or medicine be affecting the response?',
-              'How should missed doses, travel, refills, storage, combinations, and stopping be handled?',
-            ].map((question) => <div key={question} className="flex gap-3 rounded-xl bg-white/75 p-4 text-sm leading-relaxed text-foreground"><span className="font-bold text-[#4e72a2]">?</span>{question}</div>)}
+              'Which 2–3 specific functional outcomes will we monitor to determine whether this medication is working?',
+              'Why are you recommending this specific medication family and formulation for my clinical profile?',
+              'What is the expected onset time, peak duration, and wearing-off pattern for this formulation?',
+              'What cardiovascular parameters (blood pressure, pulse) will we track, and how often?',
+              'What is our contingency plan if this first drug family or formulation proves ineffective or intolerable?',
+              'Are there any dangerous interactions with my current medications, supplements, or dietary habits (e.g. caffeine)?',
+              'What are the product-specific instructions for missed doses, secure locked storage, and refills?',
+              'How will we manage titration reviews, and when should I call versus seek emergency evaluation?',
+            ].map((question) => <div key={question} className="flex gap-3 rounded-xl bg-white/80 p-4 text-sm leading-relaxed text-foreground"><span className="font-bold text-[#4e72a2]">?</span>{question}</div>)}
           </div>
         </section>
 
         <SourceList
           sources={[
             {
-              title: 'ADHD: Parents’ Medication Guide',
-              organization: 'AACAP and American Psychiatric Association',
-              url: '/resources/ADHD_Medication_Guide-web.pdf',
-              note: 'Primary content backbone for this page: treatment pathways, stimulant table, dosing concepts, effectiveness, side-effect management, nonstimulants, alpha agonists, combinations, and FAQs.',
+              title: 'Comparative efficacy and tolerability of medications for attention-deficit hyperactivity disorder in children, adolescents, and adults: a systematic review and network meta-analysis',
+              organization: 'The Lancet Psychiatry (Cortese et al., 2018)',
+              url: 'https://doi.org/10.1016/S2215-0366(18)30269-4',
+              note: 'Landmark network meta-analysis of 133 double-blind randomized controlled trials evaluating comparative efficacy and tolerability across stimulants and nonstimulants.',
             },
             {
-              title: 'Treatment of ADHD',
-              organization: 'Centers for Disease Control and Prevention',
-              url: 'https://www.cdc.gov/adhd/treatment/index.html',
-              note: 'Current overview of stimulant and nonstimulant treatment, response, side effects, and monitoring.',
+              title: 'The World Federation of ADHD International Consensus Statement: 208 Evidence-based conclusions about the disorder',
+              organization: 'Neuroscience & Biobehavioral Reviews (Faraone et al., 2021)',
+              url: 'https://doi.org/10.1016/j.neubiorev.2021.01.022',
+              note: 'Consensus statement synthesizing international empirical findings on ADHD genetics, neurobiology, clinical presentation, and pharmacotherapy.',
             },
             {
-              title: 'Clinical Care of ADHD in Children',
-              organization: 'Centers for Disease Control and Prevention',
-              url: 'https://www.cdc.gov/adhd/hcp/treatment-recommendations/index.html',
-              note: 'Summarizes AAP recommendations on age-specific treatment and dose adjustment for maximum benefit with tolerable side effects.',
+              title: 'Clinical Practice Guideline for the Diagnosis, Evaluation, and Treatment of ADHD in Children and Adolescents',
+              organization: 'American Academy of Pediatrics (Wolraich et al., Pediatrics 2019)',
+              url: 'https://doi.org/10.1542/peds.2019-2528',
+              note: 'AAP evidence-based guidelines for age-specific multimodal care, cardiovascular pre-screening, stimulant titration, and follow-up tracking.',
             },
             {
-              title: 'Attention-Deficit/Hyperactivity Disorder: What You Need to Know',
-              organization: 'National Institute of Mental Health',
-              url: 'https://www.nimh.nih.gov/health/publications/attention-deficit-hyperactivity-disorder-what-you-need-to-know',
+              title: 'Attention deficit hyperactivity disorder: diagnosis and management (NICE Guideline NG87)',
+              organization: 'National Institute for Health and Care Excellence (NICE 2018, updated 2024)',
+              url: 'https://www.nice.org.uk/guidance/ng87',
+              note: 'UK clinical practice guidelines covering first-line stimulant hierarchy, nonstimulant indications, cardiovascular baseline monitoring, and contraindications.',
             },
             {
-              title: 'DailyMed drug labels',
+              title: 'FDA Drug Safety Communication: FDA updates Boxed Warning for prescription stimulants to address misuse, abuse, addiction, and overdose',
+              organization: 'U.S. Food and Drug Administration (FDA, May 2023)',
+              url: 'https://www.fda.gov/drugs/drug-safety-and-availability/fda-updates-boxed-warning-prescription-stimulants-improve-safe-use-and-address-misuse-abuse-addiction',
+              note: 'Standardized class-wide Boxed Warning update across all prescription methylphenidate and amphetamine medications regarding abuse, misuse, addiction, and diversion.',
+            },
+            {
+              title: 'DailyMed Prescribing Information (FDA Package Inserts)',
               organization: 'U.S. National Library of Medicine',
               url: 'https://dailymed.nlm.nih.gov/dailymed/',
-              note: 'Current U.S. prescribing information used for adult approvals, boxed warnings, starting information, adjunctive indications, and tapering cautions.',
+              note: 'Official FDA package inserts for Ritalin, Concerta, Focalin XR, Daytrana, Adderall IR/XR, Vyvanse, Jornay PM, Strattera, Qelbree, Intuniv, and Kapvay.',
             },
             {
-              title: 'ADHD Resource Center',
-              organization: 'American Academy of Child and Adolescent Psychiatry',
+              title: 'Catecholamine regulation of the prefrontal cortex: Cognitive function and ADHD pharmacotherapy',
+              organization: 'Neuropharmacology (Arnsten, A. F. T., 2020)',
+              url: 'https://doi.org/10.1016/j.neuropharm.2020.108343',
+              note: 'Cellular neurobiology detailing alpha-2A adrenergic receptor and dopamine D1 receptor modulation of working memory and prefrontal signal-to-noise ratio.',
+            },
+            {
+              title: 'Clinical Update: ADHD Across the Lifespan',
+              organization: 'American Academy of Child and Adolescent Psychiatry (AACAP)',
               url: 'https://www.aacap.org/AACAP/Families_and_Youth/Resource_Centers/ADHD_Resource_Center/Home.aspx',
+              note: 'Practice parameters for comprehensive diagnostic assessment, stimulant titration protocols, adjunctive alpha-2 agonist usage, and multimodal intervention.',
             },
           ]}
         />
@@ -897,6 +1137,6 @@ export default function Medication() {
           Back to the three pathways <ArrowDown className="h-4 w-4 rotate-180" />
         </button>
       </motion.div>
-    </ChapterLayout>
+    </ChapterLayoutWide>
   );
 }

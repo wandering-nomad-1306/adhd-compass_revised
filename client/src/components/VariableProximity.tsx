@@ -7,6 +7,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { useReducedMotion } from 'framer-motion';
 
@@ -21,6 +22,11 @@ interface VariableProximityProps extends HTMLAttributes<HTMLSpanElement> {
   falloff?: Falloff;
   className?: string;
   style?: CSSProperties;
+}
+
+interface LetterCoord {
+  centerX: number;
+  centerY: number;
 }
 
 function parseSettings(settings: string) {
@@ -51,9 +57,19 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>(
     ref,
   ) => {
     const reducedMotion = useReducedMotion();
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
     const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+    const letterCoordsRef = useRef<LetterCoord[]>([]);
     const frameRef = useRef<number | null>(null);
-    const pointerRef = useRef({ x: -10_000, y: -10_000 });
+    const pointerClientRef = useRef<{ x: number; y: number }>({ x: -10_000, y: -10_000 });
+
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        const isTouch =
+          window.matchMedia('(pointer: coarse)').matches && !window.matchMedia('(hover: hover)').matches;
+        setIsTouchDevice(isTouch);
+      }
+    }, []);
 
     const axes = useMemo(() => {
       const from = parseSettings(fromFontVariationSettings);
@@ -76,64 +92,118 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>(
       [falloff, radius],
     );
 
+    const measurePositions = useCallback(() => {
+      const container = containerRef.current;
+      if (!container) return;
+      const containerRect = container.getBoundingClientRect();
+
+      // Read-only phase: batch measure all letters without writing styles
+      letterCoordsRef.current = letterRefs.current.map((letter) => {
+        if (!letter) return { centerX: 0, centerY: 0 };
+        const rect = letter.getBoundingClientRect();
+        return {
+          centerX: rect.left + rect.width / 2 - containerRect.left,
+          centerY: rect.top + rect.height / 2 - containerRect.top,
+        };
+      });
+    }, [containerRef]);
+
     const paint = useCallback(() => {
       frameRef.current = null;
       const container = containerRef.current;
-      if (!container || reducedMotion) return;
+      if (!container || reducedMotion || isTouchDevice) return;
 
+      // Single read for container position per frame
       const containerRect = container.getBoundingClientRect();
+      const pointerX = pointerClientRef.current.x - containerRect.left;
+      const pointerY = pointerClientRef.current.y - containerRect.top;
 
-      letterRefs.current.forEach((letter) => {
+      if (letterCoordsRef.current.length === 0) {
+        measurePositions();
+      }
+
+      const coords = letterCoordsRef.current;
+
+      // Pure write phase with no interleaved DOM measurements
+      letterRefs.current.forEach((letter, i) => {
         if (!letter) return;
-        const rect = letter.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2 - containerRect.left;
-        const centerY = rect.top + rect.height / 2 - containerRect.top;
-        const distance = Math.hypot(pointerRef.current.x - centerX, pointerRef.current.y - centerY);
+        const pos = coords[i];
+        if (!pos) return;
+
+        const distance = Math.hypot(pointerX - pos.centerX, pointerY - pos.centerY);
 
         if (distance >= radius) {
-          letter.style.fontVariationSettings = fromFontVariationSettings;
+          if (letter.style.fontVariationSettings !== fromFontVariationSettings) {
+            letter.style.fontVariationSettings = fromFontVariationSettings;
+          }
           return;
         }
 
         const influence = calculateFalloff(distance);
-        letter.style.fontVariationSettings = axes
+        const targetSettings = axes
           .map(({ axis, fromValue, toValue }) => `'${axis}' ${fromValue + (toValue - fromValue) * influence}`)
           .join(', ');
+
+        if (letter.style.fontVariationSettings !== targetSettings) {
+          letter.style.fontVariationSettings = targetSettings;
+        }
       });
-    }, [axes, calculateFalloff, containerRef, fromFontVariationSettings, radius, reducedMotion]);
+    }, [
+      axes,
+      calculateFalloff,
+      containerRef,
+      fromFontVariationSettings,
+      isTouchDevice,
+      measurePositions,
+      radius,
+      reducedMotion,
+    ]);
 
     useEffect(() => {
       const container = containerRef.current;
-      if (!container || reducedMotion) return;
+      if (!container || reducedMotion || isTouchDevice) return;
 
-      const queuePaint = () => {
-        if (frameRef.current === null) frameRef.current = window.requestAnimationFrame(paint);
-      };
+      // Initial measurement after layout
+      const measureTimer = window.setTimeout(measurePositions, 60);
 
       const handleMove = (event: PointerEvent) => {
-        const rect = container.getBoundingClientRect();
-        pointerRef.current = { x: event.clientX - rect.left, y: event.clientY - rect.top };
-        queuePaint();
+        if (event.pointerType === 'touch') return;
+        pointerClientRef.current = { x: event.clientX, y: event.clientY };
+        if (frameRef.current === null) {
+          frameRef.current = window.requestAnimationFrame(paint);
+        }
       };
 
       const handleLeave = () => {
-        pointerRef.current = { x: -10_000, y: -10_000 };
+        pointerClientRef.current = { x: -10_000, y: -10_000 };
         letterRefs.current.forEach((letter) => {
-          if (letter) letter.style.fontVariationSettings = fromFontVariationSettings;
+          if (letter && letter.style.fontVariationSettings !== fromFontVariationSettings) {
+            letter.style.fontVariationSettings = fromFontVariationSettings;
+          }
         });
       };
 
-      container.addEventListener('pointermove', handleMove);
-      container.addEventListener('pointerleave', handleLeave);
+      container.addEventListener('pointermove', handleMove, { passive: true });
+      container.addEventListener('pointerleave', handleLeave, { passive: true });
+      window.addEventListener('resize', measurePositions, { passive: true });
+
+      let resizeObserver: ResizeObserver | null = null;
+      if (typeof ResizeObserver !== 'undefined') {
+        resizeObserver = new ResizeObserver(() => measurePositions());
+        resizeObserver.observe(container);
+      }
 
       return () => {
+        window.clearTimeout(measureTimer);
         container.removeEventListener('pointermove', handleMove);
         container.removeEventListener('pointerleave', handleLeave);
+        window.removeEventListener('resize', measurePositions);
+        if (resizeObserver) resizeObserver.disconnect();
         if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
       };
-    }, [containerRef, fromFontVariationSettings, paint, reducedMotion]);
+    }, [containerRef, fromFontVariationSettings, isTouchDevice, measurePositions, paint, reducedMotion]);
 
-    if (reducedMotion) {
+    if (reducedMotion || isTouchDevice) {
       return (
         <span ref={ref} className={className} style={style} {...rest}>
           {label}

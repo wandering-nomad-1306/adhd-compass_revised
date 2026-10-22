@@ -14,10 +14,10 @@ import {
   Target,
   Zap,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import BrainNetworkViz from '@/components/BrainNetworkViz';
-import ChapterLayout from '@/components/ChapterLayout';
+import ChapterLayoutWide from '@/components/ChapterLayoutWide';
 import SourceList from '@/components/SourceList';
 
 const brainSystems = [
@@ -27,13 +27,13 @@ const brainSystems = [
     title: 'Executive control',
     subtitle: 'Keeping a goal active and guiding behaviour toward it',
     regions: 'Prefrontal and frontoparietal systems, working with the striatum and other regions',
-    job: 'These systems help keep a future goal active long enough to guide the present moment. They support working memory, inhibition, planning, error monitoring, and flexible adjustment when the situation changes. This is about access to control—not intelligence or knowing the rule.',
+    job: 'These systems help <strong>keep a future goal active long enough to guide the present moment</strong>. They support working memory, pausing impulses, planning, error monitoring, and flexible adjustment. This is about <strong>access to control in real-time</strong>—not intelligence or knowing what you should do.',
     research:
-      'ADHD research repeatedly finds group-level differences in activation and connectivity across frontal-control circuits. A large NIH-supported analysis published in 2024 also linked ADHD symptoms in youth with atypical interactions between the frontal cortex and deeper information-processing regions.',
+      'Brain imaging repeatedly finds <strong>differences in connectivity across frontal-control networks</strong>. Recent NIH studies link ADHD symptoms in youth to atypical interactions between the frontal cortex and deeper motor and reward circuits.',
     daily:
-      'The result may look like inconsistent inhibition, losing track of a plan, difficulty beginning a multi-step task, or knowing a rule but failing to use it at the right moment.',
+      'The result is the classic intention-action gap: <strong>knowing the rules perfectly, yet struggling to initiate multi-step tasks or resist distractions</strong> without immediate deadlines or external scaffolding.',
     limit:
-      'Executive-function test results vary widely. Some people with ADHD perform within an average range on a structured test but struggle when everyday tasks are long, unstructured, or unsupported.',
+      'Executive test scores vary widely. Many people with ADHD score normally on short, novel office tests, yet <strong>experience significant impairment during prolonged, unstructured real-world demands</strong>.',
   },
   {
     id: 'attention',
@@ -41,27 +41,27 @@ const brainSystems = [
     title: 'Attention and salience',
     subtitle: 'Selecting what matters now and shifting between internal and external information',
     regions: 'Frontal and parietal attention systems, anterior cingulate, insula, and connected sensory regions',
-    job: 'Attention is not one on/off switch. The brain must select what matters, reduce competition from other signals, sustain the current goal, and redirect attention when priorities change. ADHD often affects the regulation and consistency of attention rather than the total ability to focus.',
+    job: 'Attention is not a simple on/off switch. The brain must <strong>select what matters right now, filter out competing signals, and sustain effort</strong>. ADHD primarily affects the <strong>regulation and consistency of attention</strong> rather than a total inability to focus.',
     research:
-      'Neuroimaging studies associate ADHD with altered coordination across attention, salience, and cognitive-control networks. These are average differences across groups—not a single pattern shared by every person.',
+      'Neuroimaging associates ADHD with <strong>variable communication between attention, salience, and control networks</strong>—creating fluctuations in how easily the brain locks onto external tasks.',
     daily:
-      'This may contribute to distractibility, variable response speed, missed details, or attention that is strong in one context and difficult to sustain in another.',
+      'This creates an interest-based nervous system: <strong>effortless hyperfocus during novel or urgent activities</strong>, alongside rapid mental fatigue or missed details during routine tasks.',
     limit:
-      'Being distracted is not specific to ADHD. Sleep loss, anxiety, depression, stress, pain, medication effects, and many other conditions can disrupt the same systems.',
+      'Distractibility is not exclusive to ADHD. <strong>Chronic stress, sleep deprivation, thyroid issues, anxiety, and depression</strong> can disrupt the exact same attention circuits.',
   },
   {
     id: 'reward',
     icon: Sparkles,
     title: 'Reward and motivation',
-    subtitle: 'Estimating effort, reward, delay, and whether an action is worth starting',
+    subtitle: 'How the brain evaluates effort, delay, and starting tasks',
     regions: 'The striatum and connected frontal circuits involved in reward learning, motivation, and action selection',
-    job: 'Reward systems help estimate effort, expected value, delay, and which action is worth starting. Immediate and certain feedback usually has more influence on present behaviour than a distant or unclear payoff. This is not a lack of caring; it is a difference in how strongly a future outcome guides action now.',
+    job: 'Reward circuits <strong>calculate effort, expected delay, and whether an action is worth starting</strong>. Immediate, tangible feedback naturally commands more neurological priority than a distant payoff. This is a difference in <strong>temporal discounting</strong>, not a lack of caring.',
     research:
-      'ADHD has been associated with differences in reward processing and, in some studies, a stronger preference for immediate rewards over delayed rewards. This can help explain why context and feedback change performance.',
+      'ADHD is strongly linked to <strong>altered dopamine signaling in the striatum</strong>, creating a biological preference for immediate consequences over distant rewards.',
     daily:
-      'A repetitive task with a distant payoff may be harder to initiate or sustain, while immediate feedback, novelty, visible progress, or urgency can make the same person’s performance look very different.',
+      'A task with a distant payoff feels <strong>neurologically invisible until a deadline creates immediate urgency</strong>, explaining why last-minute pressure suddenly unlocks productivity.',
     limit:
-      'This does not mean people with ADHD only care about fun or cannot value long-term goals. It describes how effectively a goal influences behaviour in a particular moment.',
+      'This does not mean people with ADHD cannot value long-term aspirations. It describes <strong>how strongly future consequences can drive physical action in the present moment</strong>.',
   },
   {
     id: 'coordination',
@@ -69,16 +69,15 @@ const brainSystems = [
     title: 'Network coordination',
     subtitle: 'Moving between mind-wandering, task focus, and monitoring what deserves attention',
     regions: 'Default-mode, frontoparietal, salience, and task-related networks',
-    job: 'The default-mode network supports internally focused thought, memory, and imagination. Task-control networks support externally directed work, while salience systems help decide which network should take priority. The useful question is not whether one network is active, but whether switching and coordination match the task.',
+    job: 'The <strong>Default Mode Network (DMN)</strong> supports daydreaming, memory, and creative thought, while the <strong>Task Positive Network (TPN)</strong> handles external work. Proper focus requires smoothly switching between them.',
     research:
-      'Studies have reported altered communication between default-mode and control networks in ADHD. One proposed explanation is that internally directed activity may intrude during tasks that require sustained external attention.',
+      'Studies show that in ADHD, the <strong>Default Mode Network tends to stay active even during focused tasks</strong>, intruding with internal thoughts, spontaneous ideas, or mental drift.',
     daily:
-      'This may feel like losing the thread of a task, drifting into unrelated thought, or repeatedly needing to re-enter “work mode.”',
+      'This feels like <strong>losing your train of thought mid-sentence</strong>, mind-wandering while someone is speaking, or needing multiple restarts to get back into “work mode.”',
     limit:
-      'The default-mode network is not bad and mind-wandering is not a defect. It supports memory, imagination, and self-reflection. The issue is coordination and timing, not eliminating internal thought.',
+      'The default mode network is not a defect. It is the engine of <strong>creativity, empathy, synthesis, and imagination</strong>. The goal is improving switching agility—not silencing your internal voice.',
   },
 ] as const;
-
 
 const chemicalSystems = [
   {
@@ -86,39 +85,73 @@ const chemicalSystems = [
     name: 'Dopamine',
     accent: '#5b6f96',
     overview:
-      'Dopamine is a neuromodulator. It changes how strongly networks respond to information and how the brain learns from outcomes; it is not a single “motivation chemical” and ADHD is not explained by a simple global dopamine shortage.',
+      'Dopamine is your brain’s <strong>interest and reward navigator</strong>—not just a simple “pleasure chemical.” It helps you evaluate whether an effort is worth the reward, signals what is relevant right now, and fuels the motivation needed to cross the starting line.',
     role:
-      'In frontal and striatal circuits, dopamine contributes to action selection, reward prediction, learning from feedback, movement, effort allocation and the stability of goal-relevant information. Different dopamine receptors and pathways can have different effects, so the useful question is how dopamine is regulated in a particular circuit rather than whether the whole brain has “too little.”',
+      'In executive and reward networks, dopamine helps <strong>anchor attention on tasks, filter out distractions, and convert mental intentions into physical action</strong>. It determines how engaging and rewarding a goal feels before you even start doing it.',
     adhd:
-      'Dopamine is clearly relevant to ADHD, but the evidence does not support one universal dopamine abnormality in every person. Research has reported differences in dopamine transporters, receptors, synthesis, release and reward-related signalling, while other studies do not find the same pattern. A 2024 review concluded that altered dopamine regulation remains plausible but that the classic simple “low dopamine” hypothesis is too narrow.',
+      'ADHD is <strong>not a simple global “shortage” of dopamine</strong>. Instead, dopamine signaling in specific focus and reward circuits is inconsistent. When a task lacks instant stimulation, visible progress, or urgency, dopamine levels drop, making starting feel like pushing through wet cement—even when you genuinely care.',
     daily:
-      'Reward-related circuits help explain why immediate feedback, visible progress, novelty or urgency may make an action easier to start or sustain, while a distant payoff may exert less influence in the present moment. That is a possible mechanism, not a statement that a person does not value long-term goals.',
+      'This explains why an interesting hobby or urgent deadline triggers effortless, laser-sharp focus (<strong>hyperfocus</strong>), while routine chores or paperwork feel almost physically exhausting to initiate.',
     medication:
-      'Stimulant medications increase catecholamine signalling, including dopamine, in relevant circuits. Their clinical effect is not the same as “adding motivation”; they can improve the conditions under which attention, inhibition and goal-directed behaviour are regulated.',
+      'Stimulant medications (and certain nonstimulants) <strong>temporarily optimize dopamine levels in communication gaps</strong>, helping interest, motivation, and attention remain steadier throughout everyday routines.',
     caution:
-      'There is no routine dopamine test that diagnoses ADHD. Dopamine findings are group-level research results and vary by brain region, receptor, age, medication history and study method.',
+      'There is <strong>no blood test or brain scan for dopamine</strong> that diagnoses ADHD. Research findings reflect average group patterns, not a simple deficit number.',
   },
   {
     id: 'norepinephrine',
     name: 'Norepinephrine',
     accent: '#477f72',
     overview:
-      'Norepinephrine is another neuromodulator that is especially important for alertness and prefrontal control. It helps task-relevant signals stand out from competing activity and supports the stability of working-memory representations.',
+      'Norepinephrine is your brain’s <strong>alertness and signal amplifier</strong>. It acts like a spotlight controller for the front control networks, keeping priority goals clear in your working memory while muting mental background noise.',
     role:
-      'In the prefrontal cortex, norepinephrine helps regulate attention, working memory and response control. Its effects depend strongly on receptor type and arousal level: an appropriate range can strengthen useful network activity, while very low alertness or very high stress can make deliberate control less reliable.',
+      'In the prefrontal cortex, norepinephrine <strong>amplifies the strength of what you are focusing on</strong>. It helps you stay alert, hold multiple instructions in mind, and resist impulsive interruptions during demanding work.',
     adhd:
-      'ADHD research has implicated norepinephrine transmission and attention networks, although the evidence is smaller than the dopamine literature and does not define one universal abnormality. The important point is that dopamine and norepinephrine interact in frontal control systems rather than operating as two separate switches.',
+      'In ADHD, norepinephrine transmission can be <strong>too low during quiet or repetitive tasks</strong> (leading to mental drift or sleepiness) or spike erratically during acute stress, making it difficult to maintain steady focus without extra stimulation or urgency.',
     daily:
-      'This helps explain why fatigue, stress and arousal can change how consistently a person can hold instructions in mind, resist a distraction or return attention to a goal. It does not mean that every fluctuation in alertness is an ADHD symptom.',
+      'This helps explain why people with ADHD often find themselves <strong>subconsciously seeking caffeine, background music, or last-minute panic</strong> to jump-start alertness, or why a sudden interruption easily erases their train of thought.',
     medication:
-      'Several ADHD medications influence norepinephrine signalling. Stimulants affect catecholamine availability, atomoxetine primarily blocks norepinephrine reuptake, and alpha-2 agonists act on adrenergic receptors. Different mechanisms can improve overlapping functions without proving that ADHD is caused by a single chemical deficit.',
+      'Medications like atomoxetine, viloxazine, stimulants, and alpha-2 agonists <strong>optimize norepinephrine signaling</strong>, helping the brain maintain steady wakefulness and focus throughout the day without relying on emergency adrenaline.',
     caution:
-      'More norepinephrine is not automatically better. High stress can impair prefrontal function, and medication effects depend on dose, receptor activity, individual biology and clinical context.',
+      'More is not automatically better. <strong>Excessive stress or high doses can overload executive circuits</strong>, which is why acute anxiety harms focus just as much as low arousal.',
   },
 ] as const;
 
 function BrainSystemExplorer() {
-  const [selected, setSelected] = useState(0);
+  const getInitialIndex = () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const sys = params.get('system');
+      if (sys) {
+        const idx = brainSystems.findIndex((s) => s.id === sys);
+        if (idx !== -1) return idx;
+      }
+    } catch {}
+    return 0;
+  };
+
+  const [selected, setSelected] = useState(getInitialIndex);
+
+  useEffect(() => {
+    const syncFromUrl = () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const sys = params.get('system');
+        if (sys) {
+          const idx = brainSystems.findIndex((s) => s.id === sys);
+          if (idx !== -1) setSelected(idx);
+        }
+      } catch {}
+    };
+
+    syncFromUrl();
+    window.addEventListener('popstate', syncFromUrl);
+    window.addEventListener('hashchange', syncFromUrl);
+    return () => {
+      window.removeEventListener('popstate', syncFromUrl);
+      window.removeEventListener('hashchange', syncFromUrl);
+    };
+  }, []);
+
   const active = brainSystems[selected];
   const Icon = active.icon;
 
@@ -180,17 +213,17 @@ function BrainSystemExplorer() {
               ['How this may appear in daily life', active.daily],
             ].map(([label, text]) => (
               <div key={label} className="min-w-0 border-l-2 border-sage-green/30 pl-4">
-                <p className="font-bold text-foreground">{label}</p>
-                <p className="mt-2 break-words leading-relaxed text-muted-foreground">{text}</p>
+                <p className="font-bold text-base text-foreground">{label}</p>
+                <p className="mt-2 break-words leading-[1.75] text-[15px] sm:text-base text-foreground/90" dangerouslySetInnerHTML={{ __html: text }} />
               </div>
             ))}
           </div>
 
-          <div className="mt-7 flex gap-3 rounded-2xl bg-warm-cream p-5">
+          <div className="mt-7 flex gap-3.5 rounded-2xl bg-warm-cream/90 p-5 sm:p-6 border border-stone-200/60">
             <Info className="mt-0.5 h-5 w-5 shrink-0 text-sage-green" />
             <div>
-              <p className="font-bold text-foreground">Important limit</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{active.limit}</p>
+              <p className="font-bold text-base text-foreground">Important diagnostic limit</p>
+              <p className="mt-1 text-[15px] sm:text-base leading-[1.75] text-foreground/90" dangerouslySetInnerHTML={{ __html: active.limit }} />
             </div>
           </div>
         </motion.article>
@@ -233,7 +266,7 @@ function ChemicalSignalExplorer() {
           <div className="max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: active.accent }}>Neurotransmitter / neuromodulator</p>
             <h3 className="mt-2 font-serif text-3xl font-bold text-foreground">{active.name}</h3>
-            <p className="mt-4 text-lg leading-relaxed text-foreground">{active.overview}</p>
+            <p className="mt-4 text-lg leading-relaxed text-foreground" dangerouslySetInnerHTML={{ __html: active.overview }} />
           </div>
 
           <div className="mt-7 grid gap-4 md:grid-cols-2">
@@ -243,25 +276,41 @@ function ChemicalSignalExplorer() {
               ['What this can look like in daily life', active.daily],
               ['Why medication affects it', active.medication],
             ].map(([title, text]) => (
-              <section key={title} className="rounded-2xl border border-sage-green/10 bg-[#fbf8f0] p-5">
-                <h4 className="font-bold text-foreground">{title}</h4>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+              <section key={title} className="rounded-2xl border border-stone-200/80 bg-white p-5 sm:p-6 shadow-2xs">
+                <h4 className="font-bold text-base sm:text-lg text-foreground">{title}</h4>
+                <p className="mt-2.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90" dangerouslySetInnerHTML={{ __html: text }} />
               </section>
             ))}
           </div>
 
-          <div className="mt-5 flex gap-3 rounded-2xl border border-[#a96952]/15 bg-[#a96952]/[0.05] p-5">
+          <div className="mt-5 flex gap-3.5 rounded-2xl border border-[#a96952]/20 bg-[#a96952]/[0.06] p-5 sm:p-6">
             <Info className="mt-0.5 h-5 w-5 shrink-0 text-[#a96952]" />
             <div>
-              <p className="font-bold text-foreground">Important limit</p>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{active.caution}</p>
+              <p className="font-bold text-base text-foreground">Important diagnostic limit</p>
+              <p className="mt-1.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90" dangerouslySetInnerHTML={{ __html: active.caution }} />
             </div>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-sage-green/15 bg-sage-green/[0.05] p-5">
-            <p className="font-bold text-foreground">How dopamine and norepinephrine fit together</p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Both systems influence prefrontal and connected networks. Dopamine is particularly important in reward learning, action selection and frontal-striatal signalling; norepinephrine is especially important for alertness and strengthening task-relevant prefrontal signals. Their functions overlap, and neither chemical alone explains ADHD.
+          <div className="mt-6 rounded-2xl border border-sage-green/20 bg-sage-green/[0.08] p-5 sm:p-6 shadow-2xs">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-sage-green/15 text-sage-green font-bold text-xs">★</span>
+              <p className="font-bold text-base sm:text-lg text-foreground">How dopamine and norepinephrine fit together: The Radio Tuner Model</p>
+            </div>
+            <p className="mt-3 text-[15px] sm:text-base leading-[1.75] text-foreground/90">
+              Think of your brain's front executive network like a high-performance radio receiver:
+            </p>
+            <div className="mt-3.5 space-y-2.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90">
+              <div className="flex items-start gap-2.5">
+                <span className="mt-1 h-2 w-2 rounded-full bg-sage-green shrink-0" />
+                <span><strong>Norepinephrine turns up the SIGNAL volume:</strong> It acts on alpha-2A receptors to boost alertness, strengthen working memory, and keep your primary goal clear and loud.</span>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="mt-1 h-2 w-2 rounded-full bg-sage-green shrink-0" />
+                <span><strong>Dopamine acts like ACTIVE NOISE CANCELLATION:</strong> It acts on D1 receptors to mute background mental chatter, random impulses, and irrelevant distractions.</span>
+              </div>
+            </div>
+            <p className="mt-3.5 text-sm sm:text-base leading-[1.75] text-stone-700 border-t border-sage-green/15 pt-3">
+              <strong>The Clinical Reality:</strong> Peak focus happens in the balanced “sweet spot” when both chemicals are tuned. In ADHD, this tuning fluctuates—so the broadcast either fades out or gets drowned in background static. Medications do not create artificial energy; they simply help tune the radio back into a clear, steady broadcast.
             </p>
           </div>
         </motion.article>
@@ -274,24 +323,20 @@ export default function MeetYourBrain() {
   const [, setLocation] = useLocation();
 
   return (
-    <ChapterLayout
+    <ChapterLayoutWide
       title="Meet Your Brain"
-      subtitle="Brain systems, neurochemistry, and executive functions"
+      subtitle="Brain systems, neurochemistry, and executive functions."
       chapterNumber={4}
       totalChapters={10}
+      badgeText="Chapter 4 · Neuroscience"
+      estimatedReadingTime="8 min read"
+      bgClass="bg-[#F4F7F9]"
+      accentColor="#3a596d"
+      maxWidthClass="max-w-[76rem]"
       onPrevious={() => setLocation('/chapter/what-is')}
       onNext={() => setLocation('/chapter/what-helps')}
     >
-      <motion.div className="space-y-16" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-        <section className="text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-sage-green">ADHD neuroscience</p>
-          <h1 className="mx-auto mt-4 max-w-4xl font-serif text-4xl font-bold leading-tight text-foreground md:text-6xl">
-            ADHD and the brain
-          </h1>
-          <p className="mx-auto mt-6 max-w-3xl text-xl leading-relaxed text-muted-foreground">
-            ADHD research examines how brain development, connected networks, executive control, attention, reward processing, and chemical signalling relate to symptoms. The findings describe patterns across groups and cannot diagnose one individual.
-          </p>
-        </section>
+      <motion.div className="space-y-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
 
         <motion.section id="research-limits" data-page-label="Research limits"
           className="rounded-2xl border border-sage-green/15 bg-gradient-to-br from-sage-green/[0.08] to-muted-teal/[0.08] p-7"
@@ -321,7 +366,7 @@ export default function MeetYourBrain() {
           <BrainNetworkViz />
         </motion.section>
 
-        <section id="brain-systems" data-page-label="Brain systems">
+        <section id="brain-systems" data-page-label="Brain systems" className="scroll-mt-24">
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">From regions to circuits</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Four systems that make the ADHD brain easier to understand</h2>
@@ -388,53 +433,53 @@ export default function MeetYourBrain() {
               {
                 icon: Zap,
                 title: 'Task demands',
-                text: 'Long duration, repetition, delayed reward, unclear steps, interruptions, and too many choices increase the amount of control the task requires.',
+                text: '<strong>Long duration, repetition, delayed payoff, unclear sub-steps, and frequent interruptions</strong> place enormous strain on prefrontal control circuits.',
               },
               {
                 icon: Gauge,
                 title: 'Current state',
-                text: 'Sleep, stress, mood, hunger, pain, arousal, and medication can change how consistently attention and working memory are available.',
+                text: '<strong>Sleep debt, chronic stress, emotional distress, hunger, and physical exhaustion</strong> directly deplete the dopamine and norepinephrine needed for executive access.',
               },
               {
                 icon: SlidersHorizontal,
                 title: 'External support',
-                text: 'Visible instructions, immediate feedback, shorter steps, reminders, accountability, and a quieter environment can reduce the load on executive functions.',
+                text: '<strong>Visual checklists, immediate feedback, visible timers, body doubling, and structured quiet workspaces</strong> externalize executive load and restore consistent performance.',
               },
             ].map(({ icon: Icon, title, text }) => (
-              <article key={title} className="rounded-2xl bg-[#fbf7ed] p-5">
-                <Icon className="h-5 w-5 text-[#4f7659]" />
+              <article key={title} className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-2xs">
+                <Icon className="h-6 w-6 text-[#4f7659]" />
                 <h3 className="mt-4 font-serif text-xl font-bold text-foreground">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+                <p className="mt-2.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90" dangerouslySetInnerHTML={{ __html: text }} />
               </article>
             ))}
           </div>
 
-          <div className="mt-6 rounded-2xl border border-[#4f7659]/15 bg-[#4f7659]/[0.05] p-5">
-            <p className="font-bold text-foreground">What this means</p>
-            <p className="mt-2 break-words leading-relaxed text-muted-foreground">
-              Doing something successfully once shows that the skill exists. It does not prove that the same level of access will be available under different demands, stress, fatigue, or support. Performance variability is not the same as lack of effort.
+          <div className="mt-6 rounded-2xl border border-[#4f7659]/20 bg-[#4f7659]/[0.06] p-6 shadow-2xs">
+            <p className="font-bold text-base sm:text-lg text-foreground">What this means for everyday life</p>
+            <p className="mt-2.5 break-words leading-[1.75] text-[15px] sm:text-base text-foreground/90">
+              <strong>Doing something successfully once proves the underlying skill exists.</strong> It does NOT prove that the brain can access that skill under different stress levels, fatigue, or lack of structure. <strong>Performance inconsistency is a core neurological symptom of ADHD—not a lack of willpower or moral failing.</strong>
             </p>
           </div>
         </section>
 
         <section id="emotion-movement" data-page-label="Emotion and movement" className="grid gap-6 lg:grid-cols-2">
-          <article className="rounded-2xl border border-sage-green/15 bg-white p-7 shadow-sm">
-            <h2 className="font-serif text-3xl font-bold text-foreground">Emotional regulation</h2>
-            <p className="mt-4 leading-relaxed text-foreground">
-              Difficulty regulating emotion is common in ADHD and can be highly impairing, although it is not one of the core DSM symptom lists. Executive-control, reward, and emotion systems interact, so frustration may rise quickly and take longer to settle.
+          <article className="rounded-2xl border border-stone-200/80 bg-white p-7 sm:p-8 shadow-2xs">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Emotional regulation</h2>
+            <p className="mt-4 text-base sm:text-lg leading-relaxed text-foreground">
+              Difficulty regulating emotions is <strong>one of the most impactful daily aspects of ADHD</strong>, even though it is not a standalone DSM category. Executive control, reward, and limbic emotion centers are deeply interconnected—meaning <strong>frustration, rejection, or excitement can surge rapidly before executive inhibitory circuits have time to evaluate or soften the reaction.</strong>
             </p>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              It should not automatically be attributed to ADHD. Anxiety, depression, trauma, sleep disruption, autism, bipolar disorder, and other conditions can affect emotions and may require separate assessment.
+            <p className="mt-4 text-[15px] sm:text-base leading-[1.75] text-foreground/90 border-t border-stone-200/60 pt-4">
+              <strong>Clinical Differential:</strong> Intense emotions should not automatically be attributed solely to ADHD. <strong>Anxiety, depression, trauma history, sleep apnea, sensory overload, and bipolar disorder</strong> also affect emotional stability and require individualized clinical evaluation.
             </p>
           </article>
 
-          <article className="rounded-2xl border border-sage-green/15 bg-white p-7 shadow-sm">
-            <h2 className="font-serif text-3xl font-bold text-foreground">Movement and timing</h2>
-            <p className="mt-4 leading-relaxed text-foreground">
-              ADHD research extends beyond the frontal lobes. The basal ganglia, cerebellum, and their connections with the cortex contribute to timing, movement, learning, and the coordination of cognitive control.
+          <article className="rounded-2xl border border-stone-200/80 bg-white p-7 sm:p-8 shadow-2xs">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Movement and timing</h2>
+            <p className="mt-4 text-base sm:text-lg leading-relaxed text-foreground">
+              ADHD neuroscience extends far beyond the prefrontal cortex. The <strong>basal ganglia and cerebellum</strong> contribute to internal timing, motor coordination, rhythm, and cognitive pacing.
             </p>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              This does not mean ADHD is a movement disorder or that one structure explains the condition. It reinforces the idea that ADHD involves distributed circuits.
+            <p className="mt-4 text-[15px] sm:text-base leading-[1.75] text-foreground/90 border-t border-stone-200/60 pt-4">
+              <strong>Everyday Relevance:</strong> This helps explain <strong>restless fidgeting, tapping, subtle balance challenges, or misestimating how fast time is passing</strong>. Movement often functions as an instinctive, subconscious tool to stimulate alertness and wake up drowsy prefrontal circuits.
             </p>
           </article>
         </section>
@@ -545,6 +590,6 @@ export default function MeetYourBrain() {
           </button>
         </motion.section>
       </motion.div>
-    </ChapterLayout>
+    </ChapterLayoutWide>
   );
 }

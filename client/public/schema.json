@@ -1,0 +1,167 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "EducationalOrganization",
+      "@id": "https://adhdcompass.in/#organization",
+      "name": "ADHD Compass",
+      "alternateName": "ADHD Compass Educational Initiative",
+      "url": "https://adhdcompass.in",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://adhdcompass.in/hero-reference.png",
+        "caption": "ADHD Compass - Navigating Neurodiversity with Science & Empathy"
+      },
+      "description": "An independent, evidence-based, compassionate educational compass translating ADHD neurobiology, pharmacology, and lived experiences into accessible insights.",
+      "publishingPrinciples": "https://adhdcompass.in/about#sources",
+      "knowsAbout": [
+        "Attention Deficit Hyperactivity Disorder (ADHD)",
+        "Executive Functioning and Executive Dysfunction",
+        "Prefrontal Cortex Neurobiology",
+        "Dopamine and Norepinephrine Transporter Mechanisms",
+        "ADHD Medication: Stimulant and Non-Stimulant Pharmacology",
+        "Adult ADHD Diagnosis and Assessment Pathways",
+        "Academic and Workplace Accommodations"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://adhdcompass.in/#website",
+      "url": "https://adhdcompass.in/",
+      "name": "ADHD Compass",
+      "description": "Evidence-based, compassionate guide to ADHD neuroscience, treatments & lived experience.",
+      "publisher": {
+        "@id": "https://adhdcompass.in/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "MedicalWebPage",
+      "@id": "https://adhdcompass.in/chapter/medication#medicalwebpage",
+      "url": "https://adhdcompass.in/chapter/medication",
+      "name": "ADHD Medication Guide: Stimulants, Non-Stimulants & Pharmacological Mechanisms",
+      "description": "Evidence-based clinical guide to ADHD medications: methylphenidate, amphetamines, atomoxetine, alpha-2 agonists, titration kinetics, side-effect profiles, and neurochemical mechanisms.",
+      "about": {
+        "@type": "MedicalCondition",
+        "name": "Attention Deficit Hyperactivity Disorder",
+        "code": {
+          "@type": "MedicalCode",
+          "code": "F90",
+          "codingSystem": "ICD-10-CM"
+        }
+      },
+      "aspect": "Treatment, Pharmacology, Mechanisms of Action, Titration Guidelines",
+      "medicalAudience": {
+        "@type": "MedicalAudience",
+        "medicalAudienceType": "Patients, Caregivers, Healthcare Professionals, Students"
+      },
+      "citation": [
+        "NICE Guideline NG87: Attention deficit hyperactivity disorder: diagnosis and management (2018, updated 2024)",
+        "Cortese et al., Comparative efficacy and tolerability of medications for ADHD in children, adolescents, and adults: a systematic review and network meta-analysis, Lancet Psychiatry (2018)",
+        "Faraone et al., The World Federation of ADHD International Consensus Statement: 208 Evidence-based conclusions about the disorder, Neuroscience & Biobehavioral Reviews (2021)",
+        "CADDRA - Canadian ADHD Practice Guidelines (4th Edition, 2020)"
+      ],
+      "publisher": {
+        "@id": "https://adhdcompass.in/#organization"
+      }
+    },
+    {
+      "@type": "MedicalWebPage",
+      "@id": "https://adhdcompass.in/chapter/brain#medicalwebpage",
+      "url": "https://adhdcompass.in/chapter/brain",
+      "name": "Meet Your Brain: ADHD Neurobiology, Neural Networks & Neurotransmitters",
+      "description": "Explore the neuroscience of ADHD: prefrontal cortex regulation, default mode network (DMN) vs central executive network (CEN), dopamine/norepinephrine pathways, and synaptic reuptake dynamics.",
+      "about": {
+        "@type": "MedicalCondition",
+        "name": "Attention Deficit Hyperactivity Disorder",
+        "code": {
+          "@type": "MedicalCode",
+          "code": "F90",
+          "codingSystem": "ICD-10-CM"
+        }
+      },
+      "aspect": "Neuroanatomy, Neurochemistry, Neural Connectivity, Executive Function Networks",
+      "medicalAudience": {
+        "@type": "MedicalAudience",
+        "medicalAudienceType": "Patients, Caregivers, Students, Educators"
+      },
+      "citation": [
+        "Arnsten, A. F. (2009). Toward a new understanding of ADHD pathophysiology: an important role for prefrontal cortex dysfunction. CNS Drugs, 23(Suppl 1), 33-41.",
+        "Castellanos, F. X., & Proal, E. (2012). Large-scale brain systems in ADHD: beyond the prefrontal-striatal model. Trends in Cognitive Sciences, 16(1), 17-26."
+      ],
+      "publisher": {
+        "@id": "https://adhdcompass.in/#organization"
+      }
+    },
+    {
+      "@type": "MedicalWebPage",
+      "@id": "https://adhdcompass.in/chapter/brain/executive-functions#medicalwebpage",
+      "url": "https://adhdcompass.in/chapter/brain/executive-functions",
+      "name": "ADHD Executive Dysfunction: Working Memory, Inhibition & Cognitive Regulation",
+      "description": "A clinical and neurocognitive breakdown of executive functions in ADHD: working memory decay, response inhibition, cognitive flexibility, and emotional self-regulation.",
+      "about": {
+        "@type": "MedicalCondition",
+        "name": "Attention Deficit Hyperactivity Disorder",
+        "code": {
+          "@type": "MedicalCode",
+          "code": "F90",
+          "codingSystem": "ICD-10-CM"
+        }
+      },
+      "aspect": "Cognitive Psychology, Neuropsychology, Executive Functions, Self-Regulation",
+      "medicalAudience": {
+        "@type": "MedicalAudience",
+        "medicalAudienceType": "Patients, Students, Clinicians, Educators"
+      },
+      "citation": [
+        "Barkley, R. A. (2015). Attention-Deficit Hyperactivity Disorder: A Handbook for Diagnosis and Treatment (4th ed.). Guilford Press.",
+        "Brown, T. E. (2013). A New Understanding of ADHD in Children and Adults: Executive Function Impairments. Routledge."
+      ],
+      "publisher": {
+        "@id": "https://adhdcompass.in/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://adhdcompass.in/chapter/medication#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://adhdcompass.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Medication Guide",
+          "item": "https://adhdcompass.in/chapter/medication"
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://adhdcompass.in/chapter/brain/executive-functions#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://adhdcompass.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Meet Your Brain",
+          "item": "https://adhdcompass.in/chapter/brain"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Executive Functions",
+          "item": "https://adhdcompass.in/chapter/brain/executive-functions"
+        }
+      ]
+    }
+  ]
+}

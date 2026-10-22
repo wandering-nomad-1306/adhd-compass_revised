@@ -3,43 +3,43 @@ import { Brain, CheckCircle2, CircleHelp, Dna, Scale, Sparkles, XCircle } from '
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import ADHDPresentationExplorer from '@/components/ADHDPresentationExplorer';
-import ChapterLayout from '@/components/ChapterLayout';
+import ChapterLayoutWide from '@/components/ChapterLayoutWide';
 import SourceList from '@/components/SourceList';
 
 const myths = [
   {
     statement: '“Everyone has a little ADHD.”',
-    verdict: 'Not quite',
+    verdict: 'Not accurate',
     explanation:
-      'Everyone can be distracted or impulsive sometimes. ADHD is a persistent developmental pattern that is more frequent or severe than expected, appears across important settings, and meaningfully interferes with daily functioning.',
+      'Everyone can be distracted, disorganized, or impulsive when stressed, tired, or bored. ADHD is <strong>not an occasional bad day</strong>—it is a lifelong, biologically grounded neurodevelopmental condition that creates <strong>persistent, measurable challenges across multiple settings</strong> (work, home, and relationships).',
   },
   {
     statement: '“ADHD is caused by laziness or bad parenting.”',
-    verdict: 'False',
+    verdict: 'Completely false',
     explanation:
-      'ADHD is a neurodevelopmental disorder. Parenting style does not create ADHD, although the environment can make symptoms easier or harder to manage. Clear support and structure can help without blaming the person or family.',
+      'ADHD is a <strong>complex genetic neurodevelopmental condition</strong> related to how brain executive networks develop. Parenting styles, screen time, and dietary sugar do NOT cause ADHD. <strong>Clear routines and supportive environments help manage symptoms</strong>, but blaming the individual or their parents contradicts decades of neuroscience.',
   },
   {
     statement: '“You cannot have ADHD if you can focus for hours.”',
-    verdict: 'False',
+    verdict: 'False (In fact, that is a hallmark feature)',
     explanation:
-      'ADHD is not an inability to focus at all. Attention may be difficult to regulate, especially when a task is repetitive, delayed, or low in immediate reward. Strong interest, novelty, urgency, or structure can temporarily change performance.',
+      'ADHD is an <strong>attention regulation challenge, not an absence of attention</strong>. When a topic offers high personal interest, urgent pressure, or novelty, the ADHD brain can lock into intense focus (<strong>hyperfocus</strong>). Difficulties arise when trying to initiate, sustain, and switch attention on repetitive or low-stimulation tasks.',
   },
   {
     statement: '“People grow out of ADHD.”',
-    verdict: 'Sometimes symptoms change—not always disappear',
+    verdict: 'Symptoms change form—they rarely disappear',
     explanation:
-      'Hyperactivity may become less visible with age, while difficulties with attention, organization, restlessness, or impulsivity can continue into adulthood. Demands and supports also change how noticeable symptoms are.',
+      'Visible physical hyperactivity often <strong>mellows with age into internal restlessness, fidgeting, or chronic racing thoughts</strong>. Meanwhile, executive challenges with <strong>time estimation, organization, emotional control, and working memory</strong> frequently continue into adulthood.',
   },
 ] as const;
 
 const coexisting = [
   'Anxiety or depression',
-  'Learning or language disorders',
-  'Autism spectrum disorder',
-  'Sleep problems',
-  'Oppositional or conduct problems',
-  'Tic disorders or substance-use concerns',
+  'Learning or language differences',
+  'Autism spectrum profile',
+  'Sleep latency and apnea concerns',
+  'Oppositional or emotional reactivity',
+  'Tic disorders or sensory overload',
 ];
 
 function MythExplorer() {
@@ -80,13 +80,13 @@ function MythExplorer() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.22 }}
-          className="flex min-h-0 flex-col justify-center rounded-2xl border border-sage-green/15 bg-white p-5 shadow-sm sm:min-h-64 sm:p-7"
+          className="flex min-h-0 flex-col justify-center rounded-2xl border border-stone-200/80 bg-white p-5 shadow-2xs sm:min-h-64 sm:p-7"
         >
           <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-sage-green">
             <CheckCircle2 className="h-5 w-5" /> Evidence-based answer
           </div>
           <h3 className="mt-5 font-serif text-2xl font-bold text-foreground">{item.verdict}</h3>
-          <p className="mt-4 text-lg leading-relaxed text-foreground">{item.explanation}</p>
+          <p className="mt-4 text-base sm:text-lg leading-relaxed text-foreground/90" dangerouslySetInnerHTML={{ __html: item.explanation }} />
         </motion.div>
       </AnimatePresence>
     </div>
@@ -97,22 +97,26 @@ export default function WhatIsADHD() {
   const [, setLocation] = useLocation();
 
   return (
-    <ChapterLayout
+    <ChapterLayoutWide
       title="What is ADHD?"
-      subtitle="A clear definition without reducing a person to a checklist"
+      subtitle="A clear clinical definition without reducing a person to a checklist."
       chapterNumber={3}
       totalChapters={10}
+      badgeText="Chapter 3 · Clinical Definition"
+      estimatedReadingTime="5 min read"
+      bgClass="bg-[#FAF8F3]"
+      accentColor="#6b5c3e"
+      maxWidthClass="max-w-[76rem]"
       onPrevious={() => setLocation('/chapter/why-feels')}
       onNext={() => setLocation('/chapter/brain')}
     >
-      <motion.div className="space-y-16" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-        <section className="text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-sage-green">The foundation</p>
-          <h1 className="mt-4 font-serif text-4xl font-bold text-foreground md:text-6xl">What is ADHD?</h1>
-          <p className="mx-auto mt-6 max-w-3xl text-xl leading-relaxed text-muted-foreground">
-            ADHD is a neurodevelopmental disorder marked by persistent patterns of inattention and/or hyperactivity-impulsivity that begin in childhood and interfere with everyday functioning.
+      <motion.div className="space-y-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        {/* Foundation Definition Banner */}
+        <div className="rounded-2xl border border-[#6b5c3e]/15 bg-white/80 backdrop-blur-sm p-6 sm:p-7 shadow-2xs">
+          <p className="text-base sm:text-lg leading-relaxed text-stone-800">
+            ADHD is a neurodevelopmental condition marked by persistent patterns of inattention and/or hyperactivity-impulsivity that begin in childhood, exist across multiple settings, and meaningfully interfere with everyday functioning.
           </p>
-        </section>
+        </div>
 
         <motion.section
           className="grid gap-5 md:grid-cols-3"
@@ -137,7 +141,7 @@ export default function WhatIsADHD() {
               text: 'Symptoms, strengths, environments, coexisting conditions, and support needs can look very different from one person to another.',
             },
           ].map(({ icon: Icon, title, text }) => (
-            <article key={title} className="rounded-2xl border border-sage-green/15 bg-white p-6 shadow-sm">
+            <article key={title} className="rounded-2xl border border-sage-green/15 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9]">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sage-green/10 text-sage-green">
                 <Icon className="h-5 w-5" />
               </span>
@@ -147,7 +151,7 @@ export default function WhatIsADHD() {
           ))}
         </motion.section>
 
-        <section>
+        <section id="presentations" data-page-label="Three ADHD presentations" className="scroll-mt-24">
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Explore the pattern</p>
             <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Three ADHD presentations</h2>
@@ -158,31 +162,52 @@ export default function WhatIsADHD() {
           <ADHDPresentationExplorer />
         </section>
 
-        <section>
+        <section id="diagnostic-criteria" data-page-label="Clinical threshold" className="scroll-mt-24">
           <div className="mb-8 max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">The clinical threshold</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">What separates ADHD from ordinary distraction?</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">The Clinical Standard</p>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">What separates ADHD from everyday distraction?</h2>
+            <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted-foreground">
+              Everyone misplaces their keys, zones out during dull meetings, or procrastinates on paperwork. A formal diagnosis requires meeting strict clinical criteria under the statutory <strong>DSM-5-TR standard</strong>:
+            </p>
           </div>
           <div className="overflow-hidden rounded-2xl border border-sage-green/15 bg-white shadow-sm">
             {[
-              ['Duration', 'Symptoms persist for at least 6 months to a degree that is inconsistent with developmental level and interferes with functioning.'],
-              ['Symptom threshold', 'Children through age 16 need at least 6 symptoms in the relevant symptom group; people age 17 and older need 5. Combined presentation requires meeting the threshold in both symptom groups.'],
-              ['History', 'Several symptoms were present before age 12, even when the diagnosis happens much later.'],
-              ['Settings', 'The pattern shows up in at least two important settings, such as home, school, work, or relationships.'],
-              ['Impact', 'Symptoms interfere with or reduce the quality of social, academic, or occupational functioning.'],
-              ['Context', 'The symptoms are not better explained by another mental disorder or by another condition that can produce similar difficulties. A careful evaluation considers sleep, anxiety, depression, learning differences, medical conditions, substances, and other explanations.'],
-            ].map(([label, text], index) => (
-              <div key={label} className="grid gap-2 border-b border-sage-green/10 p-5 last:border-b-0 md:grid-cols-[130px_1fr] md:p-6">
-                <span className="flex items-center gap-2 font-bold text-sage-green">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-sage-green/10 text-xs">{index + 1}</span>
+              [
+                'Duration (6+ Months)',
+                'Symptoms must persist for <strong>at least 6 continuous months</strong> to a degree that is inconsistent with a person’s developmental level and directly interferes with everyday goals.',
+              ],
+              [
+                'Symptom Threshold',
+                '<strong>Children and teens up to age 16</strong> must meet at least <strong>6 out of 9 symptoms</strong> in inattention or hyperactivity-impulsivity. <strong>Teens age 17 and adults</strong> need at least <strong>5 symptoms</strong>. The Combined presentation requires meeting thresholds in both categories.',
+              ],
+              [
+                'Childhood History (Before Age 12)',
+                'Several symptoms must have been <strong>present before age 12</strong>. Even when an adult is diagnosed in their 30s or 50s, a retrospective look reveals childhood patterns—even if they were high-achieving or masked by intense effort.',
+              ],
+              [
+                'Multiple Settings (2+ Areas)',
+                'Difficulties cannot happen in only one room. The pattern must cause noticeable friction in <strong>at least two important settings</strong> (such as school/work <em>and</em> home, finances, or relationships).',
+              ],
+              [
+                'Functional Impairment',
+                'Symptoms must genuinely <strong>disrupt or reduce the quality</strong> of academic achievement, job stability, safety (such as driving), or personal relationships—not just represent an eccentric personality trait.',
+              ],
+              [
+                'Context & Medical Rule-Outs',
+                'Difficulties cannot be better explained by another condition. A thorough clinical evaluation systematically rules out <strong>chronic sleep apnea, thyroid imbalances, unmanaged anxiety, clinical depression, learning disabilities, or trauma</strong> before confirming ADHD.',
+              ],
+            ].map(([label, textHtml], index) => (
+              <div key={label} className="grid gap-2 border-b border-sage-green/10 p-5 last:border-b-0 md:grid-cols-[170px_1fr] md:p-6">
+                <span className="flex items-center gap-2 font-bold text-sage-green text-sm sm:text-base">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sage-green/10 text-xs">{index + 1}</span>
                   {label}
                 </span>
-                <p className="leading-relaxed text-foreground">{text}</p>
+                <p className="text-[15px] sm:text-base leading-[1.75] text-foreground/90" dangerouslySetInnerHTML={{ __html: textHtml }} />
               </div>
             ))}
           </div>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            This is only the high-level framework. The separate Getting Diagnosed chapter will cover who evaluates ADHD, what the process includes, and how to prepare.
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted-foreground">
+            This framework establishes the clinical threshold. Chapter 8 (<em>Getting Diagnosed</em>) details who performs evaluations, what questions they ask, and how to prepare.
           </p>
         </section>
 
@@ -195,33 +220,33 @@ export default function WhatIsADHD() {
         </section>
 
         <section className="grid gap-7 lg:grid-cols-2">
-          <article className="rounded-2xl border border-sage-green/15 bg-white p-7 shadow-sm">
+          <article className="rounded-2xl border border-stone-200/80 bg-white p-7 sm:p-8 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-sage-green">
             <div className="flex items-center gap-3">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sage-green/10 text-sage-green">
                 <Dna className="h-5 w-5" />
               </span>
-              <h2 className="font-serif text-3xl font-bold text-foreground">What causes ADHD?</h2>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">What causes ADHD?</h2>
             </div>
-            <p className="mt-5 leading-relaxed text-foreground">
-              There is no single cause. Genetics play an important role, and research also examines brain development and factors associated with pregnancy, birth, environmental exposures, and injury. A risk factor is not proof that any one event caused a person's ADHD.
+            <p className="mt-5 text-base sm:text-lg leading-relaxed text-foreground">
+              ADHD is a <strong>highly heritable, neurodevelopmental condition</strong> with an estimated heritability of 70–80%. Research shows it is shaped by complex genetic variations influencing dopamine and norepinephrine transmission.
             </p>
-            <div className="mt-5 rounded-xl bg-warm-cream p-5">
-              <p className="font-bold text-foreground">What is not supported as a cause</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                ADHD is not created by laziness, poor discipline, lack of intelligence, ordinary screen use, or eating sugar. Those factors can affect behavior or daily functioning without being the underlying cause of ADHD.
+            <div className="mt-5 rounded-2xl bg-warm-cream p-5 sm:p-6 border border-stone-200/60">
+              <p className="font-bold text-base text-foreground">What science proves does NOT cause ADHD</p>
+              <p className="mt-2 text-[15px] sm:text-base leading-[1.75] text-foreground/90">
+                ADHD is <strong>never caused by personal laziness, poor discipline, dietary sugar, or standard screen time</strong>. While stress and lack of sleep certainly make symptoms worse, blaming the individual or their upbringing contradicts decades of peer-reviewed neuroscience.
               </p>
             </div>
           </article>
 
-          <article className="rounded-2xl border border-sage-green/15 bg-white p-7 shadow-sm">
-            <h2 className="font-serif text-3xl font-bold text-foreground">ADHD often overlaps with other needs</h2>
-            <p className="mt-4 leading-relaxed text-foreground">
-              Coexisting conditions can change what symptoms look like and what support works best. They should not be assumed, but they are important to assess rather than treating every difficulty as “just ADHD.”
+          <article className="rounded-2xl border border-stone-200/80 bg-white p-7 sm:p-8 shadow-2xs transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-sage-green">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">ADHD often overlaps with other needs</h2>
+            <p className="mt-4 text-base sm:text-lg leading-relaxed text-foreground">
+              Approximately <strong>80% of adults with ADHD have at least one co-occurring condition</strong>. Evaluating these overlaps is essential because treating anxiety or sleep deprivation can dramatically improve daily functioning:
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               {coexisting.map((item) => (
-                <div key={item} className="flex items-center gap-3 rounded-xl bg-warm-cream p-3 text-sm font-medium text-foreground">
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-muted-teal" />
+                <div key={item} className="flex items-center gap-3 rounded-xl bg-warm-cream p-3.5 text-[15px] sm:text-base font-medium text-foreground border border-stone-200/50">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-sage-green" />
                   {item}
                 </div>
               ))}
@@ -269,9 +294,16 @@ export default function WhatIsADHD() {
               url: 'https://www.psychiatry.org/patients-families/adhd/what-is-adhd',
             },
             {
-              title: 'DSM-5 Changes: Attention-Deficit/Hyperactivity Disorder',
-              organization: 'American Psychiatric Association',
-              url: 'https://www.psychiatry.org/File%20Library/Psychiatrists/Practice/DSM/APA_DSM-5-ADHD.pdf',
+              title: 'Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition, Text Revision (DSM-5-TR)',
+              organization: 'American Psychiatric Association (2022)',
+              url: 'https://www.psychiatry.org/psychiatrists/practice/dsm',
+              note: 'Current statutory diagnostic manual defining the 18 criteria, age-specific thresholds (≥ 6 for age ≤ 16; ≥ 5 for age ≥ 17), and duration/impairment requirements.',
+            },
+            {
+              title: 'The World Federation of ADHD International Consensus Statement: 208 Evidence-based conclusions about the disorder',
+              organization: 'Neuroscience & Biobehavioral Reviews (Faraone et al., 2021)',
+              url: 'https://doi.org/10.1016/j.neubiorev.2021.01.022',
+              note: 'Synthesizes global epidemiological, genetic, neuroimaging, and clinical consensus on ADHD etiology and validity.',
             },
             {
               title: 'ADHD Resource Center',
@@ -296,6 +328,6 @@ export default function WhatIsADHD() {
           ]}
         />
       </motion.div>
-    </ChapterLayout>
+    </ChapterLayoutWide>
   );
 }

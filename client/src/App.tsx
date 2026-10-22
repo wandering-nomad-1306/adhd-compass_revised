@@ -1,21 +1,234 @@
-﻿import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
-import RouteSEO from "./components/RouteSEO";
 import { ThemeProvider } from "./contexts/ThemeContext";
+
+// Home is statically loaded for instant initial render
 import Home from "./pages/Home";
-import Welcome from "./pages/chapters/Welcome";
-import WhyItFeelsLikeThis from "./pages/chapters/WhyItFeelsLikeThis";
-import MeetYourBrain from "./pages/chapters/MeetYourBrain";
-import ExecutiveFunctions from "./pages/chapters/ExecutiveFunctions";
-import WhatIsADHD from "./pages/chapters/WhatIsADHD";
-import WhatHelps from "./pages/chapters/WhatHelps";
-import Medication from "./pages/chapters/Medication";
-import InProgress from "./pages/chapters/InProgress";
-import About from "./pages/About";
+
+// Route-level code-splitting for chapters and auxiliary pages
+const Welcome = lazy(() => import("./pages/chapters/Welcome"));
+const WhyItFeelsLikeThis = lazy(() => import("./pages/chapters/WhyItFeelsLikeThis"));
+const MeetYourBrain = lazy(() => import("./pages/chapters/MeetYourBrain"));
+const ExecutiveFunctions = lazy(() => import("./pages/chapters/ExecutiveFunctions"));
+const WhatIsADHD = lazy(() => import("./pages/chapters/WhatIsADHD"));
+const WhatHelps = lazy(() => import("./pages/chapters/WhatHelps"));
+const WhatHelpsPrototype = lazy(() => import("./pages/chapters/WhatHelpsPrototype"));
+const Medication = lazy(() => import("./pages/chapters/Medication"));
+const GettingDiagnosed = lazy(() => import("./pages/chapters/GettingDiagnosed"));
+const ADHDTestPage = lazy(() => import("./pages/chapters/ADHDTestPage"));
+const InProgress = lazy(() => import("./pages/chapters/InProgress"));
+const About = lazy(() => import("./pages/About"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+import SEO, { BreadcrumbItem, FAQItem, MedicalAspectData } from "./components/SEO";
+
+function RouteSeoManager() {
+  const [location] = useLocation();
+
+  interface RouteMetadata {
+    title: string;
+    description: string;
+    type?: 'website' | 'article';
+    breadcrumbs?: BreadcrumbItem[];
+    medicalData?: MedicalAspectData;
+    faqItems?: FAQItem[];
+  }
+
+  const routeMetaMap: Record<string, RouteMetadata> = {
+    '/': {
+      title: 'ADHD Compass | Understanding Your Brain',
+      description: 'An independent, evidence-based, compassionate guide translating ADHD neuroscience, executive dysfunction, diagnosis pathways, non-pharmacological strategies, and medication pharmacology.',
+      type: 'website',
+    },
+    '/about': {
+      title: 'About ADHD Compass | Evidence Standards, Sources & Mission',
+      description: 'ADHD Compass is an independent, non-commercial educational project grounded in peer-reviewed neuroscience, NICE guidelines, and lived neurodivergent experiences.',
+      type: 'website',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'About', path: '/about' },
+      ],
+    },
+    '/chapter/welcome': {
+      title: 'Welcome to ADHD Compass: Navigating Your ADHD Journey',
+      description: 'A gentle, grounding introduction for adults navigating ADHD. Understand how to pace your reading and explore evidence-based chapters without cognitive overload.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Welcome', path: '/chapter/welcome' },
+      ],
+    },
+    '/chapter/why-feels': {
+      title: 'Why It Feels Like This: Lived ADHD Experiences, Paralysis & Validation',
+      description: 'Deconstruct why ADHD feels like overwhelm, task paralysis, sensory overload, time blindness, and rejection sensitivity. Compassionate validation grounded in cognitive science.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Lived Experiences', path: '/chapter/why-feels' },
+      ],
+      faqItems: [
+        {
+          question: 'Why do I experience sudden task paralysis despite wanting to work?',
+          answer: 'ADHD task paralysis is rooted in prefrontal cortex dopamine signaling delays and working memory overload when initiating complex tasks, not a lack of motivation or willpower.',
+        },
+        {
+          question: 'What is rejection sensitive dysphoria (RSD)?',
+          answer: 'RSD refers to intense emotional pain triggered by perceived rejection, criticism, or falling short of high personal standards, heavily mediated by emotional dysregulation in ADHD neural networks.',
+        },
+      ],
+    },
+    '/chapter/what-is': {
+      title: 'What is ADHD? Clinical Definitions, Presentations & Myths',
+      description: 'Understand DSM-5-TR ADHD presentations: inattentive, hyperactive-impulsive, and combined. Debunk pervasive myths about laziness, dopamine deficiency, and screen time.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'What is ADHD?', path: '/chapter/what-is' },
+      ],
+      medicalData: {
+        aspect: 'Clinical Definition, DSM-5-TR Presentations, Diagnostic Criteria',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+      faqItems: [
+        {
+          question: 'Is ADHD just a simple dopamine deficiency?',
+          answer: 'No. ADHD involves complex dysregulation of dopamine and norepinephrine pathways across prefrontal-striatal circuits and transporter kinetics (DAT/NET), not a simple global shortage.',
+        },
+        {
+          question: 'Can ADHD develop for the first time in adulthood?',
+          answer: 'ADHD is a neurodevelopmental condition with childhood onset; however, many individuals—especially females and those with high cognitive scaffolding—are not diagnosed until adult demands exceed compensation mechanisms.',
+        },
+      ],
+    },
+    '/chapter/brain': {
+      title: 'Meet Your Brain: ADHD Neurobiology, Networks & Neurotransmitters',
+      description: 'An interactive neuroanatomical guide to the ADHD brain: prefrontal cortex, default mode network (DMN), salience network, basal ganglia, and dopamine/norepinephrine signaling.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Meet Your Brain', path: '/chapter/brain' },
+      ],
+      medicalData: {
+        aspect: 'Neuroanatomy, Neurotransmitters, Large-Scale Brain Networks',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+    '/chapter/brain/executive-functions': {
+      title: 'ADHD Executive Dysfunction: Working Memory & Cognitive Regulation',
+      description: 'In-depth clinical guide to executive functions in ADHD: working memory capacity, response inhibition, cognitive flexibility, and Barkley\'s self-regulation model.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Meet Your Brain', path: '/chapter/brain' },
+        { name: 'Executive Functions', path: '/chapter/brain/executive-functions' },
+      ],
+      medicalData: {
+        aspect: 'Executive Dysfunction, Neuropsychology, Cognitive Science',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+    '/chapter/what-helps': {
+      title: 'What Actually Helps: Evidence-Based Non-Pharmacological Strategies',
+      description: 'Practical, research-backed interventions for ADHD: cognitive behavioral strategies, externalizing working memory, body doubling, exercise physiology, and sensory adjustments.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'What Actually Helps', path: '/chapter/what-helps' },
+      ],
+      medicalData: {
+        aspect: 'Behavioral Interventions, Environmental Scaffolding, Psychotherapy',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+    '/chapter/what-helps-prototype': {
+      title: 'What Actually Helps (Prototype) | ADHD Compass',
+      description: 'Prototype view with wide balanced layout and simplified medical headings.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'What Helps Prototype', path: '/chapter/what-helps-prototype' },
+      ],
+      medicalData: {
+        aspect: 'Behavioral Interventions, Environmental Scaffolding, Psychotherapy',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+    '/chapter/medication': {
+      title: 'ADHD Medication Guide: Stimulants, Non-Stimulants & Mechanisms',
+      description: 'Comprehensive, evidence-based guide to ADHD medications: methylphenidate vs amphetamine mechanisms, atomoxetine, alpha-2 agonists, titration kinetics, side effects, and clinical contraindications.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Medication Guide', path: '/chapter/medication' },
+      ],
+      medicalData: {
+        aspect: 'Pharmacology, Titration Guidelines, Reuptake Kinetics, Contraindications',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+    '/chapter/getting-diagnosed': {
+      title: 'Getting Diagnosed: Adult ADHD Clinical Assessment Pathways',
+      description: 'A step-by-step roadmap to seeking an adult ADHD diagnosis: clinical interviews (DIVA-5, CAARS), psychiatric evaluation, comorbidity screening, and preparation checklists.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Getting Diagnosed', path: '/chapter/getting-diagnosed' },
+      ],
+      medicalData: {
+        aspect: 'Clinical Assessment, Psychiatric Evaluation, Differential Diagnosis',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+    '/chapter/getting-diagnosed/test': {
+      title: 'ADHD Self-Assessment Test: 18-Question Clinical Screener | ADHD Compass',
+      description: 'An evidence-based 18-question adult ADHD screening test based on official DSM-5 criteria and clinical prompts. Simple, completely private, with instant results.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Getting Diagnosed', path: '/chapter/getting-diagnosed' },
+        { name: 'Screening Test', path: '/chapter/getting-diagnosed/test' },
+      ],
+      medicalData: {
+        aspect: 'Symptom Checklist, Adult ADHD-RS-IV, ASRS v1.1 Clinical Screening',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+    '/chapter/accommodations': {
+      title: 'ADHD Accommodations: Educational Rights & Workplace Strategies',
+      description: 'Legal and practical guide to ADHD accommodations: university disability services, exam adjustments, workplace accommodations under the ADA / Equality Act, and disclosure strategies.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Accommodations', path: '/chapter/accommodations' },
+      ],
+      medicalData: {
+        aspect: 'Academic Accommodations, Workplace Adjustments, Disability Rights',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+  };
+
+  const currentMeta = routeMetaMap[location] || {
+    title: 'Page Not Found | ADHD Compass',
+    description: 'The requested page could not be found on ADHD Compass.',
+    type: 'website' as const,
+  };
+
+  return (
+    <SEO
+      title={currentMeta.title}
+      description={currentMeta.description}
+      canonicalPath={location}
+      type={currentMeta.type}
+      breadcrumbs={currentMeta.breadcrumbs}
+      medicalData={currentMeta.medicalData}
+      faqItems={currentMeta.faqItems}
+    />
+  );
+}
 
 function RouteScrollRestoration() {
   const [location] = useLocation();
@@ -25,47 +238,109 @@ function RouteScrollRestoration() {
       window.history.scrollRestoration = "manual";
     }
 
-    const frame = window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    });
+    const scrollToHashOrTop = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const id = decodeURIComponent(hash.replace(/^#/, ''));
+        const element = document.getElementById(id) || document.querySelector(hash);
+        if (element) {
+          const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          element.scrollIntoView({
+            behavior: prefersReduced ? 'auto' : 'smooth',
+          });
+          return true;
+        }
+      }
+      return false;
+    };
 
-    return () => window.cancelAnimationFrame(frame);
+    const hash = window.location.hash;
+    if (hash) {
+      let attempts = 0;
+      const maxAttempts = 15;
+      let timeoutId: ReturnType<typeof setTimeout>;
+
+      const tryScroll = () => {
+        if (!scrollToHashOrTop() && attempts < maxAttempts) {
+          attempts++;
+          timeoutId = setTimeout(tryScroll, 60);
+        } else if (attempts >= maxAttempts && !scrollToHashOrTop()) {
+          window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        }
+      };
+
+      const frame = window.requestAnimationFrame(tryScroll);
+      return () => {
+        window.cancelAnimationFrame(frame);
+        clearTimeout(timeoutId);
+      };
+    } else {
+      const frame = window.requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
   }, [location]);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const id = decodeURIComponent(hash.replace(/^#/, ''));
+        const element = document.getElementById(id) || document.querySelector(hash);
+        if (element) {
+          const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          element.scrollIntoView({
+            behavior: prefersReduced ? 'auto' : 'smooth',
+          });
+        }
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   return null;
 }
 
+const RouteLoadingFallback = () => (
+  <div className="min-h-[100dvh] bg-warm-cream flex items-center justify-center">
+    <div className="flex flex-col items-center gap-3">
+      <div className="w-8 h-8 rounded-full border-2 border-sage-green/30 border-t-sage-green animate-spin" />
+      <span className="text-xs font-medium text-stone-500 font-mono tracking-wide">Loading chapter...</span>
+    </div>
+  </div>
+);
+
 function Router() {
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/about"} component={About} />
-      <Route path={"/chapter/welcome"} component={Welcome} />
-      <Route path={"/chapter/why-feels"} component={WhyItFeelsLikeThis} />
-      <Route path={"/chapter/brain/executive-functions"} component={ExecutiveFunctions} />
-      <Route path={"/chapter/brain"} component={MeetYourBrain} />
-      <Route path={"/chapter/what-is"} component={WhatIsADHD} />
-      <Route path={"/chapter/what-helps"} component={WhatHelps} />
-      <Route path={"/chapter/medication"} component={Medication} />
-      <Route path={"/chapter/getting-diagnosed"}>
-        <InProgress
-          title="Getting Diagnosed"
-          chapterNumber={9}
-          previousPath="/chapter/medication"
-          nextPath="/chapter/accommodations"
-        />
-      </Route>
-      <Route path={"/chapter/accommodations"}>
-        <InProgress
-          title="Accommodations"
-          chapterNumber={10}
-          previousPath="/chapter/getting-diagnosed"
-        />
-      </Route>
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<RouteLoadingFallback />}>
+      <Switch>
+        <Route path={"/"} component={Home} />
+        <Route path={"/about"} component={About} />
+        <Route path={"/chapter/welcome"} component={Welcome} />
+        <Route path={"/chapter/why-feels"} component={WhyItFeelsLikeThis} />
+        <Route path={"/chapter/brain/executive-functions"} component={ExecutiveFunctions} />
+        <Route path={"/chapter/brain"} component={MeetYourBrain} />
+        <Route path={"/chapter/what-is"} component={WhatIsADHD} />
+        <Route path={"/chapter/what-helps"} component={WhatHelps} />
+        <Route path={"/chapter/what-helps-prototype"} component={WhatHelpsPrototype} />
+        <Route path={"/chapter/medication"} component={Medication} />
+        <Route path={"/chapter/getting-diagnosed"} component={GettingDiagnosed} />
+        <Route path={"/chapter/getting-diagnosed/test"} component={ADHDTestPage} />
+        <Route path={"/chapter/accommodations"}>
+          <InProgress
+            title="Accommodations"
+            chapterNumber={10}
+            previousPath="/chapter/getting-diagnosed"
+          />
+        </Route>
+        <Route path={"/404"} component={NotFound} />
+        {/* Final fallback route */}
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 
@@ -82,7 +357,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <RouteSEO />
+          <RouteSeoManager />
           <RouteScrollRestoration />
           <Router />
         </TooltipProvider>
@@ -92,5 +367,3 @@ function App() {
 }
 
 export default App;
-
-

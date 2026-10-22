@@ -1,4 +1,25 @@
-﻿User-agent: *
-Allow: /
+# ==============================================================================
+# ADHD Compass (https://adhdcompass.in) - robots.txt
+# Evidence-based, compassionate guide to ADHD neuroscience, treatments & lived experience.
+# ==============================================================================
 
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /chapter/
+Allow: /resources/
+Allow: /assets/
+
+# Disallow internal debug runtimes, sandbox telemetry, and storage proxy endpoints
+Disallow: /__manus__/
+Disallow: /manus-storage/
+Disallow: /.manus-logs/
+
+# Disallow internal 404 error page from search engine indexation
+Disallow: /404
+
+# Host declaration
+Host: https://adhdcompass.in
+
+# Canonical XML Sitemap
 Sitemap: https://adhdcompass.in/sitemap.xml

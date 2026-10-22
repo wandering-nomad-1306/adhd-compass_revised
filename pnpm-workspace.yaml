@@ -1,0 +1,14 @@
+packages:
+  - '.'
+overrides:
+  express>body-parser: '>=1.20.6'
+  express>qs: '>=6.16.0'
+  express>proxy-addr: '>=2.0.8'
+  express>path-to-regexp: '>=0.1.13'
+  body-parser>qs: '>=6.16.0'
+  body-parser: '>=1.20.6'
+  qs: '>=6.16.0'
+  proxy-addr: '>=2.0.8'
+  path-to-regexp: '>=0.1.13'
+patchedDependencies:
+  wouter@3.7.1: patches/wouter@3.7.1.patch

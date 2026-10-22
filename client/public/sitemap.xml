@@ -1,28 +1,95 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- Core Landing & Orientation -->
   <url>
     <loc>https://adhdcompass.in/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
+
+  <!-- About, Clinical Sources, Editorial Methodology & Privacy -->
+  <url>
+    <loc>https://adhdcompass.in/about</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Chapter 1: Welcome & Grounding -->
   <url>
     <loc>https://adhdcompass.in/chapter/welcome</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
+
+  <!-- Chapter 2: Why It Feels Like This (Lived Experience Validation) -->
   <url>
     <loc>https://adhdcompass.in/chapter/why-feels</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
+
+  <!-- Chapter 3: What is ADHD? (DSM-5-TR Presentations & Deconstructing Myths) -->
   <url>
     <loc>https://adhdcompass.in/chapter/what-is</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
+
+  <!-- Chapter 4: Meet Your Brain (Neuroscience, Networks & Neurotransmitters) -->
   <url>
     <loc>https://adhdcompass.in/chapter/brain</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
+
+  <!-- Executive Functions Deep Dive (Prefrontal Networks & Cognitive Regulation) -->
   <url>
     <loc>https://adhdcompass.in/chapter/brain/executive-functions</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
+
+  <!-- Chapter 5: What Actually Helps (Evidence-Based Non-Pharmacological Strategies) -->
   <url>
     <loc>https://adhdcompass.in/chapter/what-helps</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
+
+  <!-- Chapter 6: ADHD Medication Guide (Pharmacology, Mechanisms & Practical Titration) -->
   <url>
     <loc>https://adhdcompass.in/chapter/medication</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
-</urlset>
 
+  <!-- Chapter 7: Getting Diagnosed (Clinical Assessment Pathways & Diagnostic Journey) -->
+  <url>
+    <loc>https://adhdcompass.in/chapter/getting-diagnosed</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Chapter 8: Accommodations & Support (Educational & Workplace Rights) -->
+  <url>
+    <loc>https://adhdcompass.in/chapter/accommodations</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>

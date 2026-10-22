@@ -11,9 +11,9 @@ import {
   ShieldCheck,
   SlidersHorizontal,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
-import ChapterLayout from '@/components/ChapterLayout';
+import ChapterLayoutWide from '@/components/ChapterLayoutWide';
 import SourceList from '@/components/SourceList';
 
 const functions = [
@@ -21,132 +21,165 @@ const functions = [
     id: 'working-memory',
     icon: Layers3,
     title: 'Working memory',
-    purpose: 'Keep information active while using it.',
+    purpose: 'Keep critical instructions active in mind while acting.',
     explanation:
-      'Working memory is the temporary mental workspace used to hold an instruction, compare options, remember the current step, and connect what just happened with what should happen next. It is different from long-term memory: the information may be known but unavailable at the moment it is needed.',
+      'Working memory is your brain’s <strong>temporary mental workspace</strong>. It holds an instruction, compares options, tracks your current step, and links what just happened with what to do next. It is distinct from long-term memory: <strong>the knowledge is safely stored, but temporarily inaccessible right when you need it</strong>.',
     examples: [
-      'Forgetting the second part of an instruction while completing the first.',
-      'Losing the reason you opened an app or entered a room after an interruption.',
-      'Understanding a project but losing track of the plan while carrying it out.',
+      '<strong>Forgetting step two</strong> of an instruction the second you finish step one.',
+      '<strong>Entering a room or opening an app</strong> and completely blanking on why you came.',
+      '<strong>Losing your mental place</strong> in a multi-step task after a five-second interruption.',
     ],
     support:
-      'Move information out of working memory: written steps, one visible task list, checklists, notes beside the point of action, and reminders timed for when action is required.',
+      '<strong>Externalize mental load:</strong> Write steps on a visible dry-erase board, maintain ONE master list, place visual cues directly at the point of action, and set alarm triggers.',
   },
   {
     id: 'inhibition',
     icon: ShieldCheck,
     title: 'Response inhibition',
-    purpose: 'Pause long enough for the goal to influence the response.',
+    purpose: 'Pause impulses long enough for your goal to guide your choice.',
     explanation:
-      'Inhibition is not simply “self-control.” It is the ability to delay an automatic response, ignore a competing signal, and protect the current goal long enough to choose what happens next. Emotion, fatigue, reward, and urgency can all change how available this pause feels.',
+      'Inhibition is not a moral virtue called “willpower.” It is the <strong>neurological pause button</strong> that holds back an automatic impulse, mutes a distraction, and protects your primary goal. In ADHD, this brake pedal is sensitive to fatigue, boredom, and emotional arousal.',
     examples: [
-      'Interrupting before the thought disappears.',
-      'Opening a notification even though another task is more important.',
-      'Continuing an activity after deciding it is time to stop.',
+      '<strong>Interrupting conversations</strong> out of fear the thought will vanish if unsaid.',
+      '<strong>Clicking sudden notifications</strong> despite working on a critical deadline.',
+      '<strong>Hyper-focusing on an impulse</strong> and struggling intensely to hit the stop button.',
     ],
     support:
-      'Create a pause outside the brain: remove the trigger, add a confirmation step, use a written rule, silence notifications, or place a brief delay between urge and action.',
+      '<strong>Create physical friction:</strong> Remove visual triggers from your desk, use browser site blockers, silence notifications, and insert a deliberate 10-second pause between urge and action.',
   },
   {
     id: 'planning',
     icon: SlidersHorizontal,
     title: 'Planning and sequencing',
-    purpose: 'Turn a broad goal into an ordered set of actions.',
+    purpose: 'Break down intimidating goals into clear, chronological actions.',
     explanation:
-      'Planning requires choosing a target, identifying the required steps, estimating resources, deciding what comes first, and updating the plan when new information appears. Vague or unfamiliar tasks demand more executive work before any visible action can begin.',
+      'Planning requires <strong>clarifying the target, ordering sub-steps, estimating needed energy, and adjusting when things change</strong>. For ADHD brains, large or vague projects appear as one terrifying, monolithic mountain rather than a sequence of manageable steps.',
     examples: [
-      'A project feels like one large block rather than a sequence.',
-      'Important steps become obvious only after something goes wrong.',
-      'Spending time on an easy detail while the critical step remains undefined.',
+      '<strong>Feeling paralyzed by large projects</strong> because the entry point feels invisible.',
+      '<strong>Realizing critical requirements were missed</strong> only after something goes wrong.',
+      '<strong>Spending hours perfecting minor formatting</strong> while the core deliverable remains untouched.',
     ],
     support:
-      'Define the next visible action, work backward from the outcome, limit the plan to a few current steps, and ask what must be true before each step can happen.',
+      '<strong>Define the immediate next physical action:</strong> Work backward from the finish line, restrict active view to only 2 current steps, and clarify: <em>“What is the single physical action I need to do first?”</em>',
   },
   {
     id: 'activation',
     icon: ArrowRight,
     title: 'Task activation',
-    purpose: 'Move from intention to the first action.',
+    purpose: 'Cross the starting line from intention to physical execution.',
     explanation:
-      'Starting requires more than deciding that something matters. The brain must represent the goal, choose an entry point, tolerate uncertainty or low reward, and overcome the cost of switching from the current state. Difficulty starting is not proof that the person does not care.',
+      'Starting requires far more than knowing something is important. The brain must <strong>calculate effort, cross an energy barrier, tolerate low immediate stimulation, and switch out of its current state</strong>. Procrastination in ADHD is biological friction—not laziness.',
     examples: [
-      'Thinking about the task repeatedly without beginning it.',
-      'Waiting for urgency before an otherwise manageable task becomes actionable.',
-      'Starting easily when another person is present but struggling alone.',
+      '<strong>Mentally agonizing over a 5-minute task</strong> for hours without taking action.',
+      '<strong>Needing the panic of an emergency deadline</strong> to produce the adrenaline required to start.',
+      '<strong>Starting smoothly when body doubling with a partner</strong>, but freezing when working in isolation.',
     ],
     support:
-      'Shrink the entry point: prepare materials, name a five-minute action, use a start cue, work beside someone, or make the first step so specific that it requires little interpretation.',
+      '<strong>Lower the activation energy:</strong> Commit to just 2 minutes of low-stakes work, prepare physical tools in advance, employ body doubling, and eliminate initial decisions.',
   },
   {
     id: 'attention',
     icon: Eye,
     title: 'Sustained attention',
-    purpose: 'Keep the goal active and respond consistently over time.',
+    purpose: 'Anchor focus on goals consistently without losing the thread.',
     explanation:
-      'ADHD is not a total inability to focus. The difficulty is often regulating where attention goes, how consistently it remains available, and how easily the person can return after interruption. Interest, novelty, feedback, fatigue, and task length can change performance sharply.',
+      'ADHD is <strong>not a deficit of attention—it is a challenge of attention regulation</strong>. Attention naturally flows toward novelty, high personal interest, urgent pressure, or immediate feedback, while routine, repetitive, or delayed-reward work rapidly starves prefrontal networks.',
     examples: [
-      'Errors increase during repetitive or delayed-reward work.',
-      'Attention is strong for an engaging task but unstable for routine work.',
-      'An interruption causes a long detour before the original task is resumed.',
+      '<strong>Making simple oversight errors</strong> during repetitive, low-stimulation paperwork.',
+      '<strong>Maintaining effortless 5-hour hyperfocus</strong> on an engaging passion project.',
+      '<strong>Taking a 45-minute detour</strong> after a brief 30-second interruption.',
     ],
     support:
-      'Reduce competing signals, keep the current question visible, use shorter work periods with defined endpoints, and create a parking place for unrelated thoughts.',
+      '<strong>Reduce competing signals:</strong> Keep the core question taped to your monitor, break work into 20-minute focus sprints, and keep a "parking lot" scratchpad for off-topic ideas.',
   },
   {
     id: 'time',
     icon: Clock3,
     title: 'Time and future action',
-    purpose: 'Represent duration, future consequences, and when to act later.',
+    purpose: 'Feel the passage of time and connect present choices to future results.',
     explanation:
-      'Time management depends on estimating duration, noticing time passing, remembering a future intention, and beginning early enough for the plan to work. “Time blindness” is a useful everyday phrase, but it is not one single scientific mechanism or a formal diagnostic criterion.',
+      'Time awareness relies on <strong>accurately sensing duration, noticing time slip by, and anchoring future deadlines into current feelings</strong>. To an ADHD brain, time often exists in only two zones: <strong>NOW and NOT NOW</strong>. A future consequence does not feel real until it enters the “NOW” window.',
     examples: [
-      'Underestimating preparation or transition time.',
-      'Not feeling a deadline until it becomes immediate.',
-      'Remembering an intention at the wrong time and forgetting it when action becomes possible.',
+      '<strong>Chronic time miscalculation:</strong> underestimating travel, prep, or transition buffers.',
+      '<strong>Feeling zero urgency for an assignment</strong> until 8 hours before the deadline.',
+      '<strong>Remembering an essential chore</strong> at 2 AM or while driving, and forgetting it when free.',
     ],
     support:
-      'Make time visible with timers, countdowns, earlier checkpoints, transition warnings, and records of how long repeated tasks actually take.',
+      '<strong>Make invisible time tangible:</strong> Use visual analog timers (like Time Timer), set intermediate milestone check-ins, add 50% buffer time, and set location-based reminders.',
   },
   {
     id: 'flexibility',
     icon: RefreshCw,
     title: 'Cognitive flexibility and monitoring',
-    purpose: 'Notice what changed, disengage, and adjust the plan.',
+    purpose: 'Pivot smoothly when priorities change and update your mental script.',
     explanation:
-      'Flexible control involves noticing that the current approach is no longer working, stopping it, updating the rule, and activating a different response. Switching has a cost for everyone; it becomes especially difficult when the next task is unclear or the current activity is absorbing.',
+      'Cognitive flexibility means <strong>noticing an approach has stalled, disengaging, updating the plan, and redirecting energy</strong>. Shifting gears requires heavy cognitive fuel, which is why abrupt transitions often trigger intense frustration or irritability.',
     examples: [
-      'Continuing the old task after priorities change.',
-      'Becoming stuck on one solution despite evidence that it is not working.',
-      'Finding transitions disproportionately tiring or frustrating.',
+      '<strong>Continuing down an obsolete path</strong> long after circumstances have shifted.',
+      '<strong>Experiencing intense irritability</strong> when unexpectedly interrupted mid-task.',
+      '<strong>Feeling deeply drained or disoriented</strong> when shifting between work modes.',
     ],
     support:
-      'Use advance warnings, a short transition routine, a visible stopping point, and a written first step for the next activity.',
+      '<strong>Build transition bridges:</strong> Give yourself a 5-minute wind-down runway, leave a "bridge note" describing where you will resume, and use consistent ritual cues.',
   },
 ] as const;
 
 export default function ExecutiveFunctions() {
   const [, setLocation] = useLocation();
-  const [selectedId, setSelectedId] = useState<(typeof functions)[number]["id"]>(functions[0].id);
+
+  const getInitialFunction = () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const fn = params.get('function');
+      if (fn && functions.some((item) => item.id === fn)) {
+        return fn as (typeof functions)[number]['id'];
+      }
+    } catch {}
+    return functions[0].id;
+  };
+
+  const [selectedId, setSelectedId] = useState<(typeof functions)[number]['id']>(getInitialFunction);
+
+  useEffect(() => {
+    const syncFromUrl = () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const fn = params.get('function');
+        if (fn && functions.some((item) => item.id === fn)) {
+          setSelectedId(fn as (typeof functions)[number]['id']);
+        }
+      } catch {}
+    };
+
+    syncFromUrl();
+    window.addEventListener('popstate', syncFromUrl);
+    window.addEventListener('hashchange', syncFromUrl);
+    return () => {
+      window.removeEventListener('popstate', syncFromUrl);
+      window.removeEventListener('hashchange', syncFromUrl);
+    };
+  }, []);
+
   const selected = functions.find((item) => item.id === selectedId) ?? functions[0];
   const Icon = selected.icon;
 
   return (
-    <ChapterLayout
+    <ChapterLayoutWide
       title="Executive Functions"
-      subtitle="How the brain turns goals into action"
+      subtitle="How goals become actions and why everyday performance varies."
+      chapterNumber={5}
+      totalChapters={10}
+      badgeText="Chapter 5 · Executive Functions"
+      estimatedReadingTime="7 min read"
+      bgClass="bg-[#F5F8F8]"
+      accentColor="#335d64"
+      maxWidthClass="max-w-[76rem]"
       onPrevious={() => setLocation('/chapter/brain')}
       onNext={() => setLocation('/chapter/what-helps')}
     >
-      <motion.div className="space-y-14" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.45 }}>
-        <section className="text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-sage-green">Brain subpage</p>
-          <h1 className="mx-auto mt-4 max-w-3xl font-serif text-4xl font-bold leading-tight text-foreground md:text-5xl">Executive functions</h1>
-          <p className="mx-auto mt-5 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-            Executive functions are the mental processes that keep a goal active, organize behaviour around it, and help the person adjust while acting. They are not a measure of intelligence, character, or how much someone cares.
-          </p>
-        </section>
+      <motion.div className="space-y-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.45 }}>
 
-        <section id="what-executive-function-is" data-page-label="What executive function is" className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm md:p-8">
+        <section id="what-executive-function-is" data-page-label="What executive function is" className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm md:p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9]">
           <div className="flex items-start gap-4">
             <BrainCircuit className="mt-1 h-7 w-7 shrink-0 text-sage-green" />
             <div className="min-w-0">
@@ -163,7 +196,7 @@ export default function ExecutiveFunctions() {
                   ['Pause', 'Prevent the strongest immediate response from automatically winning.'],
                   ['Adjust', 'Notice when the situation changes and update the plan or rule.'],
                 ].map(([title, text]) => (
-                  <div key={title} className="rounded-2xl bg-warm-cream p-4">
+                  <div key={title} className="rounded-2xl bg-warm-cream p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:bg-white">
                     <p className="font-bold text-sage-green">{title}</p>
                     <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{text}</p>
                   </div>
@@ -173,7 +206,7 @@ export default function ExecutiveFunctions() {
           </div>
         </section>
 
-        <section id="executive-dysfunction-adhd" data-page-label="Executive dysfunction and ADHD" className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm md:p-8">
+        <section id="executive-dysfunction-adhd" data-page-label="Executive dysfunction and ADHD" className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm md:p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9]">
           <h2 className="font-serif text-3xl font-bold text-foreground">Executive dysfunction and ADHD</h2>
           <p className="mt-4 leading-relaxed text-foreground">
             Many people with ADHD have difficulty with one or more executive processes, which can create a gap between <em>knowing</em> what to do and being able to organize behaviour around that knowledge at the right moment. Working-memory difficulties can make instructions disappear while you are acting; inhibition difficulties can make competing signals harder to suppress; and planning or shifting difficulties can make a task feel undefined even when its final goal is clear.
@@ -189,7 +222,7 @@ export default function ExecutiveFunctions() {
           </div>
         </section>
 
-        <section id="main-functions" data-page-label="Main executive functions">
+        <section id="main-functions" data-page-label="Main executive functions" className="scroll-mt-24">
           <div className="mb-7 max-w-3xl">
             <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl">The main executive functions</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
@@ -240,18 +273,23 @@ export default function ExecutiveFunctions() {
                       <p className="mt-2 font-semibold text-sage-green">{selected.purpose}</p>
                     </div>
                   </div>
-                  <p className="mt-6 leading-relaxed text-foreground">{selected.explanation}</p>
+                  <p className="mt-6 text-base sm:text-lg leading-relaxed text-foreground" dangerouslySetInnerHTML={{ __html: selected.explanation }} />
 
                   <div className="mt-7 grid gap-5 md:grid-cols-2">
-                    <div className="rounded-2xl bg-warm-cream p-5">
-                      <h4 className="font-bold text-foreground">How difficulty may appear</h4>
-                      <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
-                        {selected.examples.map((example) => <li key={example}>• {example}</li>)}
+                    <div className="rounded-2xl border border-stone-200/80 bg-warm-cream/50 p-6 shadow-2xs">
+                      <h4 className="font-bold text-base sm:text-lg text-foreground">How difficulty appears in real life</h4>
+                      <ul className="mt-3.5 space-y-3 text-[15px] sm:text-base leading-[1.7] text-foreground/90">
+                        {selected.examples.map((example) => (
+                          <li key={example} className="flex gap-2.5 items-start">
+                            <span className="mt-1.5 h-2 w-2 rounded-full bg-sage-green shrink-0" />
+                            <span dangerouslySetInnerHTML={{ __html: example }} />
+                          </li>
+                        ))}
                       </ul>
                     </div>
-                    <div className="rounded-2xl bg-sage-green/[0.07] p-5">
-                      <h4 className="font-bold text-foreground">Reduce the executive load</h4>
-                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{selected.support}</p>
+                    <div className="rounded-2xl border border-sage-green/20 bg-sage-green/[0.08] p-6 shadow-2xs">
+                      <h4 className="font-bold text-base sm:text-lg text-foreground">Point-of-performance scaffolding</h4>
+                      <p className="mt-3.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90" dangerouslySetInnerHTML={{ __html: selected.support }} />
                     </div>
                   </div>
                 </motion.article>
@@ -354,6 +392,6 @@ export default function ExecutiveFunctions() {
           ]}
         />
       </motion.div>
-    </ChapterLayout>
+    </ChapterLayoutWide>
   );
 }

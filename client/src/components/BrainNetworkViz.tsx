@@ -1,10 +1,16 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Info, Network, ScanSearch } from 'lucide-react';
+import { Activity, Brain, Clock, HelpCircle, Info, Network, ScanSearch, ShieldCheck, Sparkles, Target } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 type ViewMode = 'regions' | 'connections';
 
 type RegionId = 'pfc' | 'parietal' | 'acc' | 'striatum' | 'insula' | 'cerebellum';
+
+interface ContentBlock {
+  lead: string;
+  highlight: string;
+  rest: string;
+}
 
 interface BrainRegion {
   id: RegionId;
@@ -12,10 +18,10 @@ interface BrainRegion {
   shortName: string;
   color: string;
   role: string;
-  function: string;
-  research: string;
-  daily: string;
-  limit: string;
+  function: ContentBlock;
+  research: ContentBlock;
+  daily: ContentBlock;
+  limit: ContentBlock;
   surfaceVisible: boolean;
 }
 
@@ -24,9 +30,9 @@ interface BrainCircuit {
   name: string;
   color: string;
   nodeIds: RegionId[];
-  role: string;
-  research: string;
-  daily: string;
+  role: ContentBlock;
+  research: ContentBlock;
+  daily: ContentBlock;
 }
 
 const regions: BrainRegion[] = [
@@ -35,31 +41,55 @@ const regions: BrainRegion[] = [
     name: 'Prefrontal cortex',
     shortName: 'Prefrontal cortex',
     color: '#4f7659',
-    role: 'Keeping goals active and regulating actions',
-    function:
-      'The prefrontal cortex supports working memory, planning, response inhibition, monitoring and flexible control. It helps keep a goal active long enough for that goal to influence what you do next.',
-    research:
-      'ADHD research repeatedly identifies group-level differences in frontal activity and in communication between frontal regions and deeper systems involved in action, reward and attention. These findings overlap across people and are not a diagnostic brain signature.',
-    daily:
-      'This can help explain why someone may know the plan but lose it while acting, struggle to pause before responding, or find a multi-step task harder to organize without external structure.',
-    limit:
-      '“Prefrontal cortex” covers several areas rather than one sharply bounded patch. The highlighted lateral zone is an anatomical approximation of the anterior frontal association cortex, not a surgical boundary or a diagnostic marker.',
+    role: 'Holding goals in mind and guiding what you do next',
+    function: {
+      lead: 'The prefrontal cortex acts like your brain’s project manager. It handles working memory, planning, pausing before reacting, and switching between tasks. Its primary job is to ',
+      highlight: 'keep your long-term goal active long enough to guide what you do next',
+      rest: ', rather than letting immediate impulses take over.',
+    },
+    research: {
+      lead: 'Brain imaging shows group differences in how easily the frontal lobe communicates with deeper action and reward hubs. Crucially, ',
+      highlight: 'this is not a brain injury, defect, or measure of intelligence',
+      rest: '—it reflects differences in how consistently attention signals are sent and received.',
+    },
+    daily: {
+      lead: 'This explains why you might clearly know what you should be doing, yet ',
+      highlight: 'struggle intensely to begin or stay on track without external structure',
+      rest: ', visual reminders, or immediate deadlines.',
+    },
+    limit: {
+      lead: 'The prefrontal cortex is a broad network of interconnected regions, not a single on/off switch. ',
+      highlight: 'A brain scan cannot diagnose ADHD in an individual',
+      rest: '; diagnosis is always based on real-world developmental patterns and life impact.',
+    },
     surfaceVisible: true,
   },
   {
     id: 'parietal',
     name: 'Posterior parietal attention cortex',
     shortName: 'Parietal cortex',
-    color: '#d0b92e',
-    role: 'Selecting and maintaining relevant information',
-    function:
-      'Posterior parietal regions work with frontal systems to orient attention, represent task-relevant information and redirect attention when priorities change.',
-    research:
-      'Frontoparietal systems are frequently studied in ADHD during sustained-attention and working-memory tasks. Differences are found at the group level, but they vary by age, task and individual.',
-    daily:
-      'Possible effects include losing your place, missing a relevant detail or having attention pulled away even though you understand what you were trying to do.',
-    limit:
-      'The attention network spans multiple parietal areas rather than one isolated spot. The highlighted region is a simplified posterior-parietal teaching zone, not a diagnostic boundary.',
+    color: '#857004',
+    role: 'Steering your attention spotlight and tracking priorities',
+    function: {
+      lead: 'The parietal cortex acts like an attentional spotlight. Working alongside the frontal lobe, it helps you ',
+      highlight: 'orient your focus toward important details and redirect your attention',
+      rest: ' when priorities shift.',
+    },
+    research: {
+      lead: 'Studies during focus tasks show that frontoparietal networks fluctuate in stability. When an activity feels repetitive or unrewarding, ',
+      highlight: 'the spotlight easily wanders toward novel background signals',
+      rest: ', even when you try hard to resist.',
+    },
+    daily: {
+      lead: 'This shows up as suddenly losing your place in a document, ',
+      highlight: 'missing a detail right in front of your eyes',
+      rest: ', or feeling your train of thought derailed by a minor movement or background sound.',
+    },
+    limit: {
+      lead: 'Attention relies on multiple parietal circuits working together. The highlighted area is a simplified map to ',
+      highlight: 'illustrate general position, not a rigid physical boundary',
+      rest: '.',
+    },
     surfaceVisible: true,
   },
   {
@@ -67,15 +97,27 @@ const regions: BrainRegion[] = [
     name: 'Anterior cingulate cortex',
     shortName: 'Anterior cingulate',
     color: '#925e76',
-    role: 'Monitoring conflict, errors and effort',
-    function:
-      'The anterior cingulate helps detect conflict, monitor errors and signal that more control or a change in strategy may be needed.',
-    research:
-      'Studies report average differences in cingulate activity and connectivity during inhibition and cognitive-control tasks. Results are mixed and depend on the task and sample.',
-    daily:
-      'Possible relevance includes noticing an error late, persisting with an ineffective approach or recognizing a change in priority after time has already been lost.',
-    limit:
-      'The anterior cingulate lies on the medial surface around the corpus callosum, so it is not exposed in the outer lateral view. It is highlighted only in the cutaway view.',
+    role: 'Catching mistakes, monitoring effort, and adapting strategies',
+    function: {
+      lead: 'The anterior cingulate functions like an internal smoke detector. It helps ',
+      highlight: 'detect errors, notice conflicts, and signal when more mental effort is needed',
+      rest: ' to solve a problem or switch approaches.',
+    },
+    research: {
+      lead: 'Research shows this monitoring system can take longer to trigger during repetitive tasks in ADHD. ',
+      highlight: 'Error awareness often arrives with a delay',
+      rest: ', which is why typos or misplaced items can slip by unnoticed in the moment.',
+    },
+    daily: {
+      lead: 'You might only realize a mistake after finishing a task, ',
+      highlight: 'persist with an ineffective approach for too long',
+      rest: ', or suddenly recognize an hour has passed on a detour before your brain signals that you went off course.',
+    },
+    limit: {
+      lead: 'This region sits deep on the inner midline between both brain hemispheres. It is ',
+      highlight: 'visible only in the cutaway view',
+      rest: ' rather than on the brain surface.',
+    },
     surfaceVisible: false,
   },
   {
@@ -83,15 +125,27 @@ const regions: BrainRegion[] = [
     name: 'Striatum',
     shortName: 'Striatum',
     color: '#a96952',
-    role: 'Action selection, reward learning and habit formation',
-    function:
-      'The striatum includes the caudate, putamen and ventral striatal structures. These nuclei help select actions, learn from outcomes, support movement and use reward information to influence what happens next.',
-    research:
-      'Frontal–striatal circuits are central to many ADHD models. Large studies have linked ADHD symptoms with atypical connectivity involving frontal regions and parts of the striatum, including the caudate, putamen and nucleus accumbens.',
-    daily:
-      'This may help explain why immediate feedback, visible progress, novelty or urgency can change task initiation and persistence more strongly than a distant reward.',
-    limit:
-      'The striatum is deep inside the cerebral hemisphere and cannot be seen on a lateral surface image. Its cutaway shape is intentionally schematic rather than an MRI segmentation.',
+    role: 'Action selection, reward evaluation, and dopamine motivation',
+    function: {
+      lead: 'Nested deep inside the brain, the striatum acts as your motivation gateway. It connects to frontal circuits to ',
+      highlight: 'calculate whether an action is worth the mental effort',
+      rest: ' based on expected reward, novelty, and urgency.',
+    },
+    research: {
+      lead: 'Frontal-striatal pathways rely heavily on dopamine signaling. In ADHD, ',
+      highlight: 'delayed or abstract payoffs trigger much weaker dopamine signaling',
+      rest: ' compared to immediate, exciting, or crisis-driven consequences.',
+    },
+    daily: {
+      lead: 'This explains why starting tasks with distant deadlines feels physically exhausting, while ',
+      highlight: 'novelty, curiosity, or emergency deadlines suddenly unlock hours of intense focus',
+      rest: ' ("hyperfocus").',
+    },
+    limit: {
+      lead: 'The striatum is an internal cluster of deep nuclei (including the caudate and putamen) ',
+      highlight: 'tucked deep within the center of the brain',
+      rest: ', shown here as an anatomical cross-section.',
+    },
     surfaceVisible: false,
   },
   {
@@ -99,15 +153,27 @@ const regions: BrainRegion[] = [
     name: 'Insula',
     shortName: 'Insula',
     color: '#5f9aaa',
-    role: 'Detecting salient internal and external signals',
-    function:
-      'The insula sits deep in the lateral sulcus beneath parts of the frontal, parietal and temporal lobes. It helps represent body state and participates in salience networks that identify information that may deserve attention.',
-    research:
-      'ADHD connectivity studies implicate the insula alongside frontal, parietal, cingulate and deeper structures. It is best understood as one part of a larger salience-and-control system.',
-    daily:
-      'A vivid notification, emotion or body sensation may capture attention more strongly than a quiet future priority.',
-    limit:
-      'The insula is hidden by the opercula on an intact lateral brain and is not truly exposed in a midline sagittal view. The cutaway window shows its relative deep-lateral position for orientation only.',
+    role: 'Spotting urgent body signals and shifting mental priorities',
+    function: {
+      lead: 'The insula bridges internal bodily sensations with external events. It helps the brain ',
+      highlight: 'decide what is most urgent right now',
+      rest: ' by tuning into physical sensations, emotional spikes, and sensory input.',
+    },
+    research: {
+      lead: 'The insula is a core hub of the "salience network." In ADHD, ',
+      highlight: 'it can amplify sudden sensory or emotional signals',
+      rest: ', making minor irritations or urgent impulses feel overpowering.',
+    },
+    daily: {
+      lead: 'A sudden notification chime, an itchy tag, or a sharp wave of frustration can ',
+      highlight: 'instantly hijack your working memory',
+      rest: ', causing you to abandon what you were doing to put out the immediate fire.',
+    },
+    limit: {
+      lead: 'The insula is tucked deep beneath the frontal and temporal folds. It is ',
+      highlight: 'hidden inside the deep lateral groove',
+      rest: ' and illustrated here for educational orientation.',
+    },
     surfaceVisible: false,
   },
   {
@@ -115,15 +181,27 @@ const regions: BrainRegion[] = [
     name: 'Cerebellum',
     shortName: 'Cerebellum',
     color: '#7e8249',
-    role: 'Timing, prediction and coordination',
-    function:
-      'The cerebellum is important for movement, but it also contributes to timing, prediction, learning and coordination with cortical systems.',
-    research:
-      'Frontal–striatal–cerebellar circuits are repeatedly studied in ADHD during timing, response-control and executive-function tasks. Findings remain group-level patterns rather than individual markers.',
-    daily:
-      'Possible relevance includes variable response timing, difficulty pacing actions or less consistent coordination between a plan and its execution.',
-    limit:
-      'The cerebellum contributes to many functions and does not explain ADHD by itself.',
+    role: 'Internal clock, time perception, and smooth sequence pacing',
+    function: {
+      lead: 'Long recognized for motor balance, the cerebellum also plays a critical cognitive role in ',
+      highlight: 'internal timing, predicting sequence steps, and coordinating thoughts',
+      rest: ' with the frontal cortex.',
+    },
+    research: {
+      lead: 'Neurodevelopmental studies link cerebellar timing circuits to ADHD, ',
+      highlight: 'directly impacting the brain’s intuitive sense of passing time',
+      rest: ' and the rhythm of multi-step task execution.',
+    },
+    daily: {
+      lead: 'This contributes directly to "time blindness"—',
+      highlight: 'difficulty estimating how long a task will take',
+      rest: ', struggling to pace multi-step projects, or losing track of how fast an hour has flown by.',
+    },
+    limit: {
+      lead: 'The cerebellum sits at the base of the skull and works in ',
+      highlight: 'continuous two-way feedback with the cortex',
+      rest: ' rather than as an isolated structure.',
+    },
     surfaceVisible: true,
   },
 ];
@@ -134,44 +212,84 @@ const circuits: BrainCircuit[] = [
     name: 'Control and action',
     color: '#a96952',
     nodeIds: ['pfc', 'acc', 'striatum'],
-    role: 'Links goal maintenance and response monitoring with action selection and learning from consequences.',
-    research:
-      'Frontal–striatal systems are among the most consistently discussed networks in ADHD research, but there is no single connection pattern shared by every person with ADHD.',
-    daily:
-      'Relevant to pausing, starting an action, using feedback and learning which responses are worth repeating.',
+    role: {
+      lead: 'Connects goal-setting in the frontal cortex with error detection and dopamine motivation to ',
+      highlight: 'translate intentions into physical actions and learn from results',
+      rest: '.',
+    },
+    research: {
+      lead: 'Frontal-striatal networks are among the most extensively studied in ADHD. Findings show ',
+      highlight: 'variable signaling during unrewarding or delayed tasks',
+      rest: ', with substantial differences between individuals.',
+    },
+    daily: {
+      lead: 'Essential for pausing before reacting, ',
+      highlight: 'breaking through the initial wall to start a task',
+      rest: ', and adapting when plans change.',
+    },
   },
   {
     id: 'attention',
     name: 'Attention control',
     color: '#5b6f96',
     nodeIds: ['pfc', 'parietal', 'insula'],
-    role: 'Coordinates goal maintenance with the selection and redirection of attention.',
-    research:
-      'Frontoparietal and salience-control networks are implicated in sustained attention, working memory and deliberate redirection of attention.',
-    daily:
-      'Relevant to keeping track of instructions, resisting competing information and returning to a task after interruption.',
+    role: {
+      lead: 'Coordinates long-term goals with the real-time spotlight of attention to ',
+      highlight: 'steer focus toward what matters and tune out distractions',
+      rest: '.',
+    },
+    research: {
+      lead: 'Frontoparietal attention networks show fluctuations during sustained tasks, meaning ',
+      highlight: 'attention is not absent, but is hard to allocate on command',
+      rest: ' without high interest.',
+    },
+    daily: {
+      lead: 'Critical for remembering instructions while carrying them out, ',
+      highlight: 'resisting notifications, and smoothly returning to work',
+      rest: ' after an interruption.',
+    },
   },
   {
     id: 'monitoring',
     name: 'Salience and monitoring',
     color: '#925e76',
     nodeIds: ['insula', 'acc', 'pfc'],
-    role: 'Coordinates detection of important signals with conflict monitoring and recruitment of control.',
-    research:
-      'Studies associate ADHD with differences in coordination among salience, attention and control networks, while also showing substantial variability among individuals.',
-    daily:
-      'Relevant when a vivid distraction wins over a quiet priority or when the need to switch is recognized late.',
+    role: {
+      lead: 'Balances urgent sensory/emotional events with conflict detection to ',
+      highlight: 'decide which signal deserves immediate mental resources',
+      rest: '.',
+    },
+    research: {
+      lead: 'Studies indicate altered coordination between salience and default-mode networks, ',
+      highlight: 'allowing internal mind-wandering or sudden stimuli to interrupt tasks',
+      rest: '.',
+    },
+    daily: {
+      lead: 'Explains why an interesting tangential thought or an urgent email ',
+      highlight: 'can effortlessly hijack several hours of your workday',
+      rest: '.',
+    },
   },
   {
     id: 'timing',
     name: 'Timing and coordination',
     color: '#7e8249',
     nodeIds: ['pfc', 'striatum', 'cerebellum'],
-    role: 'Coordinates planning, action selection, timing, prediction and execution.',
-    research:
-      'Frontal–striatal–cerebellar systems are studied in ADHD during timing, response-control and executive-function tasks.',
-    daily:
-      'Relevant to pacing, transitions, response timing and translating a plan into a sequence of actions.',
+    role: {
+      lead: 'Combines planning, dopamine motivation, and internal time tracking to ',
+      highlight: 'pace actions smoothly and manage transitions between activities',
+      rest: '.',
+    },
+    research: {
+      lead: 'Frontal-striatal-cerebellar pathways show differences during timing tasks, ',
+      highlight: 'correlating with intuitive difficulty measuring the passage of time',
+      rest: '.',
+    },
+    daily: {
+      lead: 'Crucial for estimating deadlines, ',
+      highlight: 'knowing when to stop one activity to prepare for the next',
+      rest: ', and avoiding chronic lateness.',
+    },
   },
 ];
 
@@ -193,11 +311,35 @@ const surfaceHitPaths: Partial<Record<RegionId, string>> = {
   cerebellum: 'M424 391 L497 378 L566 386 L612 411 L632 445 L624 483 L603 515 L568 541 L520 560 L474 553 L441 531 L420 499 L410 455 Z',
 };
 
-function DetailSection({ label, text }: { label: string; text: string }) {
+function DetailSection({
+  label,
+  block,
+  accentColor,
+  icon: SectionIcon,
+}: {
+  label: string;
+  block: ContentBlock;
+  accentColor?: string;
+  icon?: typeof Info;
+}) {
   return (
-    <div className="border-t border-sage-green/10 pt-4 first:border-t-0 first:pt-0">
-      <h4 className="text-sm font-bold text-foreground">{label}</h4>
-      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{text}</p>
+    <div className="rounded-2xl border border-stone-200/80 bg-white p-5 sm:p-6 shadow-2xs transition-all duration-300 hover:border-sage-green/40 hover:shadow-xs">
+      <div className="flex items-center gap-2 mb-2.5">
+        {SectionIcon && <SectionIcon className="h-4 w-4" style={{ color: accentColor || '#34533d' }} />}
+        <h4
+          className="text-xs sm:text-sm font-bold uppercase tracking-wider"
+          style={{ color: accentColor || '#34533d' }}
+        >
+          {label}
+        </h4>
+      </div>
+      <p className="text-[15px] sm:text-base leading-[1.75] text-stone-700">
+        {block.lead}
+        <strong className="font-semibold text-foreground bg-[#edf4ee] px-1.5 py-0.5 rounded shadow-2xs">
+          {block.highlight}
+        </strong>
+        {block.rest}
+      </p>
     </div>
   );
 }
@@ -205,7 +347,6 @@ function DetailSection({ label, text }: { label: string; text: string }) {
 function SurfaceBrain({ activeIds, onSelect }: { activeIds: RegionId[]; onSelect: (id: RegionId) => void }) {
   const [hovered, setHovered] = useState<RegionId | null>(null);
   const highlighted = hovered ?? activeIds.find((id) => surfaceOverlay[id]) ?? null;
-  const deepActive = activeIds.filter((id) => !surfaceOverlay[id]);
   const insulaActive = activeIds.includes('insula');
 
   return (
@@ -260,57 +401,60 @@ function SurfaceBrain({ activeIds, onSelect }: { activeIds: RegionId[]; onSelect
         )}
       </svg>
 
-      {insulaActive && (
-        <div className="pointer-events-none absolute bottom-3 left-1/2 w-[min(92%,29rem)] -translate-x-1/2 rounded-xl border border-[#5f9aaa]/25 bg-white/94 px-3 py-2 text-center text-[10px] font-semibold leading-snug text-[#4d7f8d] shadow-sm backdrop-blur-sm sm:text-xs">
-          Insula: deep to the lateral sulcus beneath the frontal, parietal and temporal opercula. The dashed window shows where it is hidden, not an exposed surface boundary.
-        </div>
-      )}
-
-      {!insulaActive && deepActive.length > 0 && (
-        <div className="pointer-events-none absolute bottom-3 left-1/2 w-[min(92%,28rem)] -translate-x-1/2 rounded-xl border border-sage-green/15 bg-white/94 px-3 py-2 text-center text-[10px] font-semibold leading-snug text-muted-foreground shadow-sm backdrop-blur-sm sm:text-xs">
-          {deepActive.map((id) => regions.find((region) => region.id === id)?.shortName).join(' · ')} {deepActive.length === 1 ? 'is' : 'are'} deep — see the research cutaway below.
-        </div>
-      )}
+      <div className="absolute right-3 top-3 rounded-full border border-stone-200/80 bg-white/90 px-3 py-1 text-[11px] font-semibold text-stone-600 backdrop-blur-sm">
+        Outer Lateral Surface
+      </div>
     </div>
   );
 }
 
 function MedialResearchBrain({ activeIds }: { activeIds: RegionId[] }) {
-  const coloredIds = activeIds.filter((id) => medialOverlay[id]);
+  const deepActive = activeIds.filter((id) => Boolean(medialOverlay[id]));
   const insulaActive = activeIds.includes('insula');
-  const surfaceOnly = activeIds.length > 0 && coloredIds.length === 0 && !insulaActive;
+  const surfaceOnly = activeIds.length > 0 && deepActive.length === 0 && !insulaActive;
 
   return (
-    <div className="relative mx-auto aspect-[260/275] w-full max-w-[31rem] overflow-hidden rounded-[22px] bg-white">
+    <div className="relative mx-auto aspect-[8/5] w-full max-w-[38rem] overflow-hidden rounded-[22px] bg-[#fdfcf9] shadow-[0_7px_22px_rgba(89,97,88,0.08)]">
       <img
-        src="/images/adhd-medial-grayscale.png"
-        alt="Medial research illustration of brain structures relevant to ADHD"
+        src="/images/adhd-brain-medial-research-base.png"
+        alt="Midline cutaway diagram showing deep brain structures"
         className="absolute inset-0 h-full w-full object-contain"
         draggable={false}
       />
 
-      {coloredIds.map((id) => (
-        <motion.img
-          key={id}
-          src={medialOverlay[id]}
-          alt=""
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 h-full w-full object-contain"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.16 }}
-        />
-      ))}
+      <AnimatePresence>
+        {deepActive.map((id) => {
+          const overlaySrc = medialOverlay[id];
+          if (!overlaySrc) return null;
+          return (
+            <motion.img
+              key={id}
+              src={overlaySrc}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 h-full w-full object-contain"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.16 }}
+            />
+          );
+        })}
+      </AnimatePresence>
+
+      <div className="absolute left-3 top-3 rounded-full border border-stone-200/80 bg-white/90 px-3 py-1 text-[11px] font-semibold text-stone-600 backdrop-blur-sm">
+        Deep Structures Cutaway
+      </div>
 
       {insulaActive && (
-        <div className="absolute inset-x-4 bottom-4 rounded-xl border border-[#5f9aaa]/30 bg-white/95 px-3 py-2 text-center text-[10px] font-semibold leading-snug text-[#4d7f8d] shadow-sm sm:text-xs">
-          The insula is not exposed in a midline medial section. It lies deep in the lateral sulcus, so it is intentionally not painted onto this view.
+        <div className="absolute inset-x-4 bottom-4 rounded-xl border border-[#5f9aaa]/30 bg-white/95 px-3 py-2 text-center text-xs font-semibold leading-snug text-[#4d7f8d] shadow-sm">
+          The insula lies deep within the lateral groove, shown here for structural orientation.
         </div>
       )}
 
       {surfaceOnly && (
-        <div className="absolute inset-x-4 bottom-4 rounded-xl border border-sage-green/15 bg-white/95 px-3 py-2 text-center text-[10px] font-semibold leading-snug text-muted-foreground shadow-sm sm:text-xs">
-          This cutaway is for deep structures. The selected cortical surface region is highlighted in the lateral view above.
+        <div className="absolute inset-x-4 bottom-4 rounded-xl border border-sage-green/15 bg-white/95 px-3 py-2 text-center text-xs font-semibold leading-snug text-muted-foreground shadow-sm">
+          This cutaway shows internal structures. The selected surface region is highlighted in the view above.
         </div>
       )}
     </div>
@@ -319,8 +463,8 @@ function MedialResearchBrain({ activeIds }: { activeIds: RegionId[] }) {
 
 function CircuitRelationship({ circuit }: { circuit: BrainCircuit }) {
   return (
-    <div className="mt-4 rounded-2xl border border-sage-green/10 bg-white p-4">
-      <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Regions highlighted in this system</p>
+    <div className="mt-4 rounded-2xl border border-sage-green/15 bg-white p-5 shadow-2xs">
+      <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Key regions cooperating in this circuit</p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {circuit.nodeIds.map((id, index) => {
           const region = regions.find((item) => item.id === id)!;
@@ -332,7 +476,9 @@ function CircuitRelationship({ circuit }: { circuit: BrainCircuit }) {
           );
         })}
       </div>
-      <p className="mt-3 text-xs leading-relaxed text-muted-foreground">This is a relationship map, not a tractography image. The regions interact through distributed and often reciprocal pathways; the 2D diagrams highlight anatomy without inventing a single wire between them.</p>
+      <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+        These regions communicate through distributed, reciprocal networks. Brain systems operate as interconnected teams rather than isolated modules.
+      </p>
     </div>
   );
 }
@@ -356,36 +502,38 @@ export default function BrainNetworkViz() {
     <div className="mx-auto w-full overflow-hidden rounded-3xl border border-sage-green/15 bg-white shadow-sm">
       <div className="flex flex-col gap-4 border-b border-sage-green/10 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="font-bold text-foreground">Brain regions and connected systems</p>
-          <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">The lateral image is grayscale by design: only the selected surface region returns to color. Deep structures are shown in the research cutaway below rather than projected onto the outside of the brain.</p>
+          <p className="font-bold text-foreground text-lg">Brain regions and connected systems</p>
+          <p className="mt-1 max-w-2xl text-sm leading-relaxed text-stone-600">
+            Select a region on the interactive map or list below. The lateral diagram highlights surface cortex, while the cutaway illustrates deep internal hubs.
+          </p>
         </div>
         <div className="inline-flex self-start rounded-xl border border-sage-green/15 bg-warm-cream p-1" role="tablist" aria-label="Brain diagram view">
-          <button type="button" role="tab" aria-selected={view === 'regions'} onClick={() => setView('regions')} className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition ${view === 'regions' ? 'bg-white text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}><ScanSearch className="h-4 w-4" /> Regions</button>
-          <button type="button" role="tab" aria-selected={view === 'connections'} onClick={() => setView('connections')} className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition ${view === 'connections' ? 'bg-white text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}><Network className="h-4 w-4" /> Connections</button>
+          <button type="button" role="tab" aria-selected={view === 'regions'} onClick={() => setView('regions')} className={`flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition ${view === 'regions' ? 'bg-white text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}><ScanSearch className="h-4 w-4" /> Regions</button>
+          <button type="button" role="tab" aria-selected={view === 'connections'} onClick={() => setView('connections')} className={`flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition ${view === 'connections' ? 'bg-white text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}><Network className="h-4 w-4" /> Connections</button>
         </div>
       </div>
 
       <div className="grid min-w-0 lg:grid-cols-[1.08fr_0.92fr]">
-        <div className="min-w-0 border-b border-sage-green/10 bg-[#fbf7ed] p-3 sm:p-5 lg:border-b-0 lg:border-r">
+        <div className="min-w-0 border-b border-sage-green/10 bg-[#fbf7ed] p-4 sm:p-6 lg:border-b-0 lg:border-r">
           <SurfaceBrain activeIds={activeIds} onSelect={selectRegion} />
 
           {view === 'regions' ? (
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3" aria-label="Brain regions">
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3" aria-label="Brain regions">
               {regions.map((region) => {
                 const active = region.id === selectedRegionId;
                 return (
-                  <button key={region.id} type="button" onClick={() => setSelectedRegionId(region.id)} className="min-w-0 rounded-xl border px-2.5 py-2.5 text-left text-xs font-semibold leading-tight transition focus-visible:outline-none focus-visible:ring-4" style={{ borderColor: active ? region.color : `${region.color}55`, backgroundColor: active ? region.color : '#ffffff', color: active ? '#ffffff' : region.color }}>
+                  <button key={region.id} type="button" onClick={() => setSelectedRegionId(region.id)} className="min-w-0 rounded-xl border px-3 py-2.5 text-left text-xs sm:text-sm font-semibold leading-tight transition focus-visible:outline-none focus-visible:ring-4" style={{ borderColor: active ? region.color : `${region.color}55`, backgroundColor: active ? region.color : '#ffffff', color: active ? '#ffffff' : region.color }}>
                     {region.shortName}
                   </button>
                 );
               })}
             </div>
           ) : (
-            <div className="mt-3 grid grid-cols-2 gap-2" aria-label="Brain connections">
+            <div className="mt-4 grid grid-cols-2 gap-2" aria-label="Brain connections">
               {circuits.map((circuit) => {
                 const active = circuit.id === selectedCircuitId;
                 return (
-                  <button key={circuit.id} type="button" onClick={() => setSelectedCircuitId(circuit.id)} className="rounded-xl border px-3 py-2.5 text-left text-xs font-semibold leading-tight transition focus-visible:outline-none focus-visible:ring-4" style={{ borderColor: active ? circuit.color : `${circuit.color}55`, backgroundColor: active ? circuit.color : '#ffffff', color: active ? '#ffffff' : circuit.color }}>
+                  <button key={circuit.id} type="button" onClick={() => setSelectedCircuitId(circuit.id)} className="rounded-xl border px-3 py-2.5 text-left text-xs sm:text-sm font-semibold leading-tight transition focus-visible:outline-none focus-visible:ring-4" style={{ borderColor: active ? circuit.color : `${circuit.color}55`, backgroundColor: active ? circuit.color : '#ffffff', color: active ? '#ffffff' : circuit.color }}>
                     {circuit.name}
                   </button>
                 );
@@ -393,7 +541,7 @@ export default function BrainNetworkViz() {
             </div>
           )}
 
-          <div className="mt-4 overflow-hidden rounded-[22px] border border-sage-green/10 bg-white shadow-sm">
+          <div className="mt-5 overflow-hidden rounded-[22px] border border-sage-green/10 bg-white shadow-sm">
             <MedialResearchBrain activeIds={activeIds} />
           </div>
 
@@ -403,28 +551,38 @@ export default function BrainNetworkViz() {
         <div className="min-w-0 p-5 sm:p-7 lg:sticky lg:top-6 lg:self-start">
           <AnimatePresence mode="wait">
             {view === 'regions' ? (
-              <motion.div key={selectedRegion.id} initial={reducedMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={reducedMotion ? undefined : { opacity: 0, y: -5 }} transition={{ duration: 0.2 }}>
-                <span className="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white" style={{ backgroundColor: selectedRegion.color }}>Brain region</span>
-                <h3 className="mt-4 font-serif text-2xl font-bold text-foreground sm:text-3xl">{selectedRegion.name}</h3>
-                <p className="mt-2 font-semibold leading-relaxed" style={{ color: selectedRegion.color }}>{selectedRegion.role}</p>
-                <div className="mt-6 space-y-4">
-                  <DetailSection label="Main function" text={selectedRegion.function} />
-                  <DetailSection label="ADHD research" text={selectedRegion.research} />
-                  <DetailSection label="Possible everyday relevance" text={selectedRegion.daily} />
-                  <DetailSection label="Anatomical limitation" text={selectedRegion.limit} />
+              <motion.div key={selectedRegion.id} initial={reducedMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={reducedMotion ? undefined : { opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="space-y-4">
+                <div>
+                  <span className="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white" style={{ backgroundColor: selectedRegion.color }}>Brain region</span>
+                  <h3 className="mt-3 font-serif text-3xl sm:text-4xl font-bold text-foreground">{selectedRegion.name}</h3>
+                  <p className="mt-2 text-base sm:text-lg font-semibold leading-relaxed" style={{ color: selectedRegion.color }}>{selectedRegion.role}</p>
+                </div>
+                <div className="space-y-3.5 pt-1">
+                  <DetailSection label="Main function" block={selectedRegion.function} accentColor={selectedRegion.color} icon={Target} />
+                  <DetailSection label="ADHD research" block={selectedRegion.research} accentColor={selectedRegion.color} icon={Brain} />
+                  <DetailSection label="Possible everyday relevance" block={selectedRegion.daily} accentColor={selectedRegion.color} icon={Activity} />
+                  <DetailSection label="Anatomical limitation" block={selectedRegion.limit} accentColor={selectedRegion.color} icon={HelpCircle} />
                 </div>
               </motion.div>
             ) : (
-              <motion.div key={selectedCircuit.id} initial={reducedMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={reducedMotion ? undefined : { opacity: 0, y: -5 }} transition={{ duration: 0.2 }}>
-                <span className="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white" style={{ backgroundColor: selectedCircuit.color }}>Connected system</span>
-                <h3 className="mt-4 font-serif text-2xl font-bold text-foreground sm:text-3xl">{selectedCircuit.name}</h3>
-                <p className="mt-2 text-sm font-semibold leading-relaxed" style={{ color: selectedCircuit.color }}>{selectedCircuit.nodeIds.map((id) => regions.find((region) => region.id === id)?.shortName).join(' · ')}</p>
-                <div className="mt-6 space-y-4">
-                  <DetailSection label="What this system helps coordinate" text={selectedCircuit.role} />
-                  <DetailSection label="What research suggests" text={selectedCircuit.research} />
-                  <DetailSection label="Possible everyday relevance" text={selectedCircuit.daily} />
+              <motion.div key={selectedCircuit.id} initial={reducedMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={reducedMotion ? undefined : { opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="space-y-4">
+                <div>
+                  <span className="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white" style={{ backgroundColor: selectedCircuit.color }}>Connected system</span>
+                  <h3 className="mt-3 font-serif text-3xl sm:text-4xl font-bold text-foreground">{selectedCircuit.name}</h3>
+                  <p className="mt-2 text-base sm:text-lg font-semibold leading-relaxed" style={{ color: selectedCircuit.color }}>{selectedCircuit.nodeIds.map((id) => regions.find((region) => region.id === id)?.shortName).join(' · ')}</p>
                 </div>
-                <div className="mt-6 flex gap-3 rounded-2xl bg-warm-cream p-4"><Info className="mt-0.5 h-5 w-5 shrink-0 text-sage-green" /><p className="text-sm leading-relaxed text-muted-foreground">Connection mode colors the anatomical regions implicated in the selected system but deliberately avoids drawing a fake single tract. Real functional communication is distributed and reciprocal.</p></div>
+                <div className="space-y-3.5 pt-1">
+                  <DetailSection label="What this system coordinates" block={selectedCircuit.role} accentColor={selectedCircuit.color} icon={Network} />
+                  <DetailSection label="What research suggests" block={selectedCircuit.research} accentColor={selectedCircuit.color} icon={Brain} />
+                  <DetailSection label="Possible everyday relevance" block={selectedCircuit.daily} accentColor={selectedCircuit.color} icon={Activity} />
+                </div>
+                <div className="mt-4 flex gap-3 rounded-2xl bg-warm-cream/90 border border-sage-green/15 p-4 sm:p-5">
+                  <Info className="mt-0.5 h-5 w-5 shrink-0 text-sage-green" />
+                  <p className="text-sm leading-relaxed text-stone-700">
+                    <strong className="font-semibold text-foreground">Distributed communication: </strong>
+                    Connection mode colors the anatomical regions involved in this system. Real communication occurs through flexible, reciprocal pathways across millions of neurons rather than a single wire.
+                  </p>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

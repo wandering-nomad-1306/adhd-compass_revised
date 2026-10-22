@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, useReducedMotion, useScroll, useSpring } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { ReactNode } from 'react';
 import ChapterNavigator from '@/components/ChapterNavigator';
 import PageDock from '@/components/PageDock';
@@ -14,6 +14,7 @@ interface ChapterLayoutProps {
   onPrevious?: () => void;
   onNext?: () => void;
   heroImage?: string;
+  estimatedReadingTime?: string;
 }
 
 export default function ChapterLayout({
@@ -25,9 +26,20 @@ export default function ChapterLayout({
   onPrevious,
   onNext,
   heroImage,
+  estimatedReadingTime,
 }: ChapterLayoutProps) {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 28, restDelta: 0.001 });
+  const reducedMotion = useReducedMotion();
+
   return (
     <div className="min-h-screen bg-warm-cream">
+      {/* Subtle top reading progress indicator */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[3px] bg-sage-green origin-left z-[80] pointer-events-none"
+        style={{ scaleX: reducedMotion ? scrollYProgress : scaleX }}
+        aria-hidden="true"
+      />
       <PageDock />
       <ChapterNavigator />
       {/* Hero section with optional background image */}
@@ -52,14 +64,22 @@ export default function ChapterLayout({
           {/* Chapter header overlay */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
             {chapterNumber && totalChapters && (
-              <motion.p
-                className="text-sm font-semibold text-white/80 mb-2"
+              <motion.div
+                className="flex items-center justify-center gap-2.5 mb-2"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.4 }}
               >
-                Chapter {chapterNumber} of {totalChapters}
-              </motion.p>
+                <span className="text-sm font-semibold text-white/80">
+                  Chapter {chapterNumber} of {totalChapters}
+                </span>
+                {estimatedReadingTime && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-md">
+                    <Clock className="h-3 w-3" />
+                    {estimatedReadingTime}
+                  </span>
+                )}
+              </motion.div>
             )}
             <motion.h1
               className="text-5xl md:text-6xl font-serif font-bold text-white mb-4"

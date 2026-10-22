@@ -1,5 +1,7 @@
-﻿@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=Roboto+Flex:opsz,wght@8..144,300..900&display=swap');
+@import "tailwindcss";
 @import "tw-animate-css";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -49,8 +51,8 @@
 }
 
 :root {
-  /* ADHD Compass Brand Colors */
-  --sage-green: oklch(0.56 0.12 142);
+  /* ADHD Compass Brand Colors - calibrated for WCAG 2.2 AA (>= 4.5:1 against warm cream) */
+  --sage-green: oklch(0.50 0.12 142);
   --muted-teal: oklch(0.58 0.1 200);
   --subtle-blue: oklch(0.62 0.08 260);
   --warm-cream: oklch(0.97 0.01 80);
@@ -216,7 +218,19 @@
   animation-play-state: running;
 }
 
+:focus-visible {
+  outline: 2px solid var(--sage-green);
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .compass-star,
   .compass-star-core {
     animation: none !important;
@@ -246,6 +260,36 @@
   .chapter-content :where(img, video, canvas) {
     max-width: 100%;
     height: auto;
+  }
+}
+
+/* Print Styles: Clean clinical assessment handout output */
+@media print {
+  /* Suppress all interactive floating site chrome and background colors */
+  .fixed,
+  button,
+  header,
+  footer,
+  nav,
+  .no-print,
+  #page-dock,
+  .page-dock,
+  [aria-label="Open the ADHD Compass chapter navigator"],
+  [aria-label="Contents"] {
+    display: none !important;
+  }
+
+  body, html {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    font-size: 10.5pt !important;
+    line-height: 1.35 !important;
+  }
+
+  @page {
+    margin: 1.2cm;
+    size: letter portrait;
   }
 }
 
