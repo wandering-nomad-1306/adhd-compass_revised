@@ -22,9 +22,9 @@ export default function GettingDiagnosed() {
     <ChapterLayoutWide
       title="Getting Diagnosed"
       subtitle="Understanding how clinical evaluations work, what to expect, and where to begin."
-      chapterNumber={8}
-      totalChapters={10}
-      badgeText="Chapter 8 · Evaluation & Assessment"
+      chapterNumber={7}
+      totalChapters={8}
+      badgeText="Chapter 7 · Evaluation & Assessment"
       estimatedReadingTime="4 min read"
       bgClass="bg-[#F5F8F7]"
       accentColor="#335952"

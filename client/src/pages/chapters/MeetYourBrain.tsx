@@ -327,7 +327,7 @@ export default function MeetYourBrain() {
       title="Meet Your Brain"
       subtitle="Brain systems, neurochemistry, and executive functions."
       chapterNumber={4}
-      totalChapters={10}
+      totalChapters={8}
       badgeText="Chapter 4 · Neuroscience"
       estimatedReadingTime="8 min read"
       bgClass="bg-[#F4F7F9]"

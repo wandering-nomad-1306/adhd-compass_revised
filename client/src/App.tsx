@@ -352,7 +352,7 @@ function Router() {
         <Route path={"/chapter/accommodations"}>
           <InProgress
             title="Accommodations"
-            chapterNumber={10}
+            chapterNumber={8}
             previousPath="/chapter/getting-diagnosed"
           />
         </Route>

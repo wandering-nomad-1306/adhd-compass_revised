@@ -118,7 +118,7 @@ export default function WhyItFeelsLikeThis() {
       title="Why It Feels Like This"
       subtitle="Identifying repeated daily patterns can turn confusing private struggles into actionable understanding."
       chapterNumber={2}
-      totalChapters={10}
+      totalChapters={8}
       badgeText="Chapter 2 · Everyday Patterns"
       estimatedReadingTime="6 min read"
       bgClass="bg-[#F8F7FA]"
@@ -228,14 +228,14 @@ export default function WhyItFeelsLikeThis() {
               onClick={() => setLocation('/chapter/what-helps')}
               className="inline-flex items-center gap-2 rounded-xl bg-sage-green px-5 py-3 text-sm font-bold text-white shadow-xs hover:bg-sage-green/90 transition-all"
             >
-              Explore Practical Strategies (Chapter 6) <ArrowRight className="h-4 w-4" />
+              Explore Practical Strategies (Chapter 5) <ArrowRight className="h-4 w-4" />
             </button>
             <button
               type="button"
               onClick={() => setLocation('/chapter/medication')}
               className="inline-flex items-center gap-2 rounded-xl border border-sage-green/30 bg-white px-5 py-3 text-sm font-bold text-sage-green shadow-2xs hover:bg-sage-green/[0.08] transition-all"
             >
-              Medication Guide (Chapter 7) <ArrowRight className="h-4 w-4" />
+              Medication Guide (Chapter 6) <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </motion.section>

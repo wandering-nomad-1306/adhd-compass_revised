@@ -1139,9 +1139,9 @@ export default function WhatHelps() {
     <ChapterLayoutWide
       title="What Helps"
       subtitle="Practical ways to reduce everyday difficulty"
-      chapterNumber={6}
-      totalChapters={10}
-      badgeText="Chapter 6 · Practical Support"
+      chapterNumber={5}
+      totalChapters={8}
+      badgeText="Chapter 5 · Practical Support"
       onPrevious={() => setLocation('/chapter/brain')}
       onNext={() => setLocation('/chapter/medication')}
       estimatedReadingTime="8 min read"

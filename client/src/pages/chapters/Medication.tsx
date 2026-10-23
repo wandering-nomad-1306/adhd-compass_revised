@@ -562,9 +562,9 @@ export default function Medication() {
     <ChapterLayoutWide
       title="Medication"
       subtitle="Options, cellular mechanisms, trade-offs, and clinical monitoring."
-      chapterNumber={7}
-      totalChapters={10}
-      badgeText="Chapter 7 · Pharmacotherapy"
+      chapterNumber={6}
+      totalChapters={8}
+      badgeText="Chapter 6 · Pharmacotherapy"
       estimatedReadingTime="9 min read"
       bgClass="bg-[#FAF7F2]"
       accentColor="#7a5933"

@@ -18,7 +18,7 @@ export default function InProgress({ title, chapterNumber, previousPath, nextPat
       title={title}
       subtitle="This chapter guide is currently being finalized with clinical citations and evidence-based exercises."
       chapterNumber={chapterNumber}
-      totalChapters={10}
+      totalChapters={8}
       badgeText={`Chapter ${chapterNumber} · Upcoming`}
       bgClass="bg-[#FAF7F5]"
       accentColor="#6b4d3d"

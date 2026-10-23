@@ -101,7 +101,7 @@ export default function WhatIsADHD() {
       title="What is ADHD?"
       subtitle="A clear clinical definition without reducing a person to a checklist."
       chapterNumber={3}
-      totalChapters={10}
+      totalChapters={8}
       badgeText="Chapter 3 · Clinical Definition"
       estimatedReadingTime="5 min read"
       bgClass="bg-[#FAF8F3]"
@@ -207,7 +207,7 @@ export default function WhatIsADHD() {
             ))}
           </div>
           <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted-foreground">
-            This framework establishes the clinical threshold. Chapter 8 (<em>Getting Diagnosed</em>) details who performs evaluations, what questions they ask, and how to prepare.
+            This framework establishes the clinical threshold. Chapter 7 (<em>Getting Diagnosed</em>) details who performs evaluations, what questions they ask, and how to prepare.
           </p>
         </section>
 

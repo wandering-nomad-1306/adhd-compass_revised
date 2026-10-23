@@ -167,9 +167,7 @@ export default function ExecutiveFunctions() {
     <ChapterLayoutWide
       title="Executive Functions"
       subtitle="How goals become actions and why everyday performance varies."
-      chapterNumber={5}
-      totalChapters={10}
-      badgeText="Chapter 5 · Executive Functions"
+      badgeText="Chapter 4 Deep Dive · Executive Functions"
       estimatedReadingTime="7 min read"
       bgClass="bg-[#F5F8F8]"
       accentColor="#335d64"

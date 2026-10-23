@@ -87,7 +87,7 @@ export default function Welcome() {
       title="Welcome to ADHD Compass"
       subtitle="Clear, evidence-based guidance to help you understand your brain and navigate daily life."
       chapterNumber={1}
-      totalChapters={10}
+      totalChapters={8}
       badgeText="Chapter 1 · Welcome"
       estimatedReadingTime="3 min read"
       bgClass="bg-[#F6F8F5]"
