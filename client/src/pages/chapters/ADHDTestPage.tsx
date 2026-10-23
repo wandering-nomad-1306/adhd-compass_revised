@@ -10,6 +10,7 @@ import {
   Clock,
   Compass,
   ExternalLink,
+  FileCheck,
   FileText,
   HeartHandshake,
   HelpCircle,
@@ -17,6 +18,7 @@ import {
   MapPin,
   Printer,
   RotateCcw,
+  ShieldAlert,
   SlidersHorizontal,
   Sparkles,
   Target,
@@ -1247,6 +1249,79 @@ export default function ADHDTestPage() {
     const hyperactiveFrequent = hyperactiveItems.filter((i) => i.value >= 3);
     const hyperactiveInfrequent = hyperactiveItems.filter((i) => i.value <= 1);
 
+    // ------------------------------------------------------------------------
+    // Step G: Clinical Likelihood Categorization (Image 1 Color Scheme & Delivery)
+    // Red = High chances, Amber = Moderate chances, Forest Green = Low chances
+    // ------------------------------------------------------------------------
+    const isHighCombined =
+      (inattentionFrequentCount >= 5 && hyperactiveFrequentCount >= 4) ||
+      (inattentionFrequentCount >= 6 && hyperactiveFrequentCount >= 3) ||
+      totalFrequent >= 9;
+
+    const isHighInattentive = !isHighCombined && inattentionFrequentCount >= 5;
+    const isHighHyperactive = !isHighCombined && hyperactiveFrequentCount >= 5;
+    const isHighMatch = isHighCombined || isHighInattentive || isHighHyperactive;
+
+    const isModerateMatch =
+      !isHighMatch &&
+      (inattentionFrequentCount >= 4 || hyperactiveFrequentCount >= 4 || totalFrequent >= 5);
+
+    const likelihood = isHighMatch
+      ? {
+          tier: 'high' as const,
+          badge: isHighCombined
+            ? 'HIGH MATCH · COMBINED INATTENTIVE & HYPERACTIVE PROFILE'
+            : isHighInattentive
+            ? 'HIGH MATCH · PREDOMINANTLY INATTENTIVE PROFILE'
+            : 'HIGH MATCH · PREDOMINANTLY HYPERACTIVE-IMPULSIVE PROFILE',
+          badgeBg: 'bg-[#991b1b]',
+          badgeText: 'text-white',
+          color: '#991b1b', // Deep rich crimson burgundy
+          headline: isHighCombined
+            ? 'Your responses reflect a strong Combined profile with elevated inattention and restlessness.'
+            : isHighInattentive
+            ? 'Your responses reflect a strong Inattentive profile with frequent focus and executive challenges.'
+            : 'Your responses reflect a strong Hyperactive-Impulsive profile with elevated restlessness and impulsivity.',
+          leadSubtitle: isAdult
+            ? 'Meets standard adult criteria across key ADHD symptom areas.'
+            : 'Meets standard criteria across key ADHD symptom areas.',
+          likelihoodSummary:
+            'Based on your answers, your daily experiences strongly match the patterns seen in ADHD. You reported frequent, persistent challenges that create noticeable friction across multiple areas of your life.',
+          doctorSuggestion:
+            'Because these patterns are creating ongoing friction across multiple areas of your life, we strongly suggest discussing these results with a doctor, psychiatrist, or clinical psychologist. They can provide an official, comprehensive evaluation.',
+        }
+      : isModerateMatch
+      ? {
+          tier: 'moderate' as const,
+          badge: inattentionFrequentCount >= hyperactiveFrequentCount
+            ? 'MODERATE MATCH · INATTENTIVE / MASKING PROFILE'
+            : 'MODERATE MATCH · RESTLESS / IMPULSIVE PROFILE',
+          badgeBg: 'bg-[#b45309]',
+          badgeText: 'text-white',
+          color: '#b45309', // Warm rich burnt amber / chestnut as in Image 1
+          headline: 'Your responses reflect a notable match with potential high-effort compensation.',
+          leadSubtitle: isAdult
+            ? 'Meets attention criteria with lower physical restlessness, characteristic of masking.'
+            : 'Meets attention criteria with lower physical restlessness.',
+          likelihoodSummary:
+            'Your answers show a noticeable match with ADHD patterns. You reported frequent difficulties with focus, starting tasks, or mental fatigue. This is very common in people who have learned to mask their difficulties or work twice as hard behind the scenes to keep up.',
+          doctorSuggestion:
+            'A formal conversation with a healthcare professional can help clarify whether your focus difficulties stem from ADHD, high-effort compensation, anxiety, or chronic cognitive burnout.',
+        }
+      : {
+          tier: 'low' as const,
+          badge: 'LOW MATCH · FEW ELEVATED SYMPTOMS REPORTED',
+          badgeBg: 'bg-[#1e3a2f]',
+          badgeText: 'text-white',
+          color: '#1e3a2f', // Deep rich forest spruce
+          headline: 'Your responses reflect low chances of ADHD with few elevated symptoms.',
+          leadSubtitle: 'Reported symptoms fall below standard thresholds for adult ADHD.',
+          likelihoodSummary:
+            'Based on your answers, there is a low likelihood that ADHD is the primary cause of your difficulties. You reported experiencing occasional moments of distraction or restlessness, but they do not appear at the persistent, cross-situational frequency typical of ADHD.',
+          doctorSuggestion:
+            'While ADHD appears unlikely from your answers, if you are currently feeling overwhelmed or struggling to concentrate, it may be helpful to look into sleep quality, stress levels, or recent lifestyle changes with a doctor.',
+        };
+
     return {
       isAdult,
       headline,
@@ -1261,6 +1336,7 @@ export default function ADHDTestPage() {
       hyperactiveInfrequent,
       recommendations: recommendations.slice(0, 3),
       highImpactAreas,
+      likelihood,
     };
   }, [answers, ageGroup]);
 
@@ -1721,70 +1797,166 @@ export default function ADHDTestPage() {
           </div>
         ) : (
           /* ------------------------------------------------------------------ */
-          /* STEP C: COMPREHENSIVE PERSONALIZED RESULTS (LEVEL 1 & LEVEL 2)      */
-          /* Preserves 100% of existing card styling while delivering substance  */
+          /* STEP C: COMPREHENSIVE PERSONALIZED RESULTS                         */
+          /* Redesigned 4-Section Architecture: Image 1 Likelihood + Image 3    */
+          /* Answer Summary + Personalized Guidance (No Meds) + Clinical Notes  */
           /* ------------------------------------------------------------------ */
-          <div className="min-h-[100dvh] bg-warm-cream text-foreground py-8 px-4 sm:px-6">
-            <div className="max-w-3xl mx-auto space-y-8">
+          <div className="min-h-[100dvh] bg-[#fdfcf9] text-foreground py-8 px-4 sm:px-6">
+            <div className="max-w-4xl mx-auto space-y-8">
               {/* Top Navigation Bar */}
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-sm print:hidden">
                 <Link
                   href="/chapter/getting-diagnosed"
                   className="inline-flex items-center gap-2 font-semibold text-sage-green hover:underline text-sm sm:text-base"
                 >
-                  <ArrowLeft className="h-4 w-4" /> Back to Overview
+                  <ArrowLeft className="h-4 w-4" /> Back to Chapter 7 Overview
                 </Link>
-                <span className="text-muted-foreground text-xs sm:text-sm font-semibold uppercase tracking-wider">
-                  Self-Assessment Summary
-                </span>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200/90 bg-white px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50 transition shadow-2xs"
+                  >
+                    <Printer className="h-4 w-4 text-sage-green" /> Print / Save PDF
+                  </button>
+                  <span className="hidden sm:inline-block text-xs font-mono uppercase tracking-wider text-muted-foreground">
+                    SELF-ASSESSMENT SUMMARY
+                  </span>
+                </div>
               </div>
 
-              {/* ============================================================ */}
-              {/* LEVEL 1: IMMEDIATE MEANINGFUL PERSONALIZED SUMMARY           */}
-              {/* Card 1: Answers "What did my answers actually show?"         */}
-              {/* ============================================================ */}
+              {/* ================================================================== */}
+              {/* SECTION 1: LIKELIHOOD CARD (REPLICATING IMAGE 1 DESIGN)            */}
+              {/* Warm cream card, solid rich pill, subtle ambient glow, no jargon   */}
+              {/* ================================================================== */}
               <motion.div
-                whileHover={{ y: -5, scale: 1.01 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25 }}
-                className="group relative overflow-hidden bg-white rounded-3xl p-6 sm:p-9 border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9] space-y-4"
+                className="relative overflow-hidden bg-gradient-to-br from-[#fefbf6] via-[#faf7f2] to-[#f5f0e8] rounded-[28px] sm:rounded-[32px] p-7 sm:p-9 border border-emerald-900/10 shadow-sm space-y-6"
               >
+                {/* Subtle warm ambient corner blur matching the likelihood color */}
                 <div
-                  className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-[#dce7d8]/40 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  className="pointer-events-none absolute -left-12 -top-12 h-64 w-64 rounded-full blur-3xl opacity-15"
+                  style={{ backgroundColor: evaluation.likelihood.color }}
                   aria-hidden="true"
                 />
 
+                {/* Solid Rich Color-Coded Pill Badge (Image 1 style) */}
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider bg-sage-green/15 text-sage-green">
-                    <Sparkles className="h-4 w-4" /> What your answers showed
+                  <span
+                    className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider ${evaluation.likelihood.badgeBg} ${evaluation.likelihood.badgeText} shadow-2xs`}
+                  >
+                    <Sparkles className="h-3.5 w-3.5 text-white" />
+                    {evaluation.likelihood.badge}
                   </span>
-                  <span className="text-xs sm:text-sm font-mono text-muted-foreground">
+                  <span className="text-xs font-mono tracking-wider uppercase text-neutral-400">
+                    Evaluated: {evaluation.isAdult ? 'Adult Standard (18+)' : 'Youth Standard (Under 18)'}
+                  </span>
+                </div>
+
+                {/* Main Editorial Headline & Lead */}
+                <div className="space-y-3">
+                  <h1 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 leading-tight">
+                    {evaluation.likelihood.headline}
+                  </h1>
+                  <p
+                    className="text-base sm:text-lg font-medium leading-relaxed"
+                    style={{ color: evaluation.likelihood.color }}
+                  >
+                    {evaluation.likelihood.leadSubtitle}
+                  </p>
+                  <p className="text-base sm:text-[17px] leading-[1.8] text-foreground/90 font-normal pt-1">
+                    {evaluation.likelihood.likelihoodSummary}
+                  </p>
+                </div>
+
+                {/* Non-Diagnostic Suggestion Box */}
+                <div className="rounded-2xl border border-stone-200/80 bg-white/75 p-5 sm:p-6 shadow-2xs space-y-2.5">
+                  <div className="flex items-center gap-2 text-stone-800">
+                    <ShieldAlert className="h-5 w-5 text-amber-700 shrink-0" />
+                    <h4 className="font-serif font-bold text-base sm:text-lg text-foreground">
+                      Important note on diagnosis
+                    </h4>
+                  </div>
+                  <p className="text-base sm:text-[17px] leading-[1.75] text-foreground/90">
+                    <strong>This is a screening guide, not an official medical diagnosis.</strong> An online test can help you organize what you are experiencing, but only a licensed healthcare professional (such as a psychiatrist or clinical psychologist) can officially diagnose ADHD.
+                  </p>
+                  <p className="text-sm sm:text-base text-stone-600 leading-relaxed border-t border-stone-200/70 pt-2.5">
+                    {evaluation.likelihood.doctorSuggestion}
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* ================================================================== */}
+              {/* SECTION 2: ANSWER SUMMARY (IMAGE 3 LAYOUT WITH REFINED DELIVERY)    */}
+              {/* Clean, digestible, warm presentation of reported symptoms          */}
+              {/* ================================================================== */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: 0.05 }}
+                className="relative overflow-hidden bg-gradient-to-br from-[#fefbf6] via-[#faf7f2] to-[#f5f0e8] rounded-[28px] sm:rounded-[32px] p-7 sm:p-9 border border-emerald-900/10 shadow-sm space-y-6"
+              >
+                {/* Header matching Image 3 */}
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-sage-green/15 text-sage-green">
+                    <Sparkles className="h-3.5 w-3.5" /> What your answers showed
+                  </span>
+                  <span className="text-xs text-muted-foreground font-mono">
                     Age Group: {evaluation.isAdult ? '18 or older' : 'Under 18'}
                   </span>
                 </div>
 
-                {/* Personalized Dynamic Headline */}
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-foreground leading-tight">
+                {/* Headline matching Image 3 serif */}
+                <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground leading-snug">
                   {evaluation.headline}
-                </h1>
+                </h2>
 
-                {/* Concrete First Paragraph (2–3 specific reported core experiences) */}
-                <p className="text-base sm:text-lg text-foreground/90 leading-relaxed font-medium">
+                {/* Primary reported symptoms description */}
+                <p className="text-base sm:text-[17px] leading-[1.8] text-foreground/90 font-normal">
                   {evaluation.firstParagraph}
                 </p>
 
-                {/* Second Paragraph (Context & Life Impact from Q19–Q26) */}
+                {/* Context Box matching Image 3 layout */}
                 {evaluation.contextParagraph && (
-                  <div className="p-4 sm:p-5 rounded-2xl bg-warm-cream/70 border border-stone-200/80 text-sm sm:text-base text-foreground/85 leading-relaxed space-y-2">
-                    <p>{evaluation.contextParagraph}</p>
+                  <div className="rounded-2xl border border-stone-200/70 bg-[#faf7f2]/90 p-5 sm:p-6 text-base sm:text-[17px] leading-[1.8] text-foreground/90 shadow-2xs">
+                    {evaluation.contextParagraph}
                   </div>
                 )}
+
+                {/* Action button bar */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-stone-200/60">
+                  <div>
+                    <p className="text-base font-bold text-foreground">Taking this to an appointment?</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      Print or save a clean summary to show your doctor or therapist.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => window.print()}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-sage-green px-6 py-3 font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md shrink-0 text-base"
+                    >
+                      <FileCheck className="h-4 w-4" /> Print / Save Summary
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleReset}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-stone-50 transition shrink-0"
+                    >
+                      <RotateCcw className="h-4 w-4" /> Retake
+                    </button>
+                  </div>
+                </div>
               </motion.div>
 
-              {/* ============================================================ */}
-              {/* LEVEL 1: GENUINELY PERSONALIZED EDUCATIONAL RECOMMENDATIONS */}
-              {/* Card 2: 2–3 tailored links with clear, explicit reasons      */}
-              {/* ============================================================ */}
-              <div className="space-y-4">
+              {/* ================================================================== */}
+              {/* SECTION 3: PERSONALIZED GUIDANCE ("Explore what may be relevant")  */}
+              {/* STRICTLY NO MEDICATION LINK per explicit user instruction         */}
+              {/* ================================================================== */}
+              <div className="space-y-4 print:hidden">
                 <div className="text-center sm:text-left">
                   <span className="text-xs font-bold uppercase tracking-wider text-sage-green">
                     Personalized Guidance
@@ -1792,335 +1964,128 @@ export default function ADHDTestPage() {
                   <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground mt-0.5">
                     Explore what may be relevant to you
                   </h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                    Based directly on the difficulties you reported most frequently in this self-assessment:
+                  <p className="text-sm sm:text-base text-muted-foreground mt-1">
+                    Practical, compassionate chapters chosen based on what you reported:
                   </p>
                 </div>
 
-                <div className="grid gap-4">
-                  {evaluation.recommendations.map((rec) => (
-                    <motion.div
-                      key={rec.title}
-                      whileHover={{ y: -4, scale: 1.01 }}
-                      transition={{ duration: 0.22 }}
-                      className="group relative overflow-hidden p-6 rounded-3xl bg-white border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9] flex flex-col justify-between space-y-3"
-                    >
-                      <div className="space-y-1.5">
-                        <div className="flex items-center gap-2">
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-sage-green/15 text-sage-green">
-                            {rec.category}
-                          </span>
-                        </div>
-                        <h3 className="font-serif font-bold text-lg sm:text-xl text-foreground group-hover:text-sage-green transition-colors">
-                          {rec.title}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed">
-                          {rec.reason}
-                        </p>
-                      </div>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {/* Guide 1: Getting Diagnosed (Chapter 7) */}
+                  <Link
+                    href="/chapter/getting-diagnosed"
+                    className="group p-6 rounded-3xl bg-white border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-lg hover:border-sage-green flex flex-col justify-between space-y-3"
+                  >
+                    <div className="space-y-2">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sage-green/10 text-sage-green font-bold text-sm">
+                        1
+                      </span>
+                      <h3 className="font-serif font-bold text-lg sm:text-xl text-foreground group-hover:text-sage-green transition-colors">
+                        How an Assessment Works
+                      </h3>
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        What clinicians ask, who can evaluate adult ADHD, and what questions to bring to your doctor visit.
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 text-sm font-bold text-sage-green group-hover:underline pt-2">
+                      Read Chapter 7 Guide <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </Link>
 
-                      <div className="pt-2 border-t border-stone-100">
-                        <Link
-                          href={rec.href}
-                          className="inline-flex items-center gap-2 text-sm font-bold text-sage-green hover:underline"
-                        >
-                          <span>{rec.actionText}</span>
-                          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </Link>
-                      </div>
-                    </motion.div>
-                  ))}
+                  {/* Guide 2: What Actually Helps (Chapter 5) */}
+                  <Link
+                    href="/chapter/what-helps"
+                    className="group p-6 rounded-3xl bg-white border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-lg hover:border-sage-green flex flex-col justify-between space-y-3"
+                  >
+                    <div className="space-y-2">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sage-green/10 text-sage-green font-bold text-sm">
+                        2
+                      </span>
+                      <h3 className="font-serif font-bold text-lg sm:text-xl text-foreground group-hover:text-sage-green transition-colors">
+                        What Actually Helps Today
+                      </h3>
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        Practical, low-friction strategies: externalizing memory, body doubling, and breaking through task paralysis.
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 text-sm font-bold text-sage-green group-hover:underline pt-2">
+                      Read Chapter 5 Tools <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </Link>
+
+                  {/* Guide 3: Why It Feels Like This (Chapter 2) */}
+                  <Link
+                    href="/chapter/why-feels"
+                    className="group p-6 rounded-3xl bg-white border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-lg hover:border-sage-green flex flex-col justify-between space-y-3"
+                  >
+                    <div className="space-y-2">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sage-green/10 text-sage-green font-bold text-sm">
+                        3
+                      </span>
+                      <h3 className="font-serif font-bold text-lg sm:text-xl text-foreground group-hover:text-sage-green transition-colors">
+                        Why It Feels Like This
+                      </h3>
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        Why starting feels physically impossible, why deadlines trigger adrenaline, and letting go of shame.
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 text-sm font-bold text-sage-green group-hover:underline pt-2">
+                      Read Chapter 2 <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </Link>
                 </div>
               </div>
 
-              {/* ============================================================ */}
-              {/* LEVEL 2: DETAILED CORE REPORTED DIFFICULTY BREAKDOWN        */}
-              {/* Card 3: "What you reported" (Attention vs Restlessness)      */}
-              {/* ============================================================ */}
-              <motion.div
-                whileHover={{ y: -5, scale: 1.01 }}
-                transition={{ duration: 0.25 }}
-                className="group relative overflow-hidden bg-white rounded-3xl p-6 sm:p-9 border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9] space-y-5"
-              >
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-sage-green">
-                    Detailed Breakdown
+              {/* ================================================================== */}
+              {/* SECTION 4: PRINT SUMMARY FOR CLINICAL CONSULTATION                 */}
+              {/* ================================================================== */}
+              <div className="bg-white rounded-3xl p-7 sm:p-9 border border-stone-200/90 shadow-sm space-y-5">
+                <div className="flex items-center justify-between border-b border-stone-200/70 pb-3">
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-sage-green">
+                      Doctor Discussion Summary
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-serif font-bold text-foreground mt-0.5">
+                      Summary for a Consultation
+                    </h3>
+                  </div>
+                  <span className="text-xs font-mono text-muted-foreground">
+                    ADHD Compass Screening Aid
                   </span>
-                  <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground mt-0.5">
-                    What you reported
-                  </h2>
-                  <p className="text-muted-foreground text-xs sm:text-sm mt-1">
-                    A concrete overview of your answers across attention, organization, and restlessness:
-                  </p>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {/* Attention and organization box */}
-                  <div className="p-5 rounded-2xl bg-warm-cream/50 border border-stone-200 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold uppercase tracking-wider text-sage-green flex items-center gap-1.5">
-                        <Target className="h-4 w-4" /> Attention and organization
-                      </span>
-                      <span className="text-xs font-mono font-bold text-foreground">
-                        {evaluation.inattentionFrequentCount} frequent
-                      </span>
+                <div className="space-y-4 text-base leading-[1.75] text-foreground/85">
+                  <p>
+                    If you decide to talk to a healthcare professional, you can share this page or take this summary with you:
+                  </p>
+
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="p-4 sm:p-5 rounded-2xl bg-warm-cream/50 border border-stone-200 space-y-2">
+                      <p className="font-bold text-foreground">Symptom Overview</p>
+                      <p className="text-sm text-stone-700">
+                        • <strong>Attention & Focus:</strong> {evaluation.inattentionFrequentCount >= 4 ? 'Frequent challenges with task initiation, sustained focus, and mental fatigue.' : 'Occasional difficulties with distraction or routine paperwork.'}
+                      </p>
+                      <p className="text-sm text-stone-700">
+                        • <strong>Restlessness / Impulsivity:</strong> {evaluation.hyperactiveFrequentCount >= 4 ? 'Frequent physical restlessness, mental racing, or impulsive speech.' : 'Lower physical restlessness; primarily internal distraction or well-masked.'}
+                      </p>
                     </div>
 
-                    {evaluation.inattentionFrequent.length > 0 ? (
-                      <div>
-                        <p className="text-xs font-bold text-foreground mb-1.5">You frequently reported:</p>
-                        <ul className="space-y-1 text-xs text-foreground/85 leading-relaxed">
-                          {evaluation.inattentionFrequent.map((item) => (
-                            <li key={item.id} className="flex items-start gap-1.5">
-                              <span className="text-sage-green font-bold">•</span>
-                              <span>{item.info.shortTitle}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        You did not report frequent difficulties with attention or organization in the areas covered.
+                    <div className="p-4 sm:p-5 rounded-2xl bg-warm-cream/50 border border-stone-200 space-y-2">
+                      <p className="font-bold text-foreground">Impact & History</p>
+                      <p className="text-sm text-stone-700">
+                        • <strong>Life Settings:</strong> {evaluation.highImpactAreas.length > 0 ? `Difficulties reported across ${evaluation.highImpactAreas.slice(0, 2).join(' and ')}.` : 'Difficulties mostly situational or low frequency.'}
                       </p>
-                    )}
-
-                    {evaluation.inattentionInfrequent.length > 0 && (
-                      <div className="pt-2 border-t border-stone-200/60">
-                        <p className="text-[11px] font-semibold text-muted-foreground mb-1">Reported rarely or never:</p>
-                        <p className="text-xs text-stone-600 leading-relaxed">
-                          {evaluation.inattentionInfrequent.slice(0, 3).map((item) => item.info.shortTitle).join(', ')}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Restlessness and impulsive actions box */}
-                  <div className="p-5 rounded-2xl bg-warm-cream/50 border border-stone-200 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold uppercase tracking-wider text-amber-700 flex items-center gap-1.5">
-                        <Zap className="h-4 w-4" /> Restlessness and impulsive actions
-                      </span>
-                      <span className="text-xs font-mono font-bold text-foreground">
-                        {evaluation.hyperactiveFrequentCount} frequent
-                      </span>
+                      <p className="text-sm text-stone-700">
+                        • <strong>Everyday Impact:</strong> Noticeable disruption to daily energy, consistency, or routine completion.
+                      </p>
                     </div>
-
-                    {evaluation.hyperactiveFrequent.length > 0 ? (
-                      <div>
-                        <p className="text-xs font-bold text-foreground mb-1.5">You frequently reported:</p>
-                        <ul className="space-y-1 text-xs text-foreground/85 leading-relaxed">
-                          {evaluation.hyperactiveFrequent.map((item) => (
-                            <li key={item.id} className="flex items-start gap-1.5">
-                              <span className="text-amber-700 font-bold">•</span>
-                              <span>{item.info.shortTitle}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        You did not report frequent difficulties with physical restlessness or impulsive actions.
-                      </p>
-                    )}
-
-                    {evaluation.hyperactiveInfrequent.length > 0 && (
-                      <div className="pt-2 border-t border-stone-200/60">
-                        <p className="text-[11px] font-semibold text-muted-foreground mb-1">Reported rarely or never:</p>
-                        <p className="text-xs text-stone-600 leading-relaxed">
-                          {evaluation.hyperactiveInfrequent.slice(0, 3).map((item) => item.info.shortTitle).join(', ')}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* ============================================================ */}
-              {/* LEVEL 2: DETAILED CONTEXT & LIFE SETTINGS BREAKDOWN          */}
-              {/* Card 4: "How this affects your life"                         */}
-              {/* ============================================================ */}
-              <motion.div
-                whileHover={{ y: -5, scale: 1.01 }}
-                transition={{ duration: 0.25 }}
-                className="group relative overflow-hidden bg-white rounded-3xl p-6 sm:p-9 border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9] space-y-5"
-              >
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-muted-teal">
-                    Contextual Findings
-                  </span>
-                  <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground mt-0.5">
-                    How this affects your life
-                  </h2>
-                  <p className="text-muted-foreground text-xs sm:text-sm mt-1">
-                    Your answers on practical consequences, life settings, and overall interference:
-                  </p>
-                </div>
-
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {/* Where you experience difficulties */}
-                  <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-1.5">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted-teal flex items-center gap-1.5">
-                      <MapPin className="h-3.5 w-3.5" /> Where difficulties occur
-                    </span>
-                    <p className="text-sm font-semibold text-foreground">
-                      {evaluation.isAdult
-                        ? Array.isArray(answers[24]) && answers[24].length > 0 && !answers[24].includes('none')
-                          ? `Noticed in ${answers[24].length} life setting${answers[24].length > 1 ? 's' : ''}`
-                          : 'Not noticed in specific fixed settings'
-                        : Array.isArray(answers[25]) && answers[25].length > 0 && !answers[25].includes('none')
-                          ? `Noticed in ${answers[25].length} setting${answers[25].length > 1 ? 's' : ''}`
-                          : 'Not noticed in specific fixed settings'}
-                    </p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      A clinical evaluation considers whether challenges occur across multiple independent environments.
-                    </p>
                   </div>
 
-                  {/* Earlier history (Adults) or School & Home (Youth) */}
-                  <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-1.5">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted-teal flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5" /> {evaluation.isAdult ? 'Earlier history' : 'Home and school life'}
-                    </span>
-                    <p className="text-sm font-semibold text-foreground">
-                      {evaluation.isAdult
-                        ? answers[25] === 'yes'
-                          ? 'Recalled difficulties before age 12'
-                          : answers[25] === 'maybe'
-                          ? 'Possible childhood difficulties'
-                          : answers[25] === 'dont_remember'
-                          ? 'Did not recall childhood details'
-                          : 'No recalled childhood difficulties'
-                        : 'Evaluated across lessons, homework, and routines'}
-                    </p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {evaluation.isAdult
-                        ? 'ADHD is developmental, so clinicians explore childhood patterns. Difficulty recalling early childhood is normal.'
-                        : 'Examines whether attention difficulties occur across classes, homework, and family routines.'}
-                    </p>
+                  <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 text-xs text-muted-foreground leading-relaxed">
+                    <strong>Notice for Healthcare Professionals: </strong>
+                    This instrument is an educational patient screening aid based on standard adult ADHD symptom criteria. It does not replace a comprehensive neuropsychiatric assessment or clinical interview.
                   </div>
                 </div>
-
-                {/* Overall Interference */}
-                <div className="p-4 rounded-2xl bg-warm-cream/60 border border-stone-200 space-y-1">
-                  <span className="text-xs font-bold uppercase tracking-wider text-stone-600">
-                    Reported overall impact
-                  </span>
-                  <p className="text-sm font-semibold text-foreground">
-                    {(() => {
-                      const val = answers[26];
-                      if (val === 'a_lot') return 'A lot of interference in everyday life';
-                      if (val === 'noticeable') return 'A noticeable amount of interference';
-                      if (val === 'a_little') return 'A small amount of interference';
-                      if (val === 'not_at_all') return 'No significant interference reported';
-                      return 'Not sure of overall interference';
-                    })()}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Your personal perspective on how much effort and friction these patterns add to your daily goals.
-                  </p>
-                </div>
-              </motion.div>
-
-              {/* ============================================================ */}
-              {/* LEVEL 2: APPOINTMENT AID & PRINT FUNCTIONALITY               */}
-              {/* Card 5: Your notes for a healthcare consultation             */}
-              {/* ============================================================ */}
-              <motion.div
-                whileHover={{ y: -5, scale: 1.01 }}
-                transition={{ duration: 0.25 }}
-                className="group relative overflow-hidden bg-white rounded-3xl p-6 sm:p-9 border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9] space-y-5"
-              >
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-sage-green">
-                    Next Steps
-                  </span>
-                  <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground mt-0.5">
-                    Your notes for a clinical discussion
-                  </h2>
-                  <p className="text-muted-foreground text-xs sm:text-sm mt-1">
-                    If you choose to discuss these findings with a professional, use this clean summary as an organized conversation aid:
-                  </p>
-                </div>
-
-                <div className="grid sm:grid-cols-3 gap-3.5">
-                  <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-1.5">
-                    <span className="w-6 h-6 rounded-md bg-sage-green/15 text-sage-green flex items-center justify-center font-bold text-xs">
-                      1
-                    </span>
-                    <h3 className="font-bold text-foreground text-sm">Target Professional</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      A <strong>psychiatrist</strong> or physician evaluates and prescribes; a <strong>clinical psychologist</strong> conducts cognitive testing and therapy.
-                    </p>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-1.5">
-                    <span className="w-6 h-6 rounded-md bg-sage-green/15 text-sage-green flex items-center justify-center font-bold text-xs">
-                      2
-                    </span>
-                    <h3 className="font-bold text-foreground text-sm">Concrete Examples</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      Prepare specific life examples of where tasks were delayed, items lost, or conversations interrupted.
-                    </p>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-1.5">
-                    <span className="w-6 h-6 rounded-md bg-sage-green/15 text-sage-green flex items-center justify-center font-bold text-xs">
-                      3
-                    </span>
-                    <h3 className="font-bold text-foreground text-sm">Bring Printable Notes</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      Use the print button below to export your complete 26-question response record formatted for clinical review.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Print and Retake Buttons */}
-                <div className="pt-3 flex flex-wrap items-center justify-between gap-3 border-t border-stone-100">
-                  <button
-                    type="button"
-                    onClick={() => window.print()}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-sage-green text-white font-bold text-sm hover:bg-sage-green/90 transition shadow-sm hover:scale-[1.01]"
-                  >
-                    <Printer className="h-4 w-4" /> Print / Save Evaluation Notes (PDF)
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleReset}
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 font-medium text-xs sm:text-sm transition"
-                  >
-                    <RotateCcw className="h-4 w-4" /> Retake Self-Assessment
-                  </button>
-                </div>
-                <p className="text-[11px] text-muted-foreground italic">
-                  Note: The printable PDF automatically formats a clean clinical document containing your summary, reported difficulties, context answers, and complete 26-item record.
-                </p>
-              </motion.div>
-
-              {/* Bottom Return to Diagnosis Overview CTA */}
-              <motion.div
-                whileHover={{ y: -3 }}
-                transition={{ duration: 0.2 }}
-                className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-xs text-center space-y-3"
-              >
-                <span className="text-xs font-bold uppercase tracking-wider text-sage-green">
-                  Continue Reading
-                </span>
-                <h3 className="text-xl sm:text-2xl font-serif font-bold text-foreground">
-                  Ready to continue your exploration?
-                </h3>
-                <p className="text-xs sm:text-sm text-foreground/80 max-w-lg mx-auto">
-                  Return to the Getting Diagnosed chapter to explore clinical interview steps, healthcare provider differences, and practical appointment preparation.
-                </p>
-                <div className="pt-2">
-                  <Link
-                    href="/chapter/getting-diagnosed"
-                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-sage-green text-white font-bold text-base hover:bg-sage-green/90 transition shadow-md hover:scale-[1.01]"
-                  >
-                    <ArrowLeft className="h-4 w-4" /> Return to Diagnosis Overview
-                  </Link>
-                </div>
-              </motion.div>
+              </div>
 
               {/* Clear Medical Notice */}
               <div className="rounded-2xl p-4 bg-stone-100 text-muted-foreground text-xs leading-relaxed border border-stone-200">

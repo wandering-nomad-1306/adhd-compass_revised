@@ -2,23 +2,371 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   Activity,
   ArrowRight,
-  BrainCircuit,
   BookOpenCheck,
+  Brain,
+  BrainCircuit,
   Eye,
   Gauge,
+  HelpCircle,
   Info,
   Network,
+  RotateCcw,
+  ScanSearch,
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
   Target,
   Zap,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useLocation } from 'wouter';
-import BrainNetworkViz from '@/components/BrainNetworkViz';
+import { useMemo, useState } from 'react';
+import { Link, useLocation } from 'wouter';
 import ChapterLayoutWide from '@/components/ChapterLayoutWide';
 import SourceList from '@/components/SourceList';
+import Brain3DVisualizer, { RegionId, CircuitId } from '@/components/Brain3DVisualizer';
+
+// Detail block interface matching official MeetYourBrain / BrainNetworkViz
+interface ContentBlock {
+  lead: string;
+  highlight: string;
+  rest: string;
+}
+
+interface BrainRegion {
+  id: RegionId;
+  name: string;
+  shortName: string;
+  color: string;
+  role: string;
+  function: ContentBlock;
+  research: ContentBlock;
+  daily: ContentBlock;
+  limit: ContentBlock;
+}
+
+interface BrainCircuit {
+  id: CircuitId;
+  name: string;
+  color: string;
+  nodeIds: RegionId[];
+  role: ContentBlock;
+  research: ContentBlock;
+  daily: ContentBlock;
+}
+
+const regions: BrainRegion[] = [
+  {
+    id: 'pfc',
+    name: 'Prefrontal Cortex (dlPFC & Frontal Pole)',
+    shortName: 'Prefrontal Cortex (dlPFC)',
+    color: '#4f7659',
+    role: 'Holding goals in working memory and guiding execution (BA 9, 10, 46)',
+    function: {
+      lead: 'The prefrontal cortex acts like your brain’s project manager. It handles working memory, planning, pausing before reacting, and switching between tasks. Its primary job is to ',
+      highlight: 'keep your long-term goal active long enough to guide what you do next',
+      rest: ', rather than letting immediate impulses take over.',
+    },
+    research: {
+      lead: 'Brain imaging shows group differences in how easily the frontal lobe communicates with deeper action and reward hubs. Crucially, ',
+      highlight: 'this is not a brain injury, defect, or measure of intelligence',
+      rest: '—it reflects differences in how consistently attention signals are sent and received.',
+    },
+    daily: {
+      lead: 'This explains why you might clearly know what you should be doing, yet ',
+      highlight: 'struggle intensely to begin or stay on track without external structure',
+      rest: ', visual reminders, or immediate deadlines.',
+    },
+    limit: {
+      lead: 'The prefrontal cortex is a broad network of interconnected regions, not a single on/off switch. ',
+      highlight: 'A brain scan cannot diagnose ADHD in an individual',
+      rest: '; diagnosis is always based on real-world developmental patterns and life impact.',
+    },
+  },
+  {
+    id: 'parietal',
+    name: 'Posterior Parietal Cortex (PPC)',
+    shortName: 'Posterior Parietal (PPC)',
+    color: '#857004',
+    role: 'Steering the attentional spotlight and spatial tracking (BA 7, 40)',
+    function: {
+      lead: 'The parietal cortex acts like an attentional spotlight. Working alongside the frontal lobe, it helps you ',
+      highlight: 'orient your focus toward important details and redirect your attention',
+      rest: ' when priorities shift.',
+    },
+    research: {
+      lead: 'Studies during focus tasks show that frontoparietal networks fluctuate in stability. When an activity feels repetitive or unrewarding, ',
+      highlight: 'the spotlight easily wanders toward novel background signals',
+      rest: ', even when you try hard to resist.',
+    },
+    daily: {
+      lead: 'This shows up as suddenly losing your place in a document, ',
+      highlight: 'missing a detail right in front of your eyes',
+      rest: ', or feeling your train of thought derailed by a minor movement or background sound.',
+    },
+    limit: {
+      lead: 'Attention relies on multiple parietal circuits working together. The highlighted area is a simplified map to ',
+      highlight: 'illustrate general position, not a rigid physical boundary',
+      rest: '.',
+    },
+  },
+  {
+    id: 'acc',
+    name: 'Anterior Cingulate Cortex (dACC)',
+    shortName: 'Anterior Cingulate (dACC)',
+    color: '#925e76',
+    role: 'Error detection, conflict monitoring, and effort valuation (BA 24, 32)',
+    function: {
+      lead: 'The anterior cingulate functions like an internal smoke detector. It helps ',
+      highlight: 'detect errors, notice conflicts, and signal when more mental effort is needed',
+      rest: ' to solve a problem or switch approaches.',
+    },
+    research: {
+      lead: 'Research shows this monitoring system can take longer to trigger during repetitive tasks in ADHD. ',
+      highlight: 'Error awareness often arrives with a delay',
+      rest: ', which is why typos or misplaced items can slip by unnoticed in the moment.',
+    },
+    daily: {
+      lead: 'You might only realize a mistake after finishing a task, ',
+      highlight: 'persist with an ineffective approach for too long',
+      rest: ', or suddenly recognize an hour has passed on a detour before your brain signals that you went off course.',
+    },
+    limit: {
+      lead: 'This region sits deep on the inner midline arching over the corpus callosum. In the 3D model, ',
+      highlight: 'the cortex turns translucent so you can see its exact interior position',
+      rest: '.',
+    },
+  },
+  {
+    id: 'striatum',
+    name: 'Striatum (Caudate & Putamen)',
+    shortName: 'Striatum (Basal Ganglia)',
+    color: '#a96952',
+    role: 'Action selection, reward evaluation, and dopamine motivation',
+    function: {
+      lead: 'Nested deep inside the brain, the striatum acts as your motivation gateway. It connects to frontal circuits to ',
+      highlight: 'calculate whether an action is worth the mental effort',
+      rest: ' based on expected reward, novelty, and urgency.',
+    },
+    research: {
+      lead: 'Frontal-striatal pathways rely heavily on dopamine signaling. In ADHD, ',
+      highlight: 'delayed or abstract payoffs trigger much weaker dopamine signaling',
+      rest: ' compared to immediate, exciting, or crisis-driven consequences.',
+    },
+    daily: {
+      lead: 'This explains why starting tasks with distant deadlines feels physically exhausting, while ',
+      highlight: 'novelty, curiosity, or emergency deadlines suddenly unlock hours of intense focus',
+      rest: ' ("hyperfocus").',
+    },
+    limit: {
+      lead: 'The striatum is an internal cluster of deep subcortical nuclei (caudate nucleus, putamen, and nucleus accumbens) ',
+      highlight: 'tucked deep within the center of the brain',
+      rest: ', illuminated here in true 3D spatial alignment.',
+    },
+  },
+  {
+    id: 'insula',
+    name: 'Insular Cortex (Salience Hub)',
+    shortName: 'Insular Cortex (BA 13)',
+    color: '#5f9aaa',
+    role: 'Spotting urgent body signals and shifting mental priorities (BA 13)',
+    function: {
+      lead: 'The insula bridges internal bodily sensations with external events. It helps the brain ',
+      highlight: 'decide what is most urgent right now',
+      rest: ' by tuning into physical sensations, emotional spikes, and sensory input.',
+    },
+    research: {
+      lead: 'The insula is a core hub of the "salience network." In ADHD, ',
+      highlight: 'it can amplify sudden sensory or emotional signals',
+      rest: ', making minor irritations or urgent impulses feel overpowering.',
+    },
+    daily: {
+      lead: 'A sudden notification chime, an itchy tag, or a sharp wave of frustration can ',
+      highlight: 'instantly hijack your working memory',
+      rest: ', causing you to abandon what you were doing to put out the immediate fire.',
+    },
+    limit: {
+      lead: 'The insula is tucked deep beneath the frontal and temporal folds inside the lateral sulcus, ',
+      highlight: 'highlighted here with translucent cortex for structural orientation',
+      rest: '.',
+    },
+  },
+  {
+    id: 'cerebellum',
+    name: 'Cerebellar Hemispheres & Vermis',
+    shortName: 'Cerebellum (Internal Clock)',
+    color: '#7e8249',
+    role: 'Internal clock, temporal estimation, and sequence pacing',
+    function: {
+      lead: 'Long recognized for motor balance, the cerebellum also plays a critical cognitive role in ',
+      highlight: 'internal timing, predicting sequence steps, and coordinating thoughts',
+      rest: ' with the frontal cortex.',
+    },
+    research: {
+      lead: 'Neurodevelopmental studies link cerebellar timing circuits to ADHD, ',
+      highlight: 'directly impacting the brain’s intuitive sense of passing time',
+      rest: ' and the rhythm of multi-step task execution.',
+    },
+    daily: {
+      lead: 'This contributes directly to "time blindness"—',
+      highlight: 'difficulty estimating how long a task will take',
+      rest: ', struggling to pace multi-step projects, or losing track of how fast an hour has flown by.',
+    },
+    limit: {
+      lead: 'The cerebellum sits at the base of the skull beneath the occipital lobes and works in ',
+      highlight: 'continuous two-way feedback with the cortex',
+      rest: ' rather than as an isolated structure.',
+    },
+  },
+];
+
+const circuits: BrainCircuit[] = [
+  {
+    id: 'control-action',
+    name: 'Frontostriatal Network (Control & Action)',
+    color: '#a96952',
+    nodeIds: ['pfc', 'acc', 'striatum'],
+    role: {
+      lead: 'Connects goal-setting in dlPFC with error detection in dACC and dopamine motivation in the striatum to ',
+      highlight: 'translate intentions into physical actions and learn from results',
+      rest: '.',
+    },
+    research: {
+      lead: 'Frontal-striatal networks are among the most extensively studied in ADHD. Findings show ',
+      highlight: 'variable signaling during unrewarding or delayed tasks',
+      rest: ', with substantial differences between individuals.',
+    },
+    daily: {
+      lead: 'Essential for pausing before reacting, ',
+      highlight: 'breaking through the initial wall to start a task',
+      rest: ', and adapting when plans change.',
+    },
+  },
+  {
+    id: 'attention',
+    name: 'Frontoparietal Network (Attention Control)',
+    color: '#5b6f96',
+    nodeIds: ['pfc', 'parietal', 'insula'],
+    role: {
+      lead: 'Coordinates long-term goals in dlPFC with the real-time spotlight of the posterior parietal cortex (BA 7/40) to ',
+      highlight: 'steer focus toward what matters and tune out distractions',
+      rest: '.',
+    },
+    research: {
+      lead: 'Frontoparietal attention networks show fluctuations during sustained tasks, meaning ',
+      highlight: 'attention is not absent, but is hard to allocate on command',
+      rest: ' without high interest.',
+    },
+    daily: {
+      lead: 'Critical for remembering instructions while carrying them out, ',
+      highlight: 'resisting notifications, and smoothly returning to work',
+      rest: ' after an interruption.',
+    },
+  },
+  {
+    id: 'monitoring',
+    name: 'Salience Network (Monitoring & Priority)',
+    color: '#925e76',
+    nodeIds: ['insula', 'acc', 'pfc'],
+    role: {
+      lead: 'Balances urgent sensory/emotional events in the anterior insula (BA 13) with conflict detection in dACC to ',
+      highlight: 'decide which signal deserves immediate mental resources',
+      rest: '.',
+    },
+    research: {
+      lead: 'Studies indicate altered coordination between salience and default-mode networks, ',
+      highlight: 'allowing internal mind-wandering or sudden stimuli to interrupt tasks',
+      rest: '.',
+    },
+    daily: {
+      lead: 'Explains why an interesting tangential thought or an urgent email ',
+      highlight: 'can effortlessly hijack several hours of your workday',
+      rest: '.',
+    },
+  },
+  {
+    id: 'timing',
+    name: 'Cerebello-Striato-Prefrontal Loop (Internal Timing)',
+    color: '#7e8249',
+    nodeIds: ['pfc', 'striatum', 'cerebellum'],
+    role: {
+      lead: 'Combines prefrontal planning, striatal dopamine motivation, and cerebellar vermis time-tracking to ',
+      highlight: 'pace actions smoothly and manage transitions between activities',
+      rest: '.',
+    },
+    research: {
+      lead: 'Frontal-striatal-cerebellar pathways show differences during timing tasks, ',
+      highlight: 'correlating with intuitive difficulty measuring the passage of time',
+      rest: '.',
+    },
+    daily: {
+      lead: 'Crucial for estimating deadlines, ',
+      highlight: 'knowing when to stop one activity to prepare for the next',
+      rest: ', and avoiding chronic lateness.',
+    },
+  },
+];
+
+function DetailSection({
+  label,
+  block,
+  accentColor,
+  icon: SectionIcon,
+}: {
+  label: string;
+  block: ContentBlock;
+  accentColor?: string;
+  icon?: typeof Info;
+}) {
+  return (
+    <div className="rounded-2xl border border-stone-200/80 bg-white p-5 sm:p-6 shadow-2xs transition-all duration-300 hover:border-sage-green/40 hover:shadow-xs">
+      <div className="flex items-center gap-2">
+        {SectionIcon && (
+          <SectionIcon
+            className="h-4 w-4 shrink-0"
+            style={{ color: accentColor || '#4f7659' }}
+          />
+        )}
+        <h4 className="font-sans font-bold text-sm sm:text-base text-foreground tracking-wide">
+          {label}
+        </h4>
+      </div>
+      <p className="mt-2.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90 font-normal">
+        {block.lead}
+        <strong className="font-semibold text-foreground" style={accentColor ? { color: accentColor } : undefined}>
+          {block.highlight}
+        </strong>
+        {block.rest}
+      </p>
+    </div>
+  );
+}
+
+function CircuitRelationship({ circuit }: { circuit: BrainCircuit }) {
+  const nodeRegions = circuit.nodeIds
+    .map((id) => regions.find((r) => r.id === id))
+    .filter(Boolean) as BrainRegion[];
+
+  return (
+    <div className="mt-5 rounded-2xl border border-stone-200/80 bg-white p-5 shadow-2xs">
+      <p className="text-xs font-bold uppercase tracking-wider" style={{ color: circuit.color }}>
+        Network components
+      </p>
+      <div className="mt-3 grid gap-2 sm:grid-cols-3">
+        {nodeRegions.map((r) => (
+          <div
+            key={r.id}
+            className="rounded-xl border border-stone-200/70 bg-stone-50/70 p-3 text-xs leading-snug"
+          >
+            <div className="flex items-center gap-1.5 font-bold text-foreground">
+              <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: r.color }} />
+              <span className="truncate">{r.shortName}</span>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground line-clamp-2">{r.role}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const brainSystems = [
   {
@@ -116,122 +464,6 @@ const chemicalSystems = [
   },
 ] as const;
 
-function BrainSystemExplorer() {
-  const getInitialIndex = () => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const sys = params.get('system');
-      if (sys) {
-        const idx = brainSystems.findIndex((s) => s.id === sys);
-        if (idx !== -1) return idx;
-      }
-    } catch {}
-    return 0;
-  };
-
-  const [selected, setSelected] = useState(getInitialIndex);
-
-  useEffect(() => {
-    const syncFromUrl = () => {
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const sys = params.get('system');
-        if (sys) {
-          const idx = brainSystems.findIndex((s) => s.id === sys);
-          if (idx !== -1) setSelected(idx);
-        }
-      } catch {}
-    };
-
-    syncFromUrl();
-    window.addEventListener('popstate', syncFromUrl);
-    window.addEventListener('hashchange', syncFromUrl);
-    return () => {
-      window.removeEventListener('popstate', syncFromUrl);
-      window.removeEventListener('hashchange', syncFromUrl);
-    };
-  }, []);
-
-  const active = brainSystems[selected];
-  const Icon = active.icon;
-
-  return (
-    <div className="grid min-w-0 gap-4 lg:gap-5 lg:grid-cols-[0.88fr_1.12fr]">
-      <div className="grid grid-cols-2 gap-2 lg:block lg:space-y-3" role="tablist" aria-label="Brain systems associated with ADHD">
-        {brainSystems.map((system, index) => {
-          const SystemIcon = system.icon;
-          const isActive = selected === index;
-          return (
-            <button
-              key={system.id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              onClick={() => setSelected(index)}
-              className={`flex min-h-12 w-full min-w-0 items-center justify-center rounded-xl border px-3 py-2.5 text-center font-sans text-sm font-bold leading-tight transition-all lg:min-h-0 lg:justify-start lg:gap-4 lg:rounded-2xl lg:p-4 lg:text-left lg:text-base ${
-                isActive
-                  ? 'border-sage-green bg-sage-green/[0.08] shadow-sm'
-                  : 'border-sage-green/15 bg-white hover:border-sage-green/40'
-              }`}
-            >
-              <span className={`hidden h-11 w-11 shrink-0 items-center justify-center rounded-full lg:flex ${isActive ? 'bg-sage-green text-warm-cream' : 'bg-warm-cream text-sage-green'}`}>
-                <SystemIcon className="h-5 w-5" />
-              </span>
-              <span className="min-w-0">
-                <span className="block break-words font-bold text-foreground">{system.title}</span>
-                <span className="mt-1 hidden text-sm leading-snug text-muted-foreground lg:block">{system.subtitle}</span>
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      <AnimatePresence mode="wait">
-        <motion.article
-          key={active.id}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.2 }}
-          className="min-w-0 overflow-hidden rounded-3xl border border-sage-green/15 bg-white p-5 shadow-sm sm:p-7 md:p-8 lg:overflow-visible"
-        >
-          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sage-green/10 text-sage-green">
-              <Icon className="h-6 w-6" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-sage-green">Connected system</p>
-              <h3 className="mt-1 break-words font-serif text-2xl font-bold leading-tight text-foreground sm:text-3xl">{active.title}</h3>
-            </div>
-          </div>
-
-          <div className="mt-7 space-y-5">
-            {[
-              ['Main regions and circuits', active.regions],
-              ['What the system normally does', active.job],
-              ['What research suggests in ADHD', active.research],
-              ['How this may appear in daily life', active.daily],
-            ].map(([label, text]) => (
-              <div key={label} className="min-w-0 border-l-2 border-sage-green/30 pl-4">
-                <p className="font-bold text-base text-foreground">{label}</p>
-                <p className="mt-2 break-words leading-[1.75] text-[15px] sm:text-base text-foreground/90" dangerouslySetInnerHTML={{ __html: text }} />
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-7 flex gap-3.5 rounded-2xl bg-warm-cream/90 p-5 sm:p-6 border border-stone-200/60">
-            <Info className="mt-0.5 h-5 w-5 shrink-0 text-sage-green" />
-            <div>
-              <p className="font-bold text-base text-foreground">Important diagnostic limit</p>
-              <p className="mt-1 text-[15px] sm:text-base leading-[1.75] text-foreground/90" dangerouslySetInnerHTML={{ __html: active.limit }} />
-            </div>
-          </div>
-        </motion.article>
-      </AnimatePresence>
-    </div>
-  );
-}
-
 function ChemicalSignalExplorer() {
   const [selected, setSelected] = useState(0);
   const active = chemicalSystems[selected];
@@ -321,11 +553,33 @@ function ChemicalSignalExplorer() {
 
 export default function MeetYourBrain() {
   const [, setLocation] = useLocation();
+  const [view, setView] = useState<'regions' | 'connections'>('regions');
+  const [selectedRegionId, setSelectedRegionId] = useState<RegionId>('pfc');
+  const [selectedCircuitId, setSelectedCircuitId] = useState<CircuitId>('control-action');
+  const [selectedSystemId, setSelectedSystemId] = useState<'control' | 'attention' | 'reward' | 'coordination'>('control');
+
+  const selectedRegion = useMemo(
+    () => regions.find((r) => r.id === selectedRegionId) ?? regions[0],
+    [selectedRegionId]
+  );
+  const selectedCircuit = useMemo(
+    () => circuits.find((c) => c.id === selectedCircuitId) ?? circuits[0],
+    [selectedCircuitId]
+  );
+  const activeSystem = useMemo(
+    () => brainSystems.find((sys) => sys.id === selectedSystemId) ?? brainSystems[0],
+    [selectedSystemId]
+  );
+
+  const selectRegion = (id: RegionId) => {
+    setSelectedRegionId(id);
+    if (view === 'connections') setView('regions');
+  };
 
   return (
     <ChapterLayoutWide
       title="Meet Your Brain"
-      subtitle="Brain systems, neurochemistry, and executive functions."
+      subtitle="The neurobiology of attention, reward, and executive control—explained clearly without moralizing."
       chapterNumber={4}
       totalChapters={8}
       badgeText="Chapter 4 · Neuroscience"
@@ -336,36 +590,269 @@ export default function MeetYourBrain() {
       onPrevious={() => setLocation('/chapter/what-is')}
       onNext={() => setLocation('/chapter/what-helps')}
     >
-      <motion.div className="space-y-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-
-        <motion.section id="research-limits" data-page-label="Research limits"
-          className="rounded-2xl border border-sage-green/15 bg-gradient-to-br from-sage-green/[0.08] to-muted-teal/[0.08] p-7"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.4 }}
-        >
-          <div className="flex items-start gap-4">
-            <BrainCircuit className="mt-1 h-7 w-7 shrink-0 text-sage-green" />
-            <div>
-              <h2 className="font-serif text-2xl font-bold text-foreground">Research limits</h2>
-              <p className="mt-3 leading-relaxed text-foreground">
-                “Associated with ADHD” means researchers found an average relationship—not that every person has the same brain pattern, that the pattern causes every symptom, or that imaging can confirm a diagnosis. ADHD remains a clinical diagnosis based on development, symptoms, impairment, and context.
+      <div className="space-y-16">
+        {/* Section 1: Why neuroscience matters */}
+        <section id="why-neuroscience" data-page-label="Why neuroscience matters">
+          <div className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm md:p-8">
+            <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl">Why neuroscience matters</h2>
+            <div className="mt-6 space-y-4 text-base sm:text-lg leading-relaxed text-foreground">
+              <p>
+                People with ADHD spend much of their lives being told—directly or subtly—that their difficulties are character flaws. “You’re just lazy.” “You just need to try harder.” “You’re so smart; if you only applied yourself.”
+              </p>
+              <p>
+                Neuroscience matters because it replaces moral failure with neurobiological reality. The ADHD brain is structurally, functionally, and chemically different in specific, measurable ways. These differences don’t make you broken; they explain why traditional advice often fails and what actually helps.
               </p>
             </div>
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section id="brain-map" data-page-label="Brain map" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <div className="mb-8 max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Interactive map</p>
-            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Brain regions and connections</h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Explore approximate brain regions, then switch to the connections view to see how frontal, parietal, striatal, salience, and cerebellar systems work together.
+        {/* Section 2: Research limits */}
+        <section id="research-limits" data-page-label="Research limits">
+          <div className="rounded-3xl border border-[#a96952]/20 bg-[#a96952]/[0.05] p-7 md:p-8">
+            <h2 className="font-serif text-2xl font-bold text-foreground">Research limits</h2>
+            <p className="mt-3 leading-relaxed text-foreground">
+              “Associated with ADHD” means researchers found an average relationship—not that every person has the same brain pattern, that the pattern causes every symptom, or that imaging can confirm a diagnosis. ADHD remains a clinical diagnosis based on development, symptoms, impairment, and context.
             </p>
           </div>
-          <BrainNetworkViz />
-        </motion.section>
+        </section>
 
+        {/* Section 3: UNIFIED 3D INTERACTIVE BRAIN MAP */}
+        <section id="brain-map" data-page-label="Brain map">
+          <div className="mb-8 max-w-3xl">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Interactive 3D map</p>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Brain regions and connections</h2>
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              Explore approximate brain regions in full 3D, then switch to the connections view to see how frontal, parietal, striatal, salience, and cerebellar systems work together.
+            </p>
+          </div>
+
+          {/* Unified Container replicating BrainNetworkViz layout */}
+          <div className="mx-auto w-full overflow-hidden rounded-3xl border border-sage-green/15 bg-white shadow-sm">
+            {/* Header with View Tabs */}
+            <div className="flex flex-col gap-4 border-b border-sage-green/10 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-bold text-foreground text-lg">Brain regions and connected systems</p>
+                <p className="mt-1 max-w-2xl text-sm leading-relaxed text-stone-600">
+                  Drag the 3D model to rotate 360°. Select a region below to isolate surface cortex or expose deep internal frontostriatal hubs.
+                </p>
+              </div>
+              <div className="inline-flex self-start rounded-xl border border-sage-green/15 bg-warm-cream p-1" role="tablist" aria-label="Brain diagram view">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={view === 'regions'}
+                  onClick={() => setView('regions')}
+                  className={`flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition ${
+                    view === 'regions' ? 'bg-white text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <ScanSearch className="h-4 w-4" /> Regions
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={view === 'connections'}
+                  onClick={() => setView('connections')}
+                  className={`flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold transition ${
+                    view === 'connections' ? 'bg-white text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <Network className="h-4 w-4" /> Connections
+                </button>
+              </div>
+            </div>
+
+            {/* Split Layout: Left 3D Canvas & Buttons | Right Detail Cards */}
+            <div className="grid min-w-0 lg:grid-cols-[1.12fr_0.88fr]">
+              {/* Left Column: 3D Brain Viewer & Region Pills */}
+              <div className="min-w-0 border-b border-sage-green/10 bg-[#fbf7ed] p-4 sm:p-6 lg:border-b-0 lg:border-r">
+                {/* Authentic 3D Brain Visualizer */}
+                <Brain3DVisualizer
+                  view={view}
+                  selectedRegionId={selectedRegionId}
+                  selectedCircuitId={selectedCircuitId}
+                  onSelectRegion={selectRegion}
+                />
+
+                {/* Region Selection Buttons */}
+                {view === 'regions' ? (
+                  <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3" aria-label="Brain regions">
+                    {regions.map((region) => {
+                      const active = region.id === selectedRegionId;
+                      return (
+                        <button
+                          key={region.id}
+                          type="button"
+                          onClick={() => setSelectedRegionId(region.id)}
+                          className="min-w-0 rounded-xl border px-3 py-2.5 text-left text-xs sm:text-sm font-semibold leading-tight transition focus-visible:outline-none focus-visible:ring-4 shadow-2xs"
+                          style={{
+                            borderColor: active ? region.color : `${region.color}55`,
+                            backgroundColor: active ? region.color : '#ffffff',
+                            color: active ? '#ffffff' : region.color,
+                          }}
+                        >
+                          {region.shortName}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="mt-4 grid grid-cols-2 gap-2" aria-label="Brain connections">
+                    {circuits.map((circuit) => {
+                      const active = circuit.id === selectedCircuitId;
+                      return (
+                        <button
+                          key={circuit.id}
+                          type="button"
+                          onClick={() => setSelectedCircuitId(circuit.id)}
+                          className="rounded-xl border px-3 py-2.5 text-left text-xs sm:text-sm font-semibold leading-tight transition focus-visible:outline-none focus-visible:ring-4 shadow-2xs"
+                          style={{
+                            borderColor: active ? circuit.color : `${circuit.color}55`,
+                            backgroundColor: active ? circuit.color : '#ffffff',
+                            color: active ? '#ffffff' : circuit.color,
+                          }}
+                        >
+                          {circuit.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Quick Anatomical Insight Banner */}
+                <div className="mt-5 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-2xs flex items-start gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-sage-green/10 text-sage-green mt-0.5">
+                    <Sparkles className="h-4 w-4" />
+                  </span>
+                  <div className="text-xs leading-relaxed text-stone-700">
+                    <strong className="font-semibold text-foreground">3D Neuroanatomy Note: </strong>
+                    When you select internal structures like the <strong>Striatum</strong> or <strong>Anterior Cingulate</strong>, the cerebral cortex becomes semi-transparent so you can inspect their exact 3D positioning inside the frontostriatal loop.
+                  </div>
+                </div>
+
+                {view === 'connections' && <CircuitRelationship circuit={selectedCircuit} />}
+              </div>
+
+              {/* Right Column: Exact Detail Cards */}
+              <div className="min-w-0 p-5 sm:p-7 lg:sticky lg:top-6 lg:self-start">
+                <AnimatePresence mode="wait">
+                  {view === 'regions' ? (
+                    <motion.div
+                      key={selectedRegion.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-4"
+                    >
+                      <div>
+                        <span
+                          className="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white"
+                          style={{ backgroundColor: selectedRegion.color }}
+                        >
+                          Brain region
+                        </span>
+                        <h3 className="mt-3 font-serif text-3xl sm:text-4xl font-bold text-foreground">
+                          {selectedRegion.name}
+                        </h3>
+                        <p
+                          className="mt-2 text-base sm:text-lg font-semibold leading-relaxed"
+                          style={{ color: selectedRegion.color }}
+                        >
+                          {selectedRegion.role}
+                        </p>
+                      </div>
+                      <div className="space-y-3.5 pt-1">
+                        <DetailSection
+                          label="Main function"
+                          block={selectedRegion.function}
+                          accentColor={selectedRegion.color}
+                          icon={Target}
+                        />
+                        <DetailSection
+                          label="ADHD research"
+                          block={selectedRegion.research}
+                          accentColor={selectedRegion.color}
+                          icon={Brain}
+                        />
+                        <DetailSection
+                          label="Possible everyday relevance"
+                          block={selectedRegion.daily}
+                          accentColor={selectedRegion.color}
+                          icon={Activity}
+                        />
+                        <DetailSection
+                          label="Anatomical limitation"
+                          block={selectedRegion.limit}
+                          accentColor={selectedRegion.color}
+                          icon={HelpCircle}
+                        />
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key={selectedCircuit.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-4"
+                    >
+                      <div>
+                        <span
+                          className="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white"
+                          style={{ backgroundColor: selectedCircuit.color }}
+                        >
+                          Connected system
+                        </span>
+                        <h3 className="mt-3 font-serif text-3xl sm:text-4xl font-bold text-foreground">
+                          {selectedCircuit.name}
+                        </h3>
+                        <p
+                          className="mt-2 text-base sm:text-lg font-semibold leading-relaxed"
+                          style={{ color: selectedCircuit.color }}
+                        >
+                          {selectedCircuit.nodeIds
+                            .map((id) => regions.find((r) => r.id === id)?.shortName)
+                            .join(' · ')}
+                        </p>
+                      </div>
+                      <div className="space-y-3.5 pt-1">
+                        <DetailSection
+                          label="What this system coordinates"
+                          block={selectedCircuit.role}
+                          accentColor={selectedCircuit.color}
+                          icon={Network}
+                        />
+                        <DetailSection
+                          label="What research suggests"
+                          block={selectedCircuit.research}
+                          accentColor={selectedCircuit.color}
+                          icon={Brain}
+                        />
+                        <DetailSection
+                          label="Possible everyday relevance"
+                          block={selectedCircuit.daily}
+                          accentColor={selectedCircuit.color}
+                          icon={Activity}
+                        />
+                      </div>
+                      <div className="mt-4 flex gap-3 rounded-2xl bg-warm-cream/90 border border-sage-green/15 p-4 sm:p-5">
+                        <Info className="mt-0.5 h-5 w-5 shrink-0 text-sage-green" />
+                        <p className="text-sm leading-relaxed text-stone-700">
+                          <strong className="font-semibold text-foreground">Distributed communication: </strong>
+                          Connection mode colors the anatomical regions involved in this system. Real communication occurs through flexible, reciprocal pathways across millions of neurons rather than a single wire.
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 4: Brain Systems Explorer */}
         <section id="brain-systems" data-page-label="Brain systems" className="scroll-mt-24">
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">From regions to circuits</p>
@@ -374,9 +861,60 @@ export default function MeetYourBrain() {
               Select a system to see its normal job, what studies suggest, how it can appear in daily life, and the limit of the explanation.
             </p>
           </div>
-          <BrainSystemExplorer />
+
+          <div className="rounded-3xl border border-sage-green/15 bg-white p-6 sm:p-8 shadow-sm">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {brainSystems.map((sys) => {
+                const Icon = sys.icon;
+                const active = sys.id === selectedSystemId;
+                return (
+                  <button
+                    key={sys.id}
+                    type="button"
+                    onClick={() => setSelectedSystemId(sys.id)}
+                    className={`flex flex-col items-center gap-2 rounded-2xl border p-4 text-center transition ${
+                      active
+                        ? 'border-sage-green bg-sage-green/10 text-sage-green shadow-xs'
+                        : 'border-stone-200 bg-white text-stone-700 hover:border-sage-green/40'
+                    }`}
+                  >
+                    <Icon className="h-6 w-6" />
+                    <span className="text-xs sm:text-sm font-bold">{sys.title}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-8 space-y-4">
+              <div>
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">{activeSystem.title}</h3>
+                <p className="text-sm font-semibold text-sage-green mt-1">{activeSystem.subtitle}</p>
+                <p className="text-xs text-muted-foreground mt-1 font-mono">Involved structures: {activeSystem.regions}</p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2 pt-2">
+                <div className="rounded-2xl border border-stone-200/80 bg-warm-cream/50 p-5">
+                  <p className="text-xs font-bold uppercase tracking-wider text-sage-green mb-1.5">What this system normally does</p>
+                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{ __html: activeSystem.job }} />
+                </div>
+                <div className="rounded-2xl border border-stone-200/80 bg-warm-cream/50 p-5">
+                  <p className="text-xs font-bold uppercase tracking-wider text-sage-green mb-1.5">What ADHD research suggests</p>
+                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{ __html: activeSystem.research }} />
+                </div>
+                <div className="rounded-2xl border border-stone-200/80 bg-warm-cream/50 p-5">
+                  <p className="text-xs font-bold uppercase tracking-wider text-sage-green mb-1.5">How it can look in daily life</p>
+                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{ __html: activeSystem.daily }} />
+                </div>
+                <div className="rounded-2xl border border-stone-200/80 bg-warm-cream/50 p-5">
+                  <p className="text-xs font-bold uppercase tracking-wider text-sage-green mb-1.5">Limits of the explanation</p>
+                  <p className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{ __html: activeSystem.limit }} />
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
+        {/* Section 5: Neurochemistry (Dopamine and Norepinephrine) */}
         <section id="neurochemistry" data-page-label="Neurochemistry">
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Neurochemistry</p>
@@ -388,6 +926,7 @@ export default function MeetYourBrain() {
           <ChemicalSignalExplorer />
         </section>
 
+        {/* Section 6: Executive Functions Card Link */}
         <section id="executive-functions" data-page-label="Executive functions">
           <div className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm md:p-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
@@ -413,6 +952,7 @@ export default function MeetYourBrain() {
           </div>
         </section>
 
+        {/* Section 7: Context and performance */}
         <section id="performance" data-page-label="Why performance varies" className="rounded-3xl border border-[#4f7659]/15 bg-white p-7 shadow-sm md:p-8">
           <div className="flex items-center gap-4">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#4f7659]/10 text-[#4f7659]">
@@ -462,56 +1002,15 @@ export default function MeetYourBrain() {
           </div>
         </section>
 
-        <section id="emotion-movement" data-page-label="Emotion and movement" className="grid gap-6 lg:grid-cols-2">
-          <article className="rounded-2xl border border-stone-200/80 bg-white p-7 sm:p-8 shadow-2xs">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Emotional regulation</h2>
-            <p className="mt-4 text-base sm:text-lg leading-relaxed text-foreground">
-              Difficulty regulating emotions is <strong>one of the most impactful daily aspects of ADHD</strong>, even though it is not a standalone DSM category. Executive control, reward, and limbic emotion centers are deeply interconnected—meaning <strong>frustration, rejection, or excitement can surge rapidly before executive inhibitory circuits have time to evaluate or soften the reaction.</strong>
-            </p>
-            <p className="mt-4 text-[15px] sm:text-base leading-[1.75] text-foreground/90 border-t border-stone-200/60 pt-4">
-              <strong>Clinical Differential:</strong> Intense emotions should not automatically be attributed solely to ADHD. <strong>Anxiety, depression, trauma history, sleep apnea, sensory overload, and bipolar disorder</strong> also affect emotional stability and require individualized clinical evaluation.
-            </p>
-          </article>
-
-          <article className="rounded-2xl border border-stone-200/80 bg-white p-7 sm:p-8 shadow-2xs">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Movement and timing</h2>
-            <p className="mt-4 text-base sm:text-lg leading-relaxed text-foreground">
-              ADHD neuroscience extends far beyond the prefrontal cortex. The <strong>basal ganglia and cerebellum</strong> contribute to internal timing, motor coordination, rhythm, and cognitive pacing.
-            </p>
-            <p className="mt-4 text-[15px] sm:text-base leading-[1.75] text-foreground/90 border-t border-stone-200/60 pt-4">
-              <strong>Everyday Relevance:</strong> This helps explain <strong>restless fidgeting, tapping, subtle balance challenges, or misestimating how fast time is passing</strong>. Movement often functions as an instinctive, subconscious tool to stimulate alertness and wake up drowsy prefrontal circuits.
-            </p>
-          </article>
-        </section>
-
-        <section className="grid gap-6 lg:grid-cols-2">
-          <article className="rounded-2xl border border-[#477f72]/25 bg-[#477f72]/[0.07] p-7">
-            <h2 className="flex items-center gap-3 font-serif text-2xl font-bold text-foreground">
-              <ShieldCheck className="h-6 w-6 text-[#477f72]" /> What neuroscience can tell us
-            </h2>
-            <ul className="mt-5 space-y-3 text-sm leading-relaxed text-foreground">
-              <li>• ADHD is a neurodevelopmental condition, not a failure of effort or intelligence.</li>
-              <li>• Attention, executive control, reward, and network coordination are useful parts of the explanation.</li>
-              <li>• Performance can vary because brain systems interact with task demands and current state.</li>
-              <li>• Treatments can target symptoms and functioning without changing a person’s identity.</li>
-            </ul>
-          </article>
-
-          <article className="rounded-2xl border border-[#a96952]/25 bg-[#a96952]/[0.07] p-7">
-            <h2 className="flex items-center gap-3 font-serif text-2xl font-bold text-foreground">
-              <Info className="h-6 w-6 text-[#a96952]" /> What it cannot tell us
-            </h2>
-            <ul className="mt-5 space-y-3 text-sm leading-relaxed text-foreground">
-              <li>• A routine brain scan cannot diagnose ADHD.</li>
-              <li>• One region, network, gene, or neurotransmitter does not explain every person.</li>
-              <li>• A group-average difference does not predict an individual’s strengths, future, or treatment response.</li>
-              <li>• Neuroscience does not replace a developmental and clinical evaluation.</li>
-            </ul>
-          </article>
-        </section>
-
+        {/* Section 8: Source list */}
         <SourceList
           sources={[
+            {
+              title: 'Interactive 3D Brain Anatomy Models',
+              organization: 'BrainFacts.org / Society for Neuroscience & Wellcome Trust',
+              url: 'https://www.brainfacts.org/3d-brain#intro=false&focus=Brain',
+              note: 'Anatomical cortical meshes and deep subcortical structures reviewed by John Morrison, Patrick Hof, and Edward Lein.',
+            },
             {
               title: 'Inside the ADHD Brain: Structure, Function, and Chemistry',
               organization: 'Attention Deficit Disorder Association',
@@ -589,7 +1088,7 @@ export default function MeetYourBrain() {
             <ArrowRight className="h-5 w-5" />
           </button>
         </motion.section>
-      </motion.div>
+      </div>
     </ChapterLayoutWide>
   );
 }
