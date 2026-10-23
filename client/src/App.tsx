@@ -17,6 +17,7 @@ const WhatIsADHD = lazy(() => import("./pages/chapters/WhatIsADHD"));
 const WhatHelps = lazy(() => import("./pages/chapters/WhatHelps"));
 const WhatHelpsPrototype = lazy(() => import("./pages/chapters/WhatHelpsPrototype"));
 const BrainPrototype = lazy(() => import("./pages/prototypes/BrainPrototype"));
+const TestResultsPrototype = lazy(() => import("./pages/prototypes/TestResultsPrototype"));
 const Medication = lazy(() => import("./pages/chapters/Medication"));
 const GettingDiagnosed = lazy(() => import("./pages/chapters/GettingDiagnosed"));
 const ADHDTestPage = lazy(() => import("./pages/chapters/ADHDTestPage"));
@@ -167,6 +168,20 @@ function RouteSeoManager() {
       ],
       medicalData: {
         aspect: 'Neuroanatomy, Frontostriatal Networks, Dopamine Pathways',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+    '/prototype/test-results': {
+      title: 'ADHD Self-Assessment Results (Redesign Prototype) | ADHD Compass',
+      description: 'Prototype view for clinical likelihood tiers, DSM-5-TR adult criteria benchmarks, and doctor discussion summary.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Getting Diagnosed', path: '/chapter/getting-diagnosed' },
+        { name: 'Test Results Prototype', path: '/prototype/test-results' },
+      ],
+      medicalData: {
+        aspect: 'Symptom Checklist, Adult ADHD-RS-IV, ASRS v1.1 Clinical Screening',
         condition: 'Attention Deficit Hyperactivity Disorder',
       },
     },
@@ -361,6 +376,7 @@ function Router() {
         <Route path={"/chapter/what-helps"} component={WhatHelps} />
         <Route path={"/chapter/what-helps-prototype"} component={WhatHelpsPrototype} />
         <Route path={"/prototype/brain"} component={BrainPrototype} />
+        <Route path={"/prototype/test-results"} component={TestResultsPrototype} />
         <Route path={"/chapter/medication"} component={Medication} />
         <Route path={"/chapter/getting-diagnosed"} component={GettingDiagnosed} />
         <Route path={"/chapter/getting-diagnosed/test"} component={ADHDTestPage} />
