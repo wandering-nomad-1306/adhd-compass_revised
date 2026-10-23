@@ -1570,7 +1570,7 @@ export default function ADHDTestPage() {
                   </div>
 
                   {/* Question Title */}
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground leading-snug">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-sans font-semibold text-foreground leading-snug sm:leading-relaxed tracking-normal">
                     {currentQ.question}
                   </h2>
 
