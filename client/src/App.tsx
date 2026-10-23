@@ -39,13 +39,13 @@ function RouteSeoManager() {
 
   const routeMetaMap: Record<string, RouteMetadata> = {
     '/': {
-      title: 'ADHD Compass | Understanding Your Brain',
-      description: 'An independent, evidence-based, compassionate guide translating ADHD neuroscience, executive dysfunction, diagnosis pathways, non-pharmacological strategies, and medication pharmacology.',
+      title: 'ADHD Compass | Understanding Your Brain & Attention',
+      description: 'An independent, ad-free guide to ADHD neuroscience, executive dysfunction, diagnosis, and treatments. Grounded in clinical evidence and lived experience.',
       type: 'website',
     },
     '/about': {
-      title: 'About ADHD Compass | Evidence Standards, Sources & Mission',
-      description: 'ADHD Compass is an independent, non-commercial educational project grounded in peer-reviewed neuroscience, NICE guidelines, and lived neurodivergent experiences.',
+      title: 'About ADHD Compass | Independent, Ad-Free & Evidence-Based',
+      description: 'Why ADHD Compass exists: an independent, ad-free project bringing scattered neuroscience, clinical guidelines, and lived experiences into one calm place.',
       type: 'website',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -54,7 +54,7 @@ function RouteSeoManager() {
     },
     '/chapter/welcome': {
       title: 'Welcome to ADHD Compass: Navigating Your ADHD Journey',
-      description: 'A gentle, grounding introduction for adults navigating ADHD. Understand how to pace your reading and explore evidence-based chapters without cognitive overload.',
+      description: 'A gentle, grounding introduction for adults navigating ADHD. Learn how to pace your reading and explore evidence-based chapters without overwhelm.',
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -62,8 +62,8 @@ function RouteSeoManager() {
       ],
     },
     '/chapter/why-feels': {
-      title: 'Why It Feels Like This: Lived ADHD Experiences, Paralysis & Validation',
-      description: 'Deconstruct why ADHD feels like overwhelm, task paralysis, sensory overload, time blindness, and rejection sensitivity. Compassionate validation grounded in cognitive science.',
+      title: 'Why ADHD Feels Like This: Task Paralysis | ADHD Compass',
+      description: "Why can't you start? Explore the cognitive science of ADHD task paralysis, time blindness, rejection sensitivity, and deadline adrenaline without self-blame.",
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -81,8 +81,8 @@ function RouteSeoManager() {
       ],
     },
     '/chapter/what-is': {
-      title: 'What is ADHD? Clinical Definitions, Presentations & Myths',
-      description: 'Understand DSM-5-TR ADHD presentations: inattentive, hyperactive-impulsive, and combined. Debunk pervasive myths about laziness, dopamine deficiency, and screen time.',
+      title: 'What is ADHD? Presentations, Symptoms & Myths | ADHD Compass',
+      description: 'An evidence-based guide to adult ADHD: DSM-5-TR presentations (inattentive, hyperactive, combined) and debunking common myths about willpower and focus.',
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -104,8 +104,8 @@ function RouteSeoManager() {
       ],
     },
     '/chapter/brain': {
-      title: 'Meet Your Brain: ADHD Neurobiology, Networks & Neurotransmitters',
-      description: 'An interactive neuroanatomical guide to the ADHD brain: prefrontal cortex, default mode network (DMN), salience network, basal ganglia, and dopamine/norepinephrine signaling.',
+      title: 'Inside the ADHD Brain: Neurobiology & Networks | ADHD Compass',
+      description: 'An accessible neuroanatomical guide to the ADHD brain: prefrontal cortex, default mode network, striatum, and dopamine-norepinephrine signaling differences.',
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -117,8 +117,8 @@ function RouteSeoManager() {
       },
     },
     '/chapter/brain/executive-functions': {
-      title: 'ADHD Executive Dysfunction: Working Memory & Cognitive Regulation',
-      description: 'In-depth clinical guide to executive functions in ADHD: working memory capacity, response inhibition, cognitive flexibility, and Barkley\'s self-regulation model.',
+      title: 'ADHD Executive Dysfunction & Working Memory | ADHD Compass',
+      description: 'Understand executive dysfunction in ADHD: working memory decay, impulse inhibition, and task planning. Clear cognitive explanations and practical scaffolding.',
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -131,8 +131,8 @@ function RouteSeoManager() {
       },
     },
     '/chapter/what-helps': {
-      title: 'What Actually Helps: Evidence-Based Non-Pharmacological Strategies',
-      description: 'Practical, research-backed interventions for ADHD: cognitive behavioral strategies, externalizing working memory, body doubling, exercise physiology, and sensory adjustments.',
+      title: 'What Actually Helps ADHD: Practical Strategies | ADHD Compass',
+      description: 'Practical, research-backed interventions for adult ADHD: externalizing working memory, body doubling, sensory adjustments, and breaking task paralysis gently.',
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -157,8 +157,8 @@ function RouteSeoManager() {
       },
     },
     '/chapter/medication': {
-      title: 'ADHD Medication Guide: Stimulants, Non-Stimulants & Mechanisms',
-      description: 'Comprehensive, evidence-based guide to ADHD medications: methylphenidate vs amphetamine mechanisms, atomoxetine, alpha-2 agonists, titration kinetics, side effects, and clinical contraindications.',
+      title: 'ADHD Medication Guide: Mechanisms & Types | ADHD Compass',
+      description: 'An objective guide to ADHD medications: methylphenidate vs amphetamines, atomoxetine, receptor mechanisms, titration, and managing common side effects safely.',
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -168,10 +168,20 @@ function RouteSeoManager() {
         aspect: 'Pharmacology, Titration Guidelines, Reuptake Kinetics, Contraindications',
         condition: 'Attention Deficit Hyperactivity Disorder',
       },
+      faqItems: [
+        {
+          question: 'What is the difference between methylphenidate and amphetamine for ADHD?',
+          answer: 'Methylphenidate (Ritalin, Concerta) acts primarily as a reuptake inhibitor blocking DAT and NET transporters, while amphetamines (Adderall, Vyvanse) both block reuptake and stimulate presynaptic dopamine release.',
+        },
+        {
+          question: 'How effective are ADHD medications according to peer-reviewed evidence?',
+          answer: 'Network meta-analyses (Cortese et al., Lancet Psychiatry 2018) demonstrate an effect size of 0.7 to 1.0 for stimulants, with 70% to 80% of individuals experiencing substantial clinical benefit.',
+        },
+      ],
     },
     '/chapter/getting-diagnosed': {
-      title: 'Getting Diagnosed: Adult ADHD Clinical Assessment Pathways',
-      description: 'A step-by-step roadmap to seeking an adult ADHD diagnosis: clinical interviews (DIVA-5, CAARS), psychiatric evaluation, comorbidity screening, and preparation checklists.',
+      title: 'Adult ADHD Diagnosis: What to Expect & Prepare | ADHD Compass',
+      description: 'A clear roadmap for seeking an adult ADHD evaluation: clinical interview steps, childhood evidence, ruling out lookalikes, and preparing for your doctor visit.',
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -181,10 +191,20 @@ function RouteSeoManager() {
         aspect: 'Clinical Assessment, Psychiatric Evaluation, Differential Diagnosis',
         condition: 'Attention Deficit Hyperactivity Disorder',
       },
+      faqItems: [
+        {
+          question: 'Can you be diagnosed with ADHD for the first time as an adult?',
+          answer: 'Yes. Many adults compensated with high intellect or supportive environments until adult independence exceeded cognitive capacity.',
+        },
+        {
+          question: 'Who can officially diagnose adult ADHD?',
+          answer: 'Licensed psychiatrists (MD/DO) who can prescribe medication, or clinical psychologists (PhD/PsyD) who perform comprehensive neuropsychological testing.',
+        },
+      ],
     },
     '/chapter/getting-diagnosed/test': {
-      title: 'ADHD Self-Assessment Test: 18-Question Clinical Screener | ADHD Compass',
-      description: 'An evidence-based 18-question adult ADHD screening test based on official DSM-5 criteria and clinical prompts. Simple, completely private, with instant results.',
+      title: 'Adult ADHD Screening Test: Free & Private | ADHD Compass',
+      description: 'Take an evidence-based adult ADHD screening test based on DSM-5 symptom criteria. 100% private, client-side only, no sign-up or tracking, with instant results.',
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
@@ -197,8 +217,8 @@ function RouteSeoManager() {
       },
     },
     '/chapter/accommodations': {
-      title: 'ADHD Accommodations: Educational Rights & Workplace Strategies',
-      description: 'Legal and practical guide to ADHD accommodations: university disability services, exam adjustments, workplace accommodations under the ADA / Equality Act, and disclosure strategies.',
+      title: 'ADHD Accommodations: Workplace & University | ADHD Compass',
+      description: 'Practical guide to ADHD accommodations: university exam adjustments, workplace reasonable adjustments under the ADA and Equality Act, and disclosure tips.',
       type: 'article',
       breadcrumbs: [
         { name: 'Home', path: '/' },
