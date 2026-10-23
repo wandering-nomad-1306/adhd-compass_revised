@@ -16,6 +16,7 @@ const ExecutiveFunctions = lazy(() => import("./pages/chapters/ExecutiveFunction
 const WhatIsADHD = lazy(() => import("./pages/chapters/WhatIsADHD"));
 const WhatHelps = lazy(() => import("./pages/chapters/WhatHelps"));
 const WhatHelpsPrototype = lazy(() => import("./pages/chapters/WhatHelpsPrototype"));
+const BrainPrototype = lazy(() => import("./pages/prototypes/BrainPrototype"));
 const Medication = lazy(() => import("./pages/chapters/Medication"));
 const GettingDiagnosed = lazy(() => import("./pages/chapters/GettingDiagnosed"));
 const ADHDTestPage = lazy(() => import("./pages/chapters/ADHDTestPage"));
@@ -153,6 +154,19 @@ function RouteSeoManager() {
       ],
       medicalData: {
         aspect: 'Behavioral Interventions, Environmental Scaffolding, Psychotherapy',
+        condition: 'Attention Deficit Hyperactivity Disorder',
+      },
+    },
+    '/prototype/brain': {
+      title: 'Brain Anatomy & Circuits (Interactive Vector Prototype) | ADHD Compass',
+      description: 'High-definition vector neuroanatomy prototype: explore subcortical dopamine hubs, error-monitoring networks, and frontostriatal circuits in ADHD.',
+      type: 'article',
+      breadcrumbs: [
+        { name: 'Home', path: '/' },
+        { name: 'Brain Prototype', path: '/prototype/brain' },
+      ],
+      medicalData: {
+        aspect: 'Neuroanatomy, Frontostriatal Networks, Dopamine Pathways',
         condition: 'Attention Deficit Hyperactivity Disorder',
       },
     },
@@ -346,6 +360,7 @@ function Router() {
         <Route path={"/chapter/what-is"} component={WhatIsADHD} />
         <Route path={"/chapter/what-helps"} component={WhatHelps} />
         <Route path={"/chapter/what-helps-prototype"} component={WhatHelpsPrototype} />
+        <Route path={"/prototype/brain"} component={BrainPrototype} />
         <Route path={"/chapter/medication"} component={Medication} />
         <Route path={"/chapter/getting-diagnosed"} component={GettingDiagnosed} />
         <Route path={"/chapter/getting-diagnosed/test"} component={ADHDTestPage} />
