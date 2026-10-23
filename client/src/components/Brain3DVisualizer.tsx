@@ -623,23 +623,21 @@ export default function Brain3DVisualizer({
         selectedCircuitId === 'attention' ? REGION_COLORS.parietal :
         selectedCircuitId === 'monitoring' ? REGION_COLORS.acc : REGION_COLORS.cerebellum;
 
-      // Add distinct glowing nodal spheres for cortical nodes (PFC, Parietal) so they are evident
+      // Add distinct glowing nodal spheres for all active circuit hubs so connectivity is crystal-clear
       nodes.forEach((nodeId) => {
-        if (nodeId === 'pfc' || nodeId === 'parietal') {
-          const pos = REGION_CENTROIDS[nodeId];
-          const nodeColor = REGION_COLORS[nodeId];
-          const sphereGeo = new THREE.SphereGeometry(1.2, 20, 20);
-          const sphereMat = new THREE.MeshStandardMaterial({
-            color: new THREE.Color(nodeColor),
-            emissive: new THREE.Color(nodeColor),
-            emissiveIntensity: 0.9,
-            roughness: 0.3,
-            metalness: 0.1,
-          });
-          const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
-          sphereMesh.position.copy(pos);
-          arcsGroup.add(sphereMesh);
-        }
+        const pos = REGION_CENTROIDS[nodeId];
+        const nodeColor = REGION_COLORS[nodeId];
+        const sphereGeo = new THREE.SphereGeometry(nodeId === 'pfc' || nodeId === 'parietal' ? 1.25 : 0.95, 24, 24);
+        const sphereMat = new THREE.MeshStandardMaterial({
+          color: new THREE.Color(nodeColor),
+          emissive: new THREE.Color(nodeColor),
+          emissiveIntensity: 0.95,
+          roughness: 0.25,
+          metalness: 0.1,
+        });
+        const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+        sphereMesh.position.copy(pos);
+        arcsGroup.add(sphereMesh);
       });
 
       // Draw high-visibility 3D connecting pathways
@@ -789,23 +787,23 @@ export default function Brain3DVisualizer({
         <span className="text-xs sm:text-sm font-bold text-foreground">
           {view === 'regions'
             ? selectedRegionId === 'pfc'
-              ? 'Anterior Prefrontal Cortex · Frontal Pole & Executive Control'
+              ? 'Prefrontal Cortex (dlPFC) · Frontal Pole & Dorsolateral Control Hub (BA 9, 10, 46)'
               : selectedRegionId === 'parietal'
-              ? 'Posterior Parietal Cortex · Attentional Spotlight'
+              ? 'Posterior Parietal Cortex (PPC) · Intraparietal Sulcus & Spatial Attention (BA 7, 40)'
               : selectedRegionId === 'acc'
-              ? 'Anterior Cingulate (ACC) · Error & Conflict Monitor (Translucent Cutaway)'
+              ? 'Anterior Cingulate Cortex (dACC) · Error Detection & Conflict Valuation (BA 24, 32)'
               : selectedRegionId === 'striatum'
-              ? 'Striatum · Caudate & Putamen Dopamine Hub (Translucent Cutaway)'
+              ? 'Striatum (Basal Ganglia) · Caudate Nucleus & Putamen (Frontostriatal Dopamine Hub)'
               : selectedRegionId === 'insula'
-              ? 'Insula · Deep Salience & Urgency Hub (Translucent Cutaway)'
-              : 'Cerebellum · Internal Clock & Coordination Base'
+              ? 'Insular Cortex · Anterior Salience Hub & Bodily Urgency (Brodmann Area 13)'
+              : 'Cerebellar Hemispheres & Vermis · Internal Timing & Sequence Coordination'
             : selectedCircuitId === 'control-action'
-            ? 'Control & Action Network · Prefrontal Cortex ↔ Anterior Cingulate ↔ Striatum'
+            ? 'Frontostriatal Network · dlPFC (BA 9/46) ↔ dACC (BA 24/32) ↔ Striatum (Action Selection & Reward)'
             : selectedCircuitId === 'attention'
-            ? 'Attention Control Network · Prefrontal Cortex ↔ Parietal Cortex ↔ Insula'
+            ? 'Frontoparietal Network · dlPFC (BA 9/46) ↔ Posterior Parietal (BA 7/40) ↔ Insula (Goal-Directed Focus)'
             : selectedCircuitId === 'monitoring'
-            ? 'Salience & Monitoring Network · Insula ↔ Anterior Cingulate ↔ Prefrontal Cortex'
-            : 'Timing & Coordination Loop · Prefrontal Cortex ↔ Striatum ↔ Cerebellum'}
+            ? 'Salience Network · Anterior Insula (BA 13) ↔ dACC (BA 24/32) ↔ dlPFC (Sensory Salience & Vigilance)'
+            : 'Cerebello-Striato-Prefrontal Loop · dlPFC ↔ Dorsal Striatum ↔ Cerebellum (Temporal Estimation & Pacing)'}
         </span>
       </div>
 

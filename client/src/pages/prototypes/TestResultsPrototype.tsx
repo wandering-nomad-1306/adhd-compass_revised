@@ -30,20 +30,17 @@ type ScenarioKey = 'high_combined' | 'moderate_inattentive' | 'low_subthreshold'
 interface ScenarioData {
   key: ScenarioKey;
   label: string;
-  // Traffic-light likelihood color coding: Red = High, Yellow/Amber = Moderate, Green = Low
   badge: string;
   badgeBg: string;
-  badgeBorder: string;
   badgeText: string;
   color: string;
-  likelihoodTitle: string;
+  headline: string;
+  leadSubtitle: string;
   likelihoodSummary: string;
-  // Answer summary (Replicating Image 3 with cleaner, better delivery)
+  // Answer summary replicating Image 3 layout with clean delivery
   answerHeadline: string;
-  primaryReportedSymptoms: string[];
-  settingsSummary: string;
-  impactSummary: string;
-  childhoodSummary: string;
+  primarySummaryParagraph: string;
+  contextBoxText: string;
   // Non-diagnostic clinical suggestion
   doctorSuggestion: string;
 }
@@ -52,79 +49,64 @@ const SCENARIOS: Record<ScenarioKey, ScenarioData> = {
   high_combined: {
     key: 'high_combined',
     label: 'Scenario A: High Chances (7 Inattentive, 6 Restless)',
-    badge: 'High Likelihood · Strong Symptom Match',
-    badgeBg: 'bg-red-50',
-    badgeBorder: 'border-red-300',
-    badgeText: 'text-red-700',
-    color: '#dc2626', // Red
-    likelihoodTitle: 'High chances that you have ADHD',
+    badge: 'HIGH MATCH · COMBINED INATTENTIVE & HYPERACTIVE PROFILE',
+    badgeBg: 'bg-[#991b1b]',
+    badgeText: 'text-white',
+    color: '#991b1b', // Deep rich crimson burgundy
+    headline: 'Your responses reflect a strong Combined profile with elevated inattention and restlessness.',
+    leadSubtitle: 'Meets adult statutory thresholds across both attention and restlessness domains.',
     likelihoodSummary:
-      'Based on your answers, your daily experiences strongly match the patterns seen in ADHD (both attention difficulties and physical or mental restlessness). You reported frequent struggles across several core areas that significantly exceed the standard benchmarks for adult ADHD.',
-    answerHeadline: 'Difficulties with both attention and restlessness stood out most in your answers.',
-    primaryReportedSymptoms: [
-      'Frequent task paralysis: wanting to start important work, but feeling stuck behind a heavy wall of friction.',
-      'Time blindness: struggling to estimate how long tasks take, often relying on last-minute deadline pressure.',
-      'Forgetting routine obligations, losing track of personal items, or needing multiple reminders.',
-      'Physical or mental restlessness: fidgeting with hands or feet, feeling constantly "on the go", or feeling mentally revved up.',
-      'Conversational impulsivity: finding it difficult to wait when speaking or frequently blurting out answers.',
-    ],
-    settingsSummary: 'You reported that these difficulties happen across multiple areas of your life, including work or studies, home routines, and relationships.',
-    impactSummary: 'Overall, you noted that these challenges create a noticeable, high amount of interference in your daily life.',
-    childhoodSummary: 'You recalled experiencing similar patterns during childhood before age 12, which is an important sign that these are lifelong traits.',
+      'Based on your answers, your daily experiences strongly match the patterns seen in ADHD. You reported frequent, persistent challenges across both executive focus and restless impulsivity that create noticeable friction across multiple areas of your life.',
+    answerHeadline: 'Restlessness, impulse control, and task focus stood out most in your answers.',
+    primarySummaryParagraph:
+      'You frequently reported forgetting routine obligations, struggling to break through task paralysis on multi-step projects, fidgeting with hands or feet when seated, feeling constantly "on the go", and blurting out answers or interrupting others before they finish.',
+    contextBoxText:
+      'You also reported noticeable difficulties across several areas, including work, university or studies, and personal relationships. Overall, you noted a high amount of everyday interference, and recalled experiencing similar patterns in childhood before age 12.',
     doctorSuggestion:
-      'Because these patterns are creating real friction across multiple parts of your life, we strongly suggest discussing these results with a doctor, psychiatrist, or clinical psychologist. They can provide a proper, personalized evaluation.',
+      'Because these patterns are creating ongoing friction across multiple areas of your life, we strongly suggest discussing these results with a doctor, psychiatrist, or clinical psychologist. They can provide an official, comprehensive evaluation.',
   },
   moderate_inattentive: {
     key: 'moderate_inattentive',
     label: 'Scenario B: Moderate Chances (Inattentive with Masking)',
-    badge: 'Moderate Likelihood · Notable Inattentive Match',
-    badgeBg: 'bg-amber-50',
-    badgeBorder: 'border-amber-300',
-    badgeText: 'text-amber-800',
-    color: '#d97706', // Yellow / Amber
-    likelihoodTitle: 'Moderate chances that you have ADHD',
+    badge: 'MODERATE MATCH · INATTENTIVE / MASKING PROFILE',
+    badgeBg: 'bg-[#b45309]',
+    badgeText: 'text-white',
+    color: '#b45309', // Warm rich burnt amber / chestnut as in Image 1
+    headline: 'Your responses reflect a notable Inattentive profile with potential high-effort compensation.',
+    leadSubtitle: 'Meets adult Inattentive threshold with lower physical restlessness, characteristic of high masking.',
     likelihoodSummary:
-      'Your answers show a noticeable match with inattentive ADHD patterns. You reported frequent difficulties with focus, starting tasks, and staying organized, while reporting fewer signs of physical hyperactivity. This is very common in people who have learned to mask their difficulties or work extra hard behind the scenes to keep up.',
+      'Your answers show a noticeable match with inattentive ADHD patterns. You reported frequent difficulties with focus, starting tasks, and mental fatigue, while reporting fewer signs of physical hyperactivity. This is very common in people who have learned to mask their difficulties or work twice as hard behind the scenes to keep up.',
     answerHeadline: 'Attention, organization, and mental fatigue stood out most in your answers.',
-    primaryReportedSymptoms: [
-      'Struggling to sustain focus during long reading, meetings, or repetitive paperwork unless it is deeply interesting.',
-      'Procrastinating on tasks that require sustained mental effort, feeling overwhelmed by multi-step projects.',
-      'Losing focus mid-conversation or re-reading the same page multiple times.',
-      'Exerting massive mental energy just to appear organized, leading to silent exhaustion or burnout.',
-    ],
-    settingsSummary: 'You reported noticing these challenges mainly at work, university, or in managing everyday administrative responsibilities.',
-    impactSummary: 'Overall, you noted that these difficulties have a noticeable effect on your daily energy and consistency.',
-    childhoodSummary: 'You noted that you may have had similar difficulties in childhood or were unsure, which is common when intellect or structure masked symptoms early on.',
+    primarySummaryParagraph:
+      'You frequently reported struggling to sustain focus during long reading or paperwork unless deeply interesting, putting off tasks requiring sustained mental effort, re-reading the same page multiple times, and feeling silent exhaustion from constantly trying to stay organized.',
+    contextBoxText:
+      'You also reported noticeable difficulties across several areas, primarily in work, studies, and personal administrative routines. Overall, you noted a moderate amount of everyday interference. You noted that you were unsure or did not fully recall similar difficulties before age 12, which frequently happens when intellect or high structure masked symptoms early on.',
     doctorSuggestion:
-      'A formal conversation with a healthcare professional can help clarify whether your focus difficulties stem from inattentive ADHD, high-effort masking, anxiety, or chronic cognitive burnout.',
+      'A formal conversation with a healthcare professional can help clarify whether your focus difficulties stem from inattentive ADHD, high-effort compensation, anxiety, or chronic cognitive burnout.',
   },
   low_subthreshold: {
     key: 'low_subthreshold',
     label: 'Scenario C: Low Chances (Few Symptoms Reported)',
-    badge: 'Low Likelihood · Few Symptoms Reported',
-    badgeBg: 'bg-green-50',
-    badgeBorder: 'border-green-300',
-    badgeText: 'text-green-700',
-    color: '#16a34a', // Green
-    likelihoodTitle: 'Low chances that you have ADHD',
+    badge: 'LOW MATCH · FEW ELEVATED SYMPTOMS REPORTED',
+    badgeBg: 'bg-[#1e3a2f]',
+    badgeText: 'text-white',
+    color: '#1e3a2f', // Deep rich forest spruce
+    headline: 'Your responses reflect low chances of ADHD with few elevated symptoms.',
+    leadSubtitle: 'Reported symptoms fall below clinical thresholds for adult ADHD.',
     likelihoodSummary:
-      'Based on your answers, there is a low likelihood that ADHD is the main cause of your difficulties. You reported experiencing occasional moments of distraction or restlessness, but they do not appear at the persistent, frequent level typically seen in ADHD.',
-    answerHeadline: 'You reported these difficulties less often overall.',
-    primaryReportedSymptoms: [
-      'Occasional procrastination on boring tasks (a normal human experience that happens to almost everyone).',
-      'Periodic forgetfulness or restlessness that usually connects to being tired, stressed, or having too much on your plate.',
-      'Good ability to maintain attention and follow through when tasks are structured or clear.',
-    ],
-    settingsSummary: 'You reported that these moments are situational and do not consistently disrupt your day across multiple settings.',
-    impactSummary: 'Overall, you noted minimal or no major interference in your everyday life.',
-    childhoodSummary: 'You did not recall experiencing persistent attention or restlessness issues during early childhood.',
+      'Based on your answers, there is a low likelihood that ADHD is the primary cause of your difficulties. You reported experiencing occasional moments of distraction or restlessness, but they do not appear at the persistent, cross-situational frequency typical of ADHD.',
+    answerHeadline: 'Few frequent attention or restlessness symptoms reported.',
+    primarySummaryParagraph:
+      'You reported occasional procrastination on boring tasks (a normal human experience that happens to almost everyone), periodic forgetfulness when tired or stressed, and a generally good ability to maintain focus and follow through when tasks are structured.',
+    contextBoxText:
+      'You noted that these moments are mostly situational rather than pervasive across settings. Overall, you noted minimal or no major interference in your everyday life, and did not recall experiencing persistent attention difficulties in childhood.',
     doctorSuggestion:
       'While ADHD appears unlikely from your answers, if you are currently feeling overwhelmed or struggling to concentrate, it may be helpful to look into sleep quality, stress levels, or recent lifestyle changes with a doctor.',
   },
 };
 
 export default function TestResultsPrototype() {
-  const [currentScenario, setCurrentScenario] = useState<ScenarioKey>('high_combined');
+  const [currentScenario, setCurrentScenario] = useState<ScenarioKey>('moderate_inattentive');
   const data = SCENARIOS[currentScenario];
 
   const handlePrint = () => {
@@ -133,7 +115,7 @@ export default function TestResultsPrototype() {
 
   return (
     <div className="min-h-screen bg-[#fdfcf9] text-foreground py-8 px-4 sm:px-6">
-      {/* Interactive Scenario Switcher Bar */}
+      {/* Interactive Scenario Switcher Bar (Prototype-only tool) */}
       <div className="max-w-4xl mx-auto mb-8 print:hidden">
         <div className="rounded-2xl border-2 border-sage-green/40 bg-warm-cream p-4 sm:p-5 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -143,10 +125,10 @@ export default function TestResultsPrototype() {
               </span>
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-sage-green">
-                  Results Prototype · Color-Coded Likelihood Preview
+                  Results Prototype · Color Indicator & Delivery Preview
                 </p>
                 <p className="text-xs text-foreground/80 mt-0.5">
-                  Red = High chances · Yellow = Moderate chances · Green = Low chances. No academic jargon.
+                  Red = High chances · Amber = Moderate chances · Slate/Green = Low chances. No academic jargon.
                 </p>
               </div>
             </div>
@@ -161,13 +143,17 @@ export default function TestResultsPrototype() {
                     key={key}
                     type="button"
                     onClick={() => setCurrentScenario(key)}
-                    className={`rounded-xl px-3.5 py-2 text-xs font-bold transition shadow-2xs ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
                       active
-                        ? 'bg-sage-green text-white shadow-xs'
-                        : 'border border-stone-200 bg-white text-stone-700 hover:bg-stone-50'
+                        ? 'bg-sage-green text-white shadow-2xs'
+                        : 'bg-white text-stone-700 hover:bg-stone-50 border border-stone-200'
                     }`}
                   >
-                    {s.label.split(':')[0]}
+                    {key === 'high_combined'
+                      ? 'High Chances (Red)'
+                      : key === 'moderate_inattentive'
+                      ? 'Moderate Chances (Amber)'
+                      : 'Low Chances (Green/Slate)'}
                   </button>
                 );
               })}
@@ -176,8 +162,8 @@ export default function TestResultsPrototype() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto space-y-8">
-        {/* Navigation Bar */}
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Navigation Bar matching user's Image 1 */}
         <div className="flex items-center justify-between text-sm print:hidden">
           <Link
             href="/chapter/getting-diagnosed"
@@ -185,80 +171,86 @@ export default function TestResultsPrototype() {
           >
             <ArrowLeft className="h-4 w-4" /> Back to Chapter 7 Overview
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={handlePrint}
               className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200/90 bg-white px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50 transition shadow-2xs"
             >
-              <Printer className="h-4 w-4 text-sage-green" /> Print / Save Summary
+              <Printer className="h-4 w-4 text-sage-green" /> Print / Save PDF
             </button>
+            <span className="hidden sm:inline-block text-xs font-mono uppercase tracking-wider text-muted-foreground">
+              SELF-ASSESSMENT SUMMARY
+            </span>
           </div>
         </div>
 
         {/* ================================================================== */}
-        {/* SECTION 1: LIKELIHOOD & CHANCES (RED / YELLOW / GREEN)            */}
-        {/* Clear, direct, zero academic jargon                                */}
+        {/* SECTION 1: LIKELIHOOD CARD (REPLICATING USER'S FIRST IMAGE)        */}
+        {/* Sophisticated warm cream card, solid rich pill, zero cheap pastel  */}
         {/* ================================================================== */}
         <motion.div
           key={currentScenario}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
-          className="group relative overflow-hidden bg-white rounded-3xl p-7 sm:p-9 border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9] space-y-6"
+          className="relative overflow-hidden bg-gradient-to-br from-[#fefbf6] via-[#faf7f2] to-[#f5f0e8] rounded-[28px] sm:rounded-[32px] p-7 sm:p-9 border border-emerald-900/10 shadow-sm space-y-6"
         >
-          {/* Subtle background glow based on likelihood color */}
+          {/* Subtle warm ambient corner blur matching the likelihood color */}
           <div
-            className="pointer-events-none absolute -left-10 -top-10 h-44 w-44 rounded-full blur-3xl opacity-20"
+            className="pointer-events-none absolute -left-12 -top-12 h-64 w-64 rounded-full blur-3xl opacity-15"
             style={{ backgroundColor: data.color }}
             aria-hidden="true"
           />
 
-          {/* Color-Coded Likelihood Badge */}
+          {/* Solid Rich Color-Coded Pill Badge (Image 1 style) */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <span
-              className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider border ${data.badgeBg} ${data.badgeBorder} ${data.badgeText} shadow-2xs`}
+              className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider ${data.badgeBg} ${data.badgeText} shadow-2xs`}
             >
-              <span
-                className="h-2.5 w-2.5 rounded-full animate-pulse"
-                style={{ backgroundColor: data.color }}
-              />
+              <Sparkles className="h-3.5 w-3.5 text-white" />
               {data.badge}
             </span>
-            <span className="text-xs font-mono text-muted-foreground">
-              Adult Self-Assessment (ASRS / DSM-5)
+            <span className="text-xs font-mono tracking-wider uppercase text-neutral-400">
+              Evaluated: Adult DSM-5-TR Standard
             </span>
           </div>
 
-          {/* Main Plain-English Likelihood Headline */}
-          <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-foreground leading-tight">
-              {data.likelihoodTitle}
+          {/* Main Editorial Headline & Lead */}
+          <div className="space-y-3">
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 leading-tight">
+              {data.headline}
             </h1>
-            <p className="mt-3 text-base sm:text-[17px] leading-[1.8] text-foreground/90 font-normal">
+            <p
+              className="text-base sm:text-lg font-medium leading-relaxed"
+              style={{ color: data.color }}
+            >
+              {data.leadSubtitle}
+            </p>
+            <p className="text-base sm:text-[17px] leading-[1.8] text-foreground/90 font-normal pt-1">
               {data.likelihoodSummary}
             </p>
           </div>
 
           {/* Non-Diagnostic Suggestion Box */}
-          <div className="rounded-2xl border-2 border-stone-200/80 bg-warm-cream/60 p-5 sm:p-6 space-y-3">
+          <div className="rounded-2xl border border-stone-200/80 bg-white/75 p-5 sm:p-6 shadow-2xs space-y-2.5">
             <div className="flex items-center gap-2 text-stone-800">
               <ShieldAlert className="h-5 w-5 text-amber-700 shrink-0" />
               <h4 className="font-serif font-bold text-base sm:text-lg text-foreground">
                 Important note on diagnosis
               </h4>
             </div>
-            <p className="text-base leading-[1.75] text-foreground/90">
+            <p className="text-base sm:text-[17px] leading-[1.75] text-foreground/90">
               <strong>This is a screening guide, not an official medical diagnosis.</strong> An online test can help you organize what you are experiencing, but only a licensed healthcare professional (such as a psychiatrist or clinical psychologist) can officially diagnose ADHD.
             </p>
-            <p className="text-sm text-stone-600 leading-relaxed border-t border-stone-200/70 pt-2.5">
+            <p className="text-sm sm:text-base text-stone-600 leading-relaxed border-t border-stone-200/70 pt-2.5">
               {data.doctorSuggestion}
             </p>
           </div>
         </motion.div>
 
         {/* ================================================================== */}
-        {/* SECTION 2: ANSWER SUMMARY (LIKE IMAGE 3 WITH BETTER DELIVERY)      */}
+        {/* SECTION 2: ANSWER SUMMARY (REPLICATING USER'S IMAGE 3 LAYOUT)      */}
         {/* Clean, digestible, warm presentation of what stood out            */}
         {/* ================================================================== */}
         <motion.div
@@ -266,11 +258,11 @@ export default function TestResultsPrototype() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, delay: 0.05 }}
-          className="group relative overflow-hidden bg-white rounded-3xl p-7 sm:p-9 border border-stone-200/90 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-sage-green hover:bg-[#fffdf9] space-y-6"
+          className="relative overflow-hidden bg-gradient-to-br from-[#fefbf6] via-[#faf7f2] to-[#f5f0e8] rounded-[28px] sm:rounded-[32px] p-7 sm:p-9 border border-emerald-900/10 shadow-sm space-y-6"
         >
-          {/* Header */}
+          {/* Header matching Image 3 */}
           <div className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-sage-green/15 text-sage-green">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-sage-green/15 text-sage-green">
               <Sparkles className="h-3.5 w-3.5" /> What your answers showed
             </span>
             <span className="text-xs text-muted-foreground font-mono">
@@ -278,47 +270,23 @@ export default function TestResultsPrototype() {
             </span>
           </div>
 
-          {/* Headline */}
-          <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground">
+          {/* Headline matching Image 3 serif */}
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground leading-snug">
             {data.answerHeadline}
           </h2>
 
-          {/* Primary Reported Symptoms in Daily Life */}
-          <div className="space-y-3">
-            <p className="text-sm font-bold uppercase tracking-wider text-stone-600">
-              Patterns you reported experiencing most often:
-            </p>
-            <ul className="space-y-2.5">
-              {data.primaryReportedSymptoms.map((symptom, idx) => (
-                <li
-                  key={idx}
-                  className="flex items-start gap-3 p-3.5 rounded-2xl bg-stone-50 border border-stone-200/70 text-base leading-[1.7] text-foreground/90"
-                >
-                  <span className="text-sage-green font-bold text-lg leading-none mt-1 shrink-0">•</span>
-                  <span>{symptom}</span>
-                </li>
-              ))}
-            </ul>
+          {/* Primary reported symptoms description */}
+          <p className="text-base sm:text-[17px] leading-[1.8] text-foreground/90 font-normal">
+            {data.primarySummaryParagraph}
+          </p>
+
+          {/* Context Box matching Image 3 layout */}
+          <div className="rounded-2xl border border-stone-200/70 bg-[#faf7f2]/90 p-5 sm:p-6 text-base sm:text-[17px] leading-[1.8] text-foreground/90 shadow-2xs">
+            {data.contextBoxText}
           </div>
 
-          {/* Context & Life Impact Box (Cleaner delivery of Image 3's box) */}
-          <div className="rounded-2xl border border-stone-200/80 bg-warm-cream/50 p-5 sm:p-6 space-y-3 text-base leading-[1.75] text-stone-700">
-            <p>
-              <strong className="font-semibold text-foreground">Where it happens: </strong>
-              {data.settingsSummary}
-            </p>
-            <p>
-              <strong className="font-semibold text-foreground">Everyday impact: </strong>
-              {data.impactSummary}
-            </p>
-            <p className="border-t border-stone-200/70 pt-2.5">
-              <strong className="font-semibold text-foreground">Childhood history: </strong>
-              {data.childhoodSummary}
-            </p>
-          </div>
-
-          {/* Action button: Download Summary */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-stone-100">
+          {/* Action button */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-stone-200/60">
             <div>
               <p className="text-base font-bold text-foreground">Taking this to an appointment?</p>
               <p className="text-sm text-muted-foreground mt-0.5">
@@ -337,7 +305,7 @@ export default function TestResultsPrototype() {
 
         {/* ================================================================== */}
         {/* SECTION 3: PERSONALIZED GUIDANCE ("Explore what may be relevant")  */}
-        {/* NO MEDICATION LINK per explicit instructions                       */}
+        {/* STRICTLY NO MEDICATION LINK per explicit instructions              */}
         {/* ================================================================== */}
         <div className="space-y-4 print:hidden">
           <div className="text-center sm:text-left">
@@ -445,7 +413,7 @@ export default function TestResultsPrototype() {
               <div className="p-4 sm:p-5 rounded-2xl bg-warm-cream/50 border border-stone-200 space-y-2">
                 <p className="font-bold text-foreground">Symptom Overview</p>
                 <p className="text-sm text-stone-700">
-                  • <strong>Attention & Focus:</strong> Frequent difficulties with task initiation, losing details, and sustained attention.
+                  • <strong>Attention & Focus:</strong> Frequent difficulties with task initiation, sustained focus, and mental fatigue.
                 </p>
                 <p className="text-sm text-stone-700">
                   • <strong>Restlessness / Impulsivity:</strong> {data.key === 'high_combined' ? 'Frequent physical or mental restlessness.' : 'Lower physical restlessness; primarily inattentive or masked.'}
@@ -455,10 +423,10 @@ export default function TestResultsPrototype() {
               <div className="p-4 sm:p-5 rounded-2xl bg-warm-cream/50 border border-stone-200 space-y-2">
                 <p className="font-bold text-foreground">Impact & History</p>
                 <p className="text-sm text-stone-700">
-                  • <strong>Life Settings:</strong> {data.settingsSummary}
+                  • <strong>Life Settings:</strong> Difficulties reported across work, study, or everyday personal administrative life.
                 </p>
                 <p className="text-sm text-stone-700">
-                  • <strong>Childhood History:</strong> {data.childhoodSummary}
+                  • <strong>Everyday Impact:</strong> Noticeable disruption to daily energy, consistency, or routine completion.
                 </p>
               </div>
             </div>

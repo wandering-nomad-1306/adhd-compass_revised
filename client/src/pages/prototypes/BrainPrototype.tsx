@@ -56,10 +56,10 @@ interface BrainCircuit {
 const regions: BrainRegion[] = [
   {
     id: 'pfc',
-    name: 'Prefrontal cortex',
-    shortName: 'Prefrontal cortex',
+    name: 'Prefrontal Cortex (dlPFC & Frontal Pole)',
+    shortName: 'Prefrontal Cortex (dlPFC)',
     color: '#4f7659',
-    role: 'Holding goals in mind and guiding what you do next',
+    role: 'Holding goals in working memory and guiding execution (BA 9, 10, 46)',
     function: {
       lead: 'The prefrontal cortex acts like your brain’s project manager. It handles working memory, planning, pausing before reacting, and switching between tasks. Its primary job is to ',
       highlight: 'keep your long-term goal active long enough to guide what you do next',
@@ -83,10 +83,10 @@ const regions: BrainRegion[] = [
   },
   {
     id: 'parietal',
-    name: 'Posterior parietal attention cortex',
-    shortName: 'Parietal cortex',
+    name: 'Posterior Parietal Cortex (PPC)',
+    shortName: 'Posterior Parietal (PPC)',
     color: '#857004',
-    role: 'Steering your attention spotlight and tracking priorities',
+    role: 'Steering the attentional spotlight and spatial tracking (BA 7, 40)',
     function: {
       lead: 'The parietal cortex acts like an attentional spotlight. Working alongside the frontal lobe, it helps you ',
       highlight: 'orient your focus toward important details and redirect your attention',
@@ -110,10 +110,10 @@ const regions: BrainRegion[] = [
   },
   {
     id: 'acc',
-    name: 'Anterior cingulate cortex',
-    shortName: 'Anterior cingulate',
+    name: 'Anterior Cingulate Cortex (dACC)',
+    shortName: 'Anterior Cingulate (dACC)',
     color: '#925e76',
-    role: 'Catching mistakes, monitoring effort, and adapting strategies',
+    role: 'Error detection, conflict monitoring, and effort valuation (BA 24, 32)',
     function: {
       lead: 'The anterior cingulate functions like an internal smoke detector. It helps ',
       highlight: 'detect errors, notice conflicts, and signal when more mental effort is needed',
@@ -137,8 +137,8 @@ const regions: BrainRegion[] = [
   },
   {
     id: 'striatum',
-    name: 'Striatum',
-    shortName: 'Striatum',
+    name: 'Striatum (Caudate & Putamen)',
+    shortName: 'Striatum (Basal Ganglia)',
     color: '#a96952',
     role: 'Action selection, reward evaluation, and dopamine motivation',
     function: {
@@ -164,10 +164,10 @@ const regions: BrainRegion[] = [
   },
   {
     id: 'insula',
-    name: 'Insula',
-    shortName: 'Insula',
+    name: 'Insular Cortex (Salience Hub)',
+    shortName: 'Insular Cortex (BA 13)',
     color: '#5f9aaa',
-    role: 'Spotting urgent body signals and shifting mental priorities',
+    role: 'Spotting urgent body signals and shifting mental priorities (BA 13)',
     function: {
       lead: 'The insula bridges internal bodily sensations with external events. It helps the brain ',
       highlight: 'decide what is most urgent right now',
@@ -191,10 +191,10 @@ const regions: BrainRegion[] = [
   },
   {
     id: 'cerebellum',
-    name: 'Cerebellum',
-    shortName: 'Cerebellum',
+    name: 'Cerebellar Hemispheres & Vermis',
+    shortName: 'Cerebellum (Internal Clock)',
     color: '#7e8249',
-    role: 'Internal clock, time perception, and smooth sequence pacing',
+    role: 'Internal clock, temporal estimation, and sequence pacing',
     function: {
       lead: 'Long recognized for motor balance, the cerebellum also plays a critical cognitive role in ',
       highlight: 'internal timing, predicting sequence steps, and coordinating thoughts',
@@ -221,11 +221,11 @@ const regions: BrainRegion[] = [
 const circuits: BrainCircuit[] = [
   {
     id: 'control-action',
-    name: 'Control and action',
+    name: 'Frontostriatal Network (Control & Action)',
     color: '#a96952',
     nodeIds: ['pfc', 'acc', 'striatum'],
     role: {
-      lead: 'Connects goal-setting in the frontal cortex with error detection and dopamine motivation to ',
+      lead: 'Connects goal-setting in dlPFC with error detection in dACC and dopamine motivation in the striatum to ',
       highlight: 'translate intentions into physical actions and learn from results',
       rest: '.',
     },
@@ -242,11 +242,11 @@ const circuits: BrainCircuit[] = [
   },
   {
     id: 'attention',
-    name: 'Attention control',
+    name: 'Frontoparietal Network (Attention Control)',
     color: '#5b6f96',
     nodeIds: ['pfc', 'parietal', 'insula'],
     role: {
-      lead: 'Coordinates long-term goals with the real-time spotlight of attention to ',
+      lead: 'Coordinates long-term goals in dlPFC with the real-time spotlight of the posterior parietal cortex (BA 7/40) to ',
       highlight: 'steer focus toward what matters and tune out distractions',
       rest: '.',
     },
@@ -263,11 +263,11 @@ const circuits: BrainCircuit[] = [
   },
   {
     id: 'monitoring',
-    name: 'Salience and monitoring',
+    name: 'Salience Network (Monitoring & Priority)',
     color: '#925e76',
     nodeIds: ['insula', 'acc', 'pfc'],
     role: {
-      lead: 'Balances urgent sensory/emotional events with conflict detection to ',
+      lead: 'Balances urgent sensory/emotional events in the anterior insula (BA 13) with conflict detection in dACC to ',
       highlight: 'decide which signal deserves immediate mental resources',
       rest: '.',
     },
@@ -284,11 +284,11 @@ const circuits: BrainCircuit[] = [
   },
   {
     id: 'timing',
-    name: 'Timing and coordination',
+    name: 'Cerebello-Striato-Prefrontal Loop (Internal Timing)',
     color: '#7e8249',
     nodeIds: ['pfc', 'striatum', 'cerebellum'],
     role: {
-      lead: 'Combines planning, dopamine motivation, and internal time tracking to ',
+      lead: 'Combines prefrontal planning, striatal dopamine motivation, and cerebellar vermis time-tracking to ',
       highlight: 'pace actions smoothly and manage transitions between activities',
       rest: '.',
     },
@@ -415,6 +415,130 @@ const brainSystems = [
       'The default mode network is not a defect. It is the engine of <strong>creativity, empathy, synthesis, and imagination</strong>. The goal is improving switching agility—not silencing your internal voice.',
   },
 ] as const;
+
+const chemicalSystems = [
+  {
+    id: 'dopamine',
+    name: 'Dopamine',
+    accent: '#5b6f96',
+    overview:
+      'Dopamine is your brain’s <strong>interest and reward navigator</strong>—not just a simple “pleasure chemical.” It helps you evaluate whether an effort is worth the reward, signals what is relevant right now, and fuels the motivation needed to cross the starting line.',
+    role:
+      'In executive and reward networks, dopamine helps <strong>anchor attention on tasks, filter out distractions, and convert mental intentions into physical action</strong>. It determines how engaging and rewarding a goal feels before you even start doing it.',
+    adhd:
+      'ADHD is <strong>not a simple global “shortage” of dopamine</strong>. Instead, dopamine signaling in specific focus and reward circuits is inconsistent. When a task lacks instant stimulation, visible progress, or urgency, dopamine levels drop, making starting feel like pushing through wet cement—even when you genuinely care.',
+    daily:
+      'This explains why an interesting hobby or urgent deadline triggers effortless, laser-sharp focus (<strong>hyperfocus</strong>), while routine chores or paperwork feel almost physically exhausting to initiate.',
+    medication:
+      'Stimulant medications (and certain nonstimulants) <strong>temporarily optimize dopamine levels in communication gaps</strong>, helping interest, motivation, and attention remain steadier throughout everyday routines.',
+    caution:
+      'There is <strong>no blood test or brain scan for dopamine</strong> that diagnoses ADHD. Research findings reflect average group patterns, not a simple deficit number.',
+  },
+  {
+    id: 'norepinephrine',
+    name: 'Norepinephrine',
+    accent: '#477f72',
+    overview:
+      'Norepinephrine is your brain’s <strong>alertness and signal amplifier</strong>. It acts like a spotlight controller for the front control networks, keeping priority goals clear in your working memory while muting mental background noise.',
+    role:
+      'In the prefrontal cortex, norepinephrine <strong>amplifies the strength of what you are focusing on</strong>. It helps you stay alert, hold multiple instructions in mind, and resist impulsive interruptions during demanding work.',
+    adhd:
+      'In ADHD, norepinephrine transmission can be <strong>too low during quiet or repetitive tasks</strong> (leading to mental drift or sleepiness) or spike erratically during acute stress, making it difficult to maintain steady focus without extra stimulation or urgency.',
+    daily:
+      'This helps explain why people with ADHD often find themselves <strong>subconsciously seeking caffeine, background music, or last-minute panic</strong> to jump-start alertness, or why a sudden interruption easily erases their train of thought.',
+    medication:
+      'Medications like atomoxetine, viloxazine, stimulants, and alpha-2 agonists <strong>optimize norepinephrine signaling</strong>, helping the brain maintain steady wakefulness and focus throughout the day without relying on emergency adrenaline.',
+    caution:
+      'More is not automatically better. <strong>Excessive stress or high doses can overload executive circuits</strong>, which is why acute anxiety harms focus just as much as low arousal.',
+  },
+] as const;
+
+function ChemicalSignalExplorer() {
+  const [selected, setSelected] = useState(0);
+  const active = chemicalSystems[selected];
+
+  return (
+    <div className="overflow-hidden rounded-3xl border border-[#4f7659]/15 bg-white shadow-sm">
+      <div className="flex border-b border-sage-green/10 bg-warm-cream/50 p-2" role="tablist" aria-label="Chemical messenger explorer">
+        {chemicalSystems.map((item, index) => (
+          <button
+            key={item.id}
+            type="button"
+            role="tab"
+            aria-selected={selected === index}
+            onClick={() => setSelected(index)}
+            className="flex-1 rounded-xl px-4 py-3 text-sm font-bold transition sm:text-base"
+            style={selected === index ? { backgroundColor: item.accent, color: 'white', boxShadow: `0 6px 18px ${item.accent}25` } : { color: '#4b514d' }}
+          >
+            {item.name}
+          </button>
+        ))}
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.article
+          key={active.id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2 }}
+          className="p-5 sm:p-7 md:p-8"
+        >
+          <div className="max-w-3xl">
+            <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: active.accent }}>Neurotransmitter / neuromodulator</p>
+            <h3 className="mt-2 font-serif text-3xl font-bold text-foreground">{active.name}</h3>
+            <p className="mt-4 text-lg leading-relaxed text-foreground" dangerouslySetInnerHTML={{ __html: active.overview }} />
+          </div>
+
+          <div className="mt-7 grid gap-4 md:grid-cols-2">
+            {[
+              ['What it normally does', active.role],
+              ['How it connects to ADHD', active.adhd],
+              ['What this can look like in daily life', active.daily],
+              ['Why medication affects it', active.medication],
+            ].map(([title, text]) => (
+              <section key={title} className="rounded-2xl border border-stone-200/80 bg-white p-5 sm:p-6 shadow-2xs">
+                <h4 className="font-bold text-base sm:text-lg text-foreground">{title}</h4>
+                <p className="mt-2.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90" dangerouslySetInnerHTML={{ __html: text }} />
+              </section>
+            ))}
+          </div>
+
+          <div className="mt-5 flex gap-3.5 rounded-2xl border border-[#a96952]/20 bg-[#a96952]/[0.06] p-5 sm:p-6">
+            <Info className="mt-0.5 h-5 w-5 shrink-0 text-[#a96952]" />
+            <div>
+              <p className="font-bold text-base text-foreground">Important diagnostic limit</p>
+              <p className="mt-1.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90" dangerouslySetInnerHTML={{ __html: active.caution }} />
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-sage-green/20 bg-sage-green/[0.08] p-5 sm:p-6 shadow-2xs">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-sage-green/15 text-sage-green font-bold text-xs">★</span>
+              <p className="font-bold text-base sm:text-lg text-foreground">How dopamine and norepinephrine fit together: The Radio Tuner Model</p>
+            </div>
+            <p className="mt-3 text-[15px] sm:text-base leading-[1.75] text-foreground/90">
+              Think of your brain's front executive network like a high-performance radio receiver:
+            </p>
+            <div className="mt-3.5 space-y-2.5 text-[15px] sm:text-base leading-[1.75] text-foreground/90">
+              <div className="flex items-start gap-2.5">
+                <span className="mt-1 h-2 w-2 rounded-full bg-sage-green shrink-0" />
+                <span><strong>Norepinephrine turns up the SIGNAL volume:</strong> It acts on alpha-2A receptors to boost alertness, strengthen working memory, and keep your primary goal clear and loud.</span>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="mt-1 h-2 w-2 rounded-full bg-sage-green shrink-0" />
+                <span><strong>Dopamine acts like ACTIVE NOISE CANCELLATION:</strong> It acts on D1 receptors to mute background mental chatter, random impulses, and irrelevant distractions.</span>
+              </div>
+            </div>
+            <p className="mt-3.5 text-sm sm:text-base leading-[1.75] text-stone-700 border-t border-sage-green/15 pt-3">
+              <strong>The Clinical Reality:</strong> Peak focus happens in the balanced “sweet spot” when both chemicals are tuned. In ADHD, this tuning fluctuates—so the broadcast either fades out or gets drowned in background static. Medications do not create artificial energy; they simply help tune the radio back into a clear, steady broadcast.
+            </p>
+          </div>
+        </motion.article>
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export default function BrainPrototype() {
   const [, setLocation] = useLocation();
@@ -803,7 +927,19 @@ export default function BrainPrototype() {
           </div>
         </section>
 
-        {/* Section 5: Executive Functions Card Link */}
+        {/* Section 5: Neurochemistry (Dopamine and Norepinephrine) */}
+        <section id="neurochemistry" data-page-label="Neurochemistry">
+          <div className="mb-8 max-w-3xl">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sage-green">Neurochemistry</p>
+            <h2 className="mt-3 font-serif text-3xl font-bold text-foreground md:text-4xl">Dopamine and norepinephrine</h2>
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              Dopamine and norepinephrine influence attention, working memory, reward, arousal and behavioural control through overlapping brain circuits. The key is regulation within specific networks—not a simple “chemical shortage.”
+            </p>
+          </div>
+          <ChemicalSignalExplorer />
+        </section>
+
+        {/* Section 6: Executive Functions Card Link */}
         <section id="executive-functions" data-page-label="Executive functions">
           <div className="rounded-3xl border border-sage-green/15 bg-white p-7 shadow-sm md:p-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
