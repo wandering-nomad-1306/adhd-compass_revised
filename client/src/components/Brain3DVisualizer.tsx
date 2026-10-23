@@ -504,12 +504,13 @@ export default function Brain3DVisualizer({
         hemiMatRight.depthWrite = false;
       }
     } else if (isConnectionsMode) {
+      // In connections mode, keep cortex cleanly translucent so internal circuits stand out clearly
       hemiMatLeft.transparent = true;
-      hemiMatLeft.opacity = 0.32;
+      hemiMatLeft.opacity = 0.18;
       hemiMatLeft.depthWrite = false;
 
       hemiMatRight.transparent = true;
-      hemiMatRight.opacity = 0.32;
+      hemiMatRight.opacity = 0.18;
       hemiMatRight.depthWrite = false;
     } else {
       hemiMatLeft.transparent = false;
@@ -531,29 +532,31 @@ export default function Brain3DVisualizer({
 
       const pfcCol = new THREE.Color(REGION_COLORS.pfc);
       const parietalCol = new THREE.Color(REGION_COLORS.parietal);
-      const baseCol = new THREE.Color(isSubcorticalFocused ? DIMMED_CORTEX_COLOR : BASE_CORTEX_COLOR);
+      const baseCol = new THREE.Color(isSubcorticalFocused || isConnectionsMode ? DIMMED_CORTEX_COLOR : BASE_CORTEX_COLOR);
 
-      const highlightPFC = activeIds.includes('pfc');
-      const highlightParietal = activeIds.includes('parietal');
+      // In connections mode, do NOT paint the outer shell with large color patches
+      // Keep outer cortex clean and neutral so internal hubs and connecting arcs are distinctly visible!
+      const highlightPFC = !isConnectionsMode && activeIds.includes('pfc');
+      const highlightParietal = !isConnectionsMode && activeIds.includes('parietal');
 
       for (let i = 0; i < pos.length; i += 3) {
         const x = pos[i];
         const y = pos[i + 1];
         const z = pos[i + 2];
 
-        // Prefrontal cortex: anterior and superior
-        if (highlightPFC && z > 2.0 && y > 4.0) {
-          // Smooth blend near boundary
-          const blend = Math.min(1.0, (z - 2.0) / 1.5);
+        // Prefrontal cortex: accurately tuned to the anterior frontal pole (z > 4.8)
+        if (highlightPFC && z > 4.8 && y > 4.8) {
+          const blend = Math.min(1.0, (z - 4.8) / 1.5);
           colors[i] = THREE.MathUtils.lerp(baseCol.r, pfcCol.r, blend);
           colors[i + 1] = THREE.MathUtils.lerp(baseCol.g, pfcCol.g, blend);
           colors[i + 2] = THREE.MathUtils.lerp(baseCol.b, pfcCol.b, blend);
         }
-        // Parietal cortex: posterior-superior spotlight
-        else if (highlightParietal && z <= 2.0 && z > -5.5 && y > 10.0) {
-          colors[i] = parietalCol.r;
-          colors[i + 1] = parietalCol.g;
-          colors[i + 2] = parietalCol.b;
+        // Parietal cortex: accurately tuned to posterior-superior parietal lobule
+        else if (highlightParietal && z <= 0.8 && z > -4.8 && y > 11.5) {
+          const blend = Math.min(1.0, (y - 11.5) / 1.5);
+          colors[i] = THREE.MathUtils.lerp(baseCol.r, parietalCol.r, blend);
+          colors[i + 1] = THREE.MathUtils.lerp(baseCol.g, parietalCol.g, blend);
+          colors[i + 2] = THREE.MathUtils.lerp(baseCol.b, parietalCol.b, blend);
         }
         // Default cortex color
         else {
@@ -575,7 +578,7 @@ export default function Brain3DVisualizer({
       if (child instanceof THREE.Mesh) {
         const mat = child.material as THREE.MeshStandardMaterial;
         mat.emissive = new THREE.Color(REGION_COLORS.striatum);
-        mat.emissiveIntensity = striatumActive ? 0.6 : 0.05;
+        mat.emissiveIntensity = striatumActive ? (isConnectionsMode ? 0.9 : 0.6) : 0.05;
         mat.color = new THREE.Color(striatumActive ? REGION_COLORS.striatum : '#baa89b');
         mat.needsUpdate = true;
       }
@@ -586,7 +589,7 @@ export default function Brain3DVisualizer({
     accGroup.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         const mat = child.material as THREE.MeshStandardMaterial;
-        mat.emissiveIntensity = accActive ? 0.75 : 0.05;
+        mat.emissiveIntensity = accActive ? (isConnectionsMode ? 0.95 : 0.75) : 0.05;
         mat.color = new THREE.Color(accActive ? REGION_COLORS.acc : '#c2b2a8');
         mat.needsUpdate = true;
       }
@@ -597,7 +600,7 @@ export default function Brain3DVisualizer({
     insulaGroup.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         const mat = child.material as THREE.MeshStandardMaterial;
-        mat.emissiveIntensity = insulaActive ? 0.75 : 0.05;
+        mat.emissiveIntensity = insulaActive ? (isConnectionsMode ? 0.95 : 0.75) : 0.05;
         mat.color = new THREE.Color(insulaActive ? REGION_COLORS.insula : '#b2c1c6');
         mat.needsUpdate = true;
       }
@@ -608,10 +611,10 @@ export default function Brain3DVisualizer({
     const cerebMat = cerebMesh.material as THREE.MeshStandardMaterial;
     cerebMat.color = new THREE.Color(cerebActive ? REGION_COLORS.cerebellum : '#c7c0b2');
     cerebMat.emissive = new THREE.Color(REGION_COLORS.cerebellum);
-    cerebMat.emissiveIntensity = cerebActive ? 0.35 : 0.0;
+    cerebMat.emissiveIntensity = cerebActive ? (isConnectionsMode ? 0.6 : 0.35) : 0.0;
     cerebMat.needsUpdate = true;
 
-    // 4. Connection Arcs in Connections Mode
+    // 4. Connection Arcs & Dedicated Nodal Hubs in Connections Mode
     arcsGroup.clear();
     if (isConnectionsMode) {
       const nodes = CIRCUIT_NODES[selectedCircuitId];
@@ -620,20 +623,41 @@ export default function Brain3DVisualizer({
         selectedCircuitId === 'attention' ? REGION_COLORS.parietal :
         selectedCircuitId === 'monitoring' ? REGION_COLORS.acc : REGION_COLORS.cerebellum;
 
+      // Add distinct glowing nodal spheres for cortical nodes (PFC, Parietal) so they are evident
+      nodes.forEach((nodeId) => {
+        if (nodeId === 'pfc' || nodeId === 'parietal') {
+          const pos = REGION_CENTROIDS[nodeId];
+          const nodeColor = REGION_COLORS[nodeId];
+          const sphereGeo = new THREE.SphereGeometry(1.2, 20, 20);
+          const sphereMat = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(nodeColor),
+            emissive: new THREE.Color(nodeColor),
+            emissiveIntensity: 0.9,
+            roughness: 0.3,
+            metalness: 0.1,
+          });
+          const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+          sphereMesh.position.copy(pos);
+          arcsGroup.add(sphereMesh);
+        }
+      });
+
+      // Draw high-visibility 3D connecting pathways
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const start = REGION_CENTROIDS[nodes[i]];
           const end = REGION_CENTROIDS[nodes[j]];
           const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
-          mid.y += 2.2; // graceful arching upward
+          mid.y += 2.4; // graceful arching upward
 
           const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
-          const tubeGeo = new THREE.TubeGeometry(curve, 28, 0.22, 8, false);
+          const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.32, 10, false);
           const tubeMat = new THREE.MeshStandardMaterial({
             color: new THREE.Color(circuitColor),
             emissive: new THREE.Color(circuitColor),
-            emissiveIntensity: 0.8,
-            roughness: 0.3,
+            emissiveIntensity: 0.95,
+            roughness: 0.25,
+            metalness: 0.2,
           });
           const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
           arcsGroup.add(tubeMesh);
@@ -762,26 +786,26 @@ export default function Brain3DVisualizer({
                 : REGION_COLORS.cerebellum,
           }}
         />
-        <span className="text-xs font-semibold text-foreground">
+        <span className="text-xs sm:text-sm font-bold text-foreground">
           {view === 'regions'
             ? selectedRegionId === 'pfc'
-              ? 'Prefrontal cortex (Frontal lobe)'
+              ? 'Anterior Prefrontal Cortex · Frontal Pole & Executive Control'
               : selectedRegionId === 'parietal'
-              ? 'Parietal cortex (Attention spotlight)'
+              ? 'Posterior Parietal Cortex · Attentional Spotlight'
               : selectedRegionId === 'acc'
-              ? 'Anterior cingulate (Midline conflict monitor)'
+              ? 'Anterior Cingulate (ACC) · Error & Conflict Monitor (Translucent Cutaway)'
               : selectedRegionId === 'striatum'
-              ? 'Striatum (Subcortical dopamine hub)'
+              ? 'Striatum · Caudate & Putamen Dopamine Hub (Translucent Cutaway)'
               : selectedRegionId === 'insula'
-              ? 'Insula (Deep salience core)'
-              : 'Cerebellum (Internal timing base)'
+              ? 'Insula · Deep Salience & Urgency Hub (Translucent Cutaway)'
+              : 'Cerebellum · Internal Clock & Coordination Base'
             : selectedCircuitId === 'control-action'
-            ? 'Control and action loop (PFC ↔ ACC ↔ Striatum)'
+            ? 'Control & Action Network · Prefrontal Cortex ↔ Anterior Cingulate ↔ Striatum'
             : selectedCircuitId === 'attention'
-            ? 'Attention control network (PFC ↔ Parietal ↔ Insula)'
+            ? 'Attention Control Network · Prefrontal Cortex ↔ Parietal Cortex ↔ Insula'
             : selectedCircuitId === 'monitoring'
-            ? 'Salience and monitoring (Insula ↔ ACC ↔ PFC)'
-            : 'Timing and coordination (PFC ↔ Striatum ↔ Cerebellum)'}
+            ? 'Salience & Monitoring Network · Insula ↔ Anterior Cingulate ↔ Prefrontal Cortex'
+            : 'Timing & Coordination Loop · Prefrontal Cortex ↔ Striatum ↔ Cerebellum'}
         </span>
       </div>
 
